@@ -59,7 +59,9 @@ settings = {
 	lockGuard: true,
 	cycleGuard: false,
 	histSkip: true,
+	banJoiners: false,
 	save: true,
+	ready: true,
 	smartReply: false,
 	version: "1.1"
 };
@@ -686,10 +688,38 @@ function loadCommands(){
 					API.sendChat('/em [' + from + '] No permission!');
 				}
 				break;
-				
+
+			case '!lockdown':
+				if(API.getUser(fromid).permssion >= 3){
+					API.moderateDeleteChat(chatid);
+					var messages = $('#chat-messages').children();
+					for (var i = 0; i < messages.length; i++) {
+						for (var j = 0; j < messages[i].classList.length; j++) {
+							if (messages[i].classList[j].indexOf('cid-') === 0) {
+								API.moderateDeleteChat(messages[i].classList[j].substr(4));
+							}
+						}
+					}
+					API.sendChat('/em [' + from + '] Lockdown enabled!');
+					API.moderateLockWaitList(true, true);
+					API.moderateForceSkip();
+					var c = API.getUser();
+					$('#dj-button').click();
+					var b = $('#chat-messages');
+					switch(b.children(text)){
+						if(b.children(text).indexOf('' || ' ' || '.' || '|' || '/' || '?' || 'a' || 'b' || 'c' || 'd' || 'e' || 'help' || 'f' || 'g' || 'h' || 'i' || '1' || '2' || '3' || '4' || '5' || '6' || '7' || '8' || '9' || '10' || '1234567890')){
+							API.sendChat('@' + from + ' you have chatted during a lockdown! Banning you...');
+							setTimeout(function(){
+								API.moderateBanUser(fromid, 1, 1);
+							}
+						}
+					}
+				}
+			break;
+
 			case '.': API.moderateDeleteChat(chatid); break;
 			case './': API.moderateDeleteChat(chatid); break;
-			case 'fan': API.moderateDeleteChat(chatid); API.sendChat('@' + from + ' please do not ask for fans'); break;
+			case '!fan': API.moderateDeleteChat(chatid); API.sendChat('@' + from + ' please do not ask for fans'); break;
 			case 'skip':
 				if(API.getUser(fromid).permission == 5 || API.getUser(fromid).permission == 4){
 					return 'good';
@@ -703,6 +733,9 @@ function loadCommands(){
 			}
 		}
 	API.on(API.CHAT, function(data) {
+		if(!settings.ready || data.from.mute == true){
+			return void 0;
+		}
 		if (data.message.substr(0,1) == '!') {
 			if(data.message.indexOf('@') !=-1) {
 				var index = data.message.indexOf('!');
@@ -711,6 +744,7 @@ function loadCommands(){
 				var indexu = data.message.indexOf('@') +1;
 				var u = data.message.substr(indexu).trim();
 				userc(msg, data.from, data.fromID, data.chatID, u);
+				settings.ready = false;
 			}
 			else {
 				if(data.message.indexOf('!say') !=-1) {
@@ -1110,8 +1144,6 @@ function moveCommand(){
 		}
 	});
 }
-
-
 
 var joined = new Date().getTime();
 
