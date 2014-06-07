@@ -400,7 +400,9 @@ function loadCommands(){
 				if(API.getUser(fromid).permission >= 3){
 					API.moderateDeleteChat(chatid);
 					API.sendChat('/em [' + from + '] I\'m now ded.');
-					location.reload();
+					setTimeout(function(){
+						location.reload();
+					}, 1000);
 				}else{
 					API.sendChat('/em [' + from + '] No permission!');
 				}
