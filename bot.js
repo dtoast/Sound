@@ -195,7 +195,7 @@ function loadCommands(){
 			case '!help':
 				API.moderateDeleteChat(chatid);
 				if(str.substring(6) == NaN || null || undefined){
-					API.sendChat('/em [' + from + '] My commands: The link is down! Please ask an admin for help!');
+					API.sendChat('/em [' + from + '] My commands: http://astroshock.bl.ee/soundbot/');
 				}else{
 					for(var i in users){
 						API.sendChat('[' + from + '] My commands: The link is down! Please ask an admin for help! @' + users[i].username);
