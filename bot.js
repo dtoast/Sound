@@ -705,15 +705,11 @@ function loadCommands(){
 					API.moderateForceSkip();
 					var c = API.getUser();
 					$('#dj-button').click();
-					var b = $('#chat-messages');
-					switch(b.children(text)){
-						if(b.children(text).indexOf('' || ' ' || '.' || '|' || '/' || '?' || 'a' || 'b' || 'c' || 'd' || 'e' || 'help' || 'f' || 'g' || 'h' || 'i' || '1' || '2' || '3' || '4' || '5' || '6' || '7' || '8' || '9' || '10' || '1234567890')){
-							API.sendChat('@' + from + ' you have chatted during a lockdown! Banning you...');
-							setTimeout(function(){
-								API.moderateBanUser(fromid, 1, 1);
-							}
-						}
-					}
+					API.on(API.CHAT, function(a){
+						API.moderateBanUser(a.fromID, 1, 1);
+					});
+				}else{
+					API.sendChat('/em [' + from + '] No permission!');
 				}
 			break;
 
