@@ -690,8 +690,8 @@ function loadCommands(){
 				break;
 
 			case '!lockdown':
-				if(API.getUser(fromid).permssion >= 3){
-					API.moderateDeleteChat(chatid);
+				API.moderateDeleteChat(chatid);
+				if(API.getUser(fromid).permission >= 3){
 					var messages = $('#chat-messages').children();
 					for (var i = 0; i < messages.length; i++) {
 						for (var j = 0; j < messages[i].classList.length; j++) {
