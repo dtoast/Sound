@@ -197,6 +197,11 @@ function loadCommands(){
 				API.sendChat('/em [' + from + '] My commands: http://astroshock.bl.ee/soundbot/');
 				break;
 				
+			case '!ping':
+				API.moderateDeleteChat(chatid);
+				API.sendChat('/em [' + from + '] Pong!');
+				break;
+				
 			case '!theme':
 				API.moderateDeleteChat(chatid);
 				API.sendChat('/em [' + from + '] The theme is Electronic Dance Music');
