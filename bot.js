@@ -66,6 +66,10 @@ settings = {
 	version: "1.1"
 };
 
+lock = {
+	down: false
+};
+
 party = {
 	on: false
 };
