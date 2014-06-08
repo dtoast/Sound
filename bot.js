@@ -450,9 +450,7 @@ function loadCommands(){
 			case '!move':
 				API.moderateDeleteChat(chatid);
 				if(API.getUser(fromid).permission >= 2){
-					var a = str.substr(6);
-					var c = a.lastIndexOf(' ');
-					var b = c.trim();
+					var b = str.lastIndexOf(' ').trim();
 					for(var i in users){
 						if(users[i].username === opt){
 							if(b <= 50){
@@ -468,7 +466,7 @@ function loadCommands(){
 								return;
 							}
 						}
-						if(users[i].username === NaN || null || undefined){
+						if(users[i].username === isNaN || null || undefined){
 							API.sendChat('/em [' + from + '] User not found!');
 						}
 					}
