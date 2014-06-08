@@ -450,7 +450,7 @@ function loadCommands(){
 			case '!move':
 				API.moderateDeleteChat(chatid);
 				if(API.getUser(fromid).permission >= 2){
-					var a = str.substr(6).trim();
+					var a = str.substr(6);
 					var c = a.lastIndexOf(' ');
 					var b = c.trim();
 					for(var i in users){
