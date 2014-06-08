@@ -451,7 +451,7 @@ function loadCommands(){
 				API.moderateDeleteChat(chatid);
 				if(API.getUser(fromid).permission >= 2){
 					var a = str.substr(6).trim();
-					var b = a.charAt(0);
+					var b = a.lastIndexOf(' ').trim();
 					for(var i in users){
 						if(users[i].username === opt){
 							if(b <= 50){
