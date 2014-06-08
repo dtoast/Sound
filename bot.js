@@ -66,10 +66,6 @@ settings = {
 	version: "1.1"
 };
 
-lock = {
-	down: false
-};
-
 party = {
 	on: false
 };
@@ -450,6 +446,35 @@ function loadCommands(){
 					API.sendChat("/em [" + from + "] No permission!");
 				}
 				break;
+
+			case '!move':
+				API.moderateDeleteChat(chatid);
+				if(API.getUser(fromid).permission >= 2){
+					var a = str.substr(6).trim();
+					var b = a.chatAt(0);
+					for(var i in users){
+						if(users[i].username === opt){
+							if(b <= 50){
+								API.sendChat('/em [' + from + '] Moved ' + users[i].username + ' to position ' + b + '!');
+								if(API.getWaitListPosition(users[i].id) === -1){
+									API.moderateAddDJ(users[i].id);
+									API.moderateMoveDJ(users[i].id, b);
+								}
+								if(API.getWaitListPosition(users[i].id) <= 50){
+									API.moderateMoveDJ(users[i].id, b);
+								}
+							}else{
+								return;
+							}
+						}
+						if(users[i].username === NaN || null || undefined){
+							API.sendChat('/em [' + from + '] User not found!');
+						}
+					}
+				}else{
+					API.sendChat('/em [' + from + '] No permission!');
+				}
+			break;
 				
 			case '!remove':
 				API.moderateDeleteChat(chatid);
@@ -694,35 +719,29 @@ function loadCommands(){
 				break;
 
 			case '!lockdown':
-				API.moderateDeleteChat(chatid);
-				if(!lock.down){
-					return void 0;
-				}
-				if(lock.down){
-					if(API.getUser(fromid).permission >= 4){
-						var messages = $('#chat-messages').children();
-						for (var i = 0; i < messages.length; i++) {
-							for (var j = 0; j < messages[i].classList.length; j++) {
-								if (messages[i].classList[j].indexOf('cid-') === 0) {
-									API.moderateDeleteChat(messages[i].classList[j].substr(4));
-								}
+				if(API.getUser(fromid).permssion >= 3){
+					API.moderateDeleteChat(chatid);
+					var messages = $('#chat-messages').children();
+					for (var i = 0; i < messages.length; i++) {
+						for (var j = 0; j < messages[i].classList.length; j++) {
+							if (messages[i].classList[j].indexOf('cid-') === 0) {
+								API.moderateDeleteChat(messages[i].classList[j].substr(4));
 							}
 						}
-						API.sendChat('/em [' + from + '] Lockdown enabled!');
-						API.moderateLockWaitList(true, true);
-						API.moderateForceSkip();
-						var c = API.getUser();
-						$('#dj-button').click();
-						API.on(API.CHAT, function(a){
-							API.moderateBanUser(a.fromID, 1, 1);
-							if(a.indexOf('!endlockdown') && API.getUser(a.fromID).permission >= 4){
-								lock.down = false;
-								API.moderateLockWaitList(false);
-								loadCommands();
+					}
+					API.sendChat('/em [' + from + '] Lockdown enabled!');
+					API.moderateLockWaitList(true, true);
+					API.moderateForceSkip();
+					var c = API.getUser();
+					$('#dj-button').click();
+					var b = $('#chat-messages');
+					switch(b.children(text)){
+						if(b.children(text).indexOf('' || ' ' || '.' || '|' || '/' || '?' || 'a' || 'b' || 'c' || 'd' || 'e' || 'help' || 'f' || 'g' || 'h' || 'i' || '1' || '2' || '3' || '4' || '5' || '6' || '7' || '8' || '9' || '10' || '1234567890')){
+							API.sendChat('@' + from + ' you have chatted during a lockdown! Banning you...');
+							setTimeout(function(){
+								API.moderateBanUser(fromid, 1, 1);
 							}
-						});
-					}else{
-						API.sendChat('/em [' + from + '] No permission!');
+						}
 					}
 				}
 			break;
@@ -1011,148 +1030,6 @@ if(settings.timeGuard){
 		API.sendChat('[TimeGuard] ' + a + ' is more than 10 minutes! Skipping...');
 		API.moderateForceSkip();
 	}
-}
-
-function moveCommand(){
-	API.on(API.CHAT, function(a){
-		if(a.message.indexOf('!move') && API.getUser(a.fromID).permission >= 2){
-			if(a.message.indexOf('@') !=-1){
-				var index = a.message.indexOf('!');
-				var endex = a.message.indexOf('@') -1;
-				var msg = a.message.substr(index, endex).trim();
-				var indexu = a.message.indexOf('@') +1;
-				var u = a.message.substr(indexu).trim();
-				var lastIndexlol = a.message.lastIndexOf(' ');
-				var lastIndex = lastIndexlol.trim();
-				API.sendChat('/em [' + a.from + '] Used move on: ' + u);
-				if(API.getWaitListPosition(u.id) == -1){
-					API.moderateAddDJ(u.id);
-					if(lastIndex == '1'){
-						API.moderateMoveDJ(u.id, 1);
-					}
-					if(lastIndex == '2'){
-						API.moderateMoveDJ(u.id, 2);
-					}
-					if(lastIndex == '3'){
-						API.moderateMoveDJ(u.id, 3);
-					}
-					if(lastIndex == '4'){
-						API.moderateMoveDJ(u.id, 4);
-					}
-					if(lastIndex == '5'){
-						API.moderateMoveDJ(u.id, 6);
-					}
-					if(lastIndex == '6'){
-						API.moderateMoveDJ(u.id, 6);
-					}
-					if(lastIndex == '7'){
-						API.moderateMoveDJ(u.id, 7);
-					}
-					if(lastIndex == '8'){
-						API.moderateMoveDJ(u.id, 8);
-					}
-					if(lastIndex == '9'){
-						API.moderateMoveDJ(u.id, 9);
-					}
-					if(lastIndex == '10'){
-						API.moderateMoveDJ(u.id, 10);
-					}
-					if(lastIndex == '11'){
-						API.moderateMoveDJ(u.id, 11);
-					}
-					if(lastIndex == '12'){
-						API.moderateMoveDJ(u.id, 12);
-					}
-					if(lastIndex == '13'){
-						API.moderateMoveDJ(u.id, 13);
-					}
-					if(lastIndex == '14'){
-						API.moderateMoveDJ(u.id, 14);
-					}
-					if(lastIndex == '15'){
-						API.moderateMoveDJ(u.id, 15);
-					}
-					if(lastIndex == '16'){
-						API.moderateMoveDJ(u.id, 16);
-					}
-					if(lastIndex == '17'){
-						API.moderateMoveDJ(u.id, 17);
-					}
-					if(lastIndex == '18'){
-						API.moderateMoveDJ(u.id, 18);
-					}
-					if(lastIndex == '19'){
-						API.moderateMoveDJ(u.id, 19);
-					}
-					if(lastIndex == '20'){
-						API.moderateMoveDJ(u.id, 20);
-					}
-				}
-				if(API.getWaitListPosition(u.id) >= 0){
-					if(lastIndex == '1'){
-						API.moderateMoveDJ(u.id, 1);
-					}
-					if(lastIndex == '2'){
-						API.moderateMoveDJ(u.id, 2);
-					}
-					if(lastIndex == '3'){
-						API.moderateMoveDJ(u.id, 3);
-					}
-					if(lastIndex == '4'){
-						API.moderateMoveDJ(u.id, 4);
-					}
-					if(lastIndex == '5'){
-						API.moderateMoveDJ(u.id, 6);
-					}
-					if(lastIndex == '6'){
-						API.moderateMoveDJ(u.id, 6);
-					}
-					if(lastIndex == '7'){
-						API.moderateMoveDJ(u.id, 7);
-					}
-					if(lastIndex == '8'){
-						API.moderateMoveDJ(u.id, 8);
-					}
-					if(lastIndex == '9'){
-						API.moderateMoveDJ(u.id, 9);
-					}
-					if(lastIndex == '10'){
-						API.moderateMoveDJ(u.id, 10);
-					}
-					if(lastIndex == '11'){
-						API.moderateMoveDJ(u.id, 11);
-					}
-					if(lastIndex == '12'){
-						API.moderateMoveDJ(u.id, 12);
-					}
-					if(lastIndex == '13'){
-						API.moderateMoveDJ(u.id, 13);
-					}
-					if(lastIndex == '14'){
-						API.moderateMoveDJ(u.id, 14);
-					}
-					if(lastIndex == '15'){
-						API.moderateMoveDJ(u.id, 15);
-					}
-					if(lastIndex == '16'){
-						API.moderateMoveDJ(u.id, 16);
-					}
-					if(lastIndex == '17'){
-						API.moderateMoveDJ(u.id, 17);
-					}
-					if(lastIndex == '18'){
-						API.moderateMoveDJ(u.id, 18);
-					}
-					if(lastIndex == '19'){
-						API.moderateMoveDJ(u.id, 19);
-					}
-					if(lastIndex == '20'){
-						API.moderateMoveDJ(u.id, 20);
-					}
-				}
-			}
-		}
-	});
 }
 
 var joined = new Date().getTime();
