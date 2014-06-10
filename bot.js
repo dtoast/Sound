@@ -451,6 +451,9 @@ function loadCommands(){
 				API.moderateDeleteChat(chatid);
 				if(API.getUser(fromid).permission >= 2){
 					var b = str.lastIndexOf(' ').trim();
+					if(b == ''){
+						API.sendChat('@' + from + ' You put an extra space, so I can\'t read that command!');
+					}
 					for(var i in users){
 						if(users[i].username === opt){
 							if(b <= 50){
@@ -466,7 +469,7 @@ function loadCommands(){
 								return;
 							}
 						}
-						if(users[i].username === isNaN || null || undefined){
+						if(users[i].username === NaN || null || undefined){
 							API.sendChat('/em [' + from + '] User not found!');
 						}
 					}
@@ -718,35 +721,29 @@ function loadCommands(){
 				break;
 
 			case '!lockdown':
-				API.moderateDeleteChat(chatid);
-				if(!lock.down){
-					return void 0;
-				}
-				if(lock.down){
-					if(API.getUser(fromid).permission >= 4){
-						var messages = $('#chat-messages').children();
-						for (var i = 0; i < messages.length; i++) {
-							for (var j = 0; j < messages[i].classList.length; j++) {
-								if (messages[i].classList[j].indexOf('cid-') === 0) {
-									API.moderateDeleteChat(messages[i].classList[j].substr(4));
-								}
+				if(API.getUser(fromid).permssion >= 3){
+					API.moderateDeleteChat(chatid);
+					var messages = $('#chat-messages').children();
+					for (var i = 0; i < messages.length; i++) {
+						for (var j = 0; j < messages[i].classList.length; j++) {
+							if (messages[i].classList[j].indexOf('cid-') === 0) {
+								API.moderateDeleteChat(messages[i].classList[j].substr(4));
 							}
 						}
-						API.sendChat('/em [' + from + '] Lockdown enabled!');
-						API.moderateLockWaitList(true, true);
-						API.moderateForceSkip();
-						var c = API.getUser();
-						$('#dj-button').click();
-						API.on(API.CHAT, function(a){
-							API.moderateBanUser(a.fromID, 1, 1);
-							if(a.indexOf('!endlockdown') && API.getUser(a.fromID).permission >= 4){
-								lock.down = false;
-								API.moderateLockWaitList(false);
-								loadCommands();
+					}
+					API.sendChat('/em [' + from + '] Lockdown enabled!');
+					API.moderateLockWaitList(true, true);
+					API.moderateForceSkip();
+					var c = API.getUser();
+					$('#dj-button').click();
+					var b = $('#chat-messages');
+					switch(b.children(text)){
+						if(b.children(text).indexOf('' || ' ' || '.' || '|' || '/' || '?' || 'a' || 'b' || 'c' || 'd' || 'e' || 'help' || 'f' || 'g' || 'h' || 'i' || '1' || '2' || '3' || '4' || '5' || '6' || '7' || '8' || '9' || '10' || '1234567890')){
+							API.sendChat('@' + from + ' you have chatted during a lockdown! Banning you...');
+							setTimeout(function(){
+								API.moderateBanUser(fromid, 1, 1);
 							}
-						});
-					}else{
-						API.sendChat('/em [' + from + '] No permission!');
+						}
 					}
 				}
 			break;
