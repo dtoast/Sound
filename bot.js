@@ -450,9 +450,11 @@ function loadCommands(){
 			case '!move':
 				API.moderateDeleteChat(chatid);
 				if(API.getUser(fromid).permission >= 2){
-					var b = str.lastIndexOf(' ').trim();
+					var a = opt.length;
+					var c = a + 1;
+					var b = str.c.trim();
 					if(b == ''){
-						API.sendChat('@' + from + ' You put an extra space, so I can\'t read that command!');
+						API.sendChat('/em [' + from + '] Position not specified!');
 					}
 					for(var i in users){
 						if(users[i].username === opt){
@@ -736,9 +738,6 @@ function loadCommands(){
 			}
 		}
 	API.on(API.CHAT, function(data) {
-		if(!settings.ready || data.from.mute == true){
-			return void 0;
-		}
 		if (data.message.substr(0,1) == '!') {
 			if(data.message.indexOf('@') !=-1) {
 				var index = data.message.indexOf('!');
@@ -747,7 +746,6 @@ function loadCommands(){
 				var indexu = data.message.indexOf('@') +1;
 				var u = data.message.substr(indexu).trim();
 				userc(msg, data.from, data.fromID, data.chatID, u);
-				settings.ready = false;
 			}
 			else {
 				if(data.message.indexOf('!say') !=-1) {
