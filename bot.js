@@ -452,7 +452,7 @@ function loadCommands(){
 				if(API.getUser(fromid).permission >= 2){
 					var a = opt.length;
 					var c = a + 1;
-					var b = str.c.trim();
+					var b = str.substr(c).trim();
 					if(b == ''){
 						API.sendChat('/em [' + from + '] Position not specified!');
 					}
