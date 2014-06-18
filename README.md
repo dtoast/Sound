@@ -6,7 +6,7 @@ http://plug.dj/astroparty
 
 Commands
 -----
-A full list can be found [there](https://googledrive.com/host/0B72VPqCAljwESjhjejMtNlNBRkE/)
+A full list can be found [there](http://astroshock.bl.ee/soundbot)
 
 Here is a list of commands (they are current, unless i get too lazy to update :p)
 
