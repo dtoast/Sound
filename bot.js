@@ -450,29 +450,16 @@ function loadCommands(){
 			case '!move':
 				API.moderateDeleteChat(chatid);
 				if(API.getUser(fromid).permission >= 2){
-					var a = opt.length;
-					var c = a + 1;
-					var b = str.substr(c).trim();
-					if(b == ''){
-						API.sendChat('/em [' + from + '] Position not specified!');
-					}
+					var a = str.substr(7, 1);
 					for(var i in users){
 						if(users[i].username === opt){
-							if(b <= 50){
-								API.sendChat('/em [' + from + '] Moved ' + users[i].username + ' to position ' + b + '!');
-								if(API.getWaitListPosition(users[i].id) === -1){
-									API.moderateAddDJ(users[i].id);
-									API.moderateMoveDJ(users[i].id, b);
-								}
-								if(API.getWaitListPosition(users[i].id) <= 50){
-									API.moderateMoveDJ(users[i].id, b);
-								}
-							}else{
-								return;
+							if(API.getWaitListPosition(users[i].id) === -1){
+								API.moderateAddDJ(users[i].id);
+								API.moderateMoveDJ(users[i].id, a);
 							}
-						}
-						if(users[i].username === NaN || null || undefined){
-							API.sendChat('/em [' + from + '] User not found!');
+							if(API.getWaitListPosition(users[i].id) >= 0){
+								API.moderateMoveDJ(users[i].id, a);
+							}
 						}
 					}
 				}else{
