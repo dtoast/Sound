@@ -197,7 +197,11 @@ function loadCommands(){
 			case '!help':
 				API.moderateDeleteChat(chatid);
 				API.sendChat('/em [' + from + '] My commands: http://astroshock.bl.ee/soundbot/');
-				break;
+			break;
+			
+			case '!web':
+				API.moderateDeleteChat(chatid);
+				API.sendChat('/em [' + from + '] AstroShock website: http://astroshock.bl.ee');
 				
 			case '!ping':
 				API.moderateDeleteChat(chatid);
