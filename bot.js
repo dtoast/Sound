@@ -192,10 +192,12 @@ var spinOutcome = [" got thier brains blasted out!"," dropped the ball!"," lost 
 
 function loadCommands(){
 	API.on(API.CHAT, function(a){
+		var arg = a.split(' ')[1];
+		var opt = a.lastIndexOf(' ') + 1;
 		if(a.message === '!lockskip' && API.getUser(a.fromID).permission >= 2){
 			API.moderateDeleteChat(a.chatID);
 			API.sendChat('/em [' + a.from + ' used lockskip]');
-			if(a.substr(10) === 'op'){
+			if(arg === 'op'){
 				API.sendChat('@' + API.getDJ().username + ' that song is op. Please pick another.');
 				if($('.cycle-toggle').hasClass('disabled')){
 					$(this).click();
