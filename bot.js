@@ -533,10 +533,25 @@ function loadCommands(){
 
 			case '!lockskip':
 				if(API.getUser(fromid).permission >= 2){
-					API.moderateDeleteChat(chatid);
-					API.sendChat("/em [" + from + " used lockskip]");
-					API.moderateLockWaitList(true, false);
-					API.moderateForceSkip();
+					if(str.split(' ')[1] === null || undefined || NaN){
+						API.moderateDeleteChat(chatid);
+						API.sendChat("/em [" + from + " used lockskip]");
+						API.moderateLockWaitList(true, false);
+						API.moderateForceSkip();
+					}
+					if(str.split(' ')[1] === 'op'){
+						API.sendChat('@' + API.getDJ().username + ' that song is op, please pick another.');
+						var a = new Array();
+						a.push(API.getDj());
+						API.moderateLockWaitList(true, false);
+						if($('.cycle-toggle').hasClass('disabled')){
+							$(this).click();
+						}
+						API.moderateForceSkip();
+						setTimeout(function(){
+							API.moderateMoveDj(a[1].id, 5);
+						}, 1000);
+					}
 				}else{
 					API.sendChat("/em [" + from + "] No permission!");
 				}
