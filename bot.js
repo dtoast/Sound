@@ -191,6 +191,37 @@ var spinTime = [60000, 78000, 120000, 138000, 180000, 198000, 240000, 258000];
 var spinOutcome = [" got thier brains blasted out!"," dropped the ball!"," lost spin!"," got hit in the face with the ball!"," fell ontop of the ball!"," got shot up into the air and hit the ground!"," died."];
 
 function loadCommands(){
+	API.on(API.CHAT, function(a){
+		if(a.message === '!lockskip' && API.getUser(a.fromID).permission >= 2){
+			API.moderateDeleteChat(a.chatID);
+			API.sendChat('/em [' + a.from + ' used lockskip]');
+			if(a.split(' ')[1] === 'op'){
+				API.sendChat('@' + API.getDJ().username + ' that song is op. Please pick another.');
+				if($('.cycle-toggle').hasClass('disabled')){
+					$(this).click();
+				}
+				var b = new Array();
+				b.push(API.getDJ().id);
+				API.moderateLockWaitList(true, false);
+				API.moderateForceSkip();
+				setTimeout(function(){
+					API.moderateMoveDj(b[1], 4);
+				}, 1000);
+			}else{
+				if($('.cycle-toggle').hasClass('disabled')){
+					$(this).click();
+				}
+				var b = new Array();
+				b.push(API.getDJ().id);
+				API.moderateLockWaitList(true, false);
+				API.moderateForceSkip();
+				setTimeout(function(){
+					API.moderateMoveDj(b[1], 4);
+				}, 1000);
+			}
+		}
+	});
+	
 	function userc(str, from, fromid, chatid, opt){
 		var users = API.getUsers();
 		switch(str){
@@ -531,32 +562,6 @@ function loadCommands(){
 				}
 				break;
 
-			case '!lockskip':
-				if(API.getUser(fromid).permission >= 2){
-					if(str.split(' ')[1] === null || undefined || NaN){
-						API.moderateDeleteChat(chatid);
-						API.sendChat("/em [" + from + " used lockskip]");
-						API.moderateLockWaitList(true, false);
-						API.moderateForceSkip();
-					}
-					if(str.split(' ')[1] === 'op'){
-						API.sendChat('@' + API.getDJ().username + ' that song is op, please pick another.');
-						var a = new Array();
-						a.push(API.getDj());
-						API.moderateLockWaitList(true, false);
-						if($('.cycle-toggle').hasClass('disabled')){
-							$(this).click();
-						}
-						API.moderateForceSkip();
-						setTimeout(function(){
-							API.moderateMoveDj(a[1].id, 5);
-						}, 1000);
-					}
-				}else{
-					API.sendChat("/em [" + from + "] No permission!");
-				}
-				break;
-
 			case '!lock':
 				if(API.getUser(fromid).permission >= 2){
 					API.moderateDeleteChat(chatid);
@@ -739,8 +744,6 @@ function loadCommands(){
 					API.sendChat('/em [' + from + '] Please don\'t ask for skips!');
 				}
 				break;
-				
-				default: API.moderateDeleteChat(chatid); API.sendChat('/em [' + from + '] Unknown command! Type !help for a list.');
 			}
 		}
 	API.on(API.CHAT, function(data) {
