@@ -195,7 +195,7 @@ function loadCommands(){
 		if(a.message === '!lockskip' && API.getUser(a.fromID).permission >= 2){
 			API.moderateDeleteChat(a.chatID);
 			API.sendChat('/em [' + a.from + ' used lockskip]');
-			if(a.split(' ')[1] === 'op'){
+			if(a.substr(10) === 'op'){
 				API.sendChat('@' + API.getDJ().username + ' that song is op. Please pick another.');
 				if($('.cycle-toggle').hasClass('disabled')){
 					$(this).click();
