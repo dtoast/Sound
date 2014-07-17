@@ -680,10 +680,6 @@ Copyright (c) 2014 FourBit (Pr0Code)
 
 	//Whitelist names have to be spelled EXacTlY as they actually are, else, it won't work.
 
-	var a = $('#chat-messages').last().text();
-	var u = API.getUsers();
-	var whitelist = ["Ambassador1", "Admin1", "Admin2", "Ambassador2"];
-
 	function antiRemove(){
 		var a = $('#chat-messages').last().text();
 		var whitelist = ["Ambassador1", "Admin1", "Admin2", "Ambassador2"];
