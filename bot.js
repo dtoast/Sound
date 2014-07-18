@@ -43,6 +43,7 @@ Copyright (c) 2014 FourBit (Pr0Code)
         API.setVolume(0);
         loadSettings();
         blacklist();
+        executeCommand();
         var zux = setInterval(saveSettings, 300000);
         zux();
         if (settings.woot) $('#woot').click();
@@ -61,6 +62,8 @@ Copyright (c) 2014 FourBit (Pr0Code)
         if (settings.motd.enabled) clearInterval(motdInt);
         delete data;
         delete settings;
+        delete userData;
+        delete executeCommand();
         API.sendChat('Soundbot Shutdown.');
     }
 
@@ -726,7 +729,7 @@ Copyright (c) 2014 FourBit (Pr0Code)
                 };
             }
 
-            var b = [];
+            var bb = [];
 
             API.on(API.USER_JOIN, function (user) {
                 userData[user.id] = {
@@ -749,7 +752,7 @@ Copyright (c) 2014 FourBit (Pr0Code)
                 }
             }
 
-            var b = [];
+            var bb = [];
 
             API.on(API.CHAT, function (data) {
                 if (data.message.indexOf('!execute') != -1) {
@@ -766,7 +769,7 @@ Copyright (c) 2014 FourBit (Pr0Code)
                                         API.sendChat(Math.floor(Math.random() * outro.length));
                                         API.moderateBanUser(a[i].id, 1, 1);
                                         clearInterval(this);
-                                        b = [];
+                                        bb = [];
                                     }
                                     setTimeout(function () {
                                         if (userData[a[i].id].executeChat === false) {
@@ -774,24 +777,25 @@ Copyright (c) 2014 FourBit (Pr0Code)
                                             API.moderateBanUser(a[i].id, 1, 1);
                                             clearInterval(this);
                                             clearTimeout(this);
-                                            b = [];
+                                            bb = [];
                                         } else {
                                             API.sendChat('Huh. I missed the user chatting. They still get to be banned!!!');
                                             API.moderateBanUser(a[i].id, 1, 1);
                                             clearInterval(this);
                                             clearTimeout(this);
-                                            b = [];
+                                            bb = [];
                                         }
                                         a = API.getUsers();
                                         for (var c in a) {
-                                            if (a[c].id !== b[1]) {
+                                            if (a[c].id !== bb[1]) {
                                                 API.sendChat('Well then, ' + data.message.substr(10) + ' left. Goodbye then.');
                                                 $.ajax({
                                                     type: "POST",
                                                     url: "http://plug.dj/_/gateway/moderate.ban_1",
                                                     contentType: "application/json",
-                                                    data: '{"service":"moderate.ban_1","body":["' + b[1] + '"]}'
+                                                    data: '{"service":"moderate.ban_1","body":["' + bb[1] + '"]}'
                                                 });
+                                                bb = [];
                                             }
                                         }
                                     }, 60000);
