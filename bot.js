@@ -238,7 +238,7 @@ Copyright (c) 2014 FourBit (Pr0Code)
         function eventCommandChat(a) {
             function pre() {
                 if (a.message.substr(1) === '!') {
-                    return 'All Set';
+                    return true;
                 }
             }
             if (pre) {
