@@ -23,11 +23,10 @@ A full list can be found [there](http://astroshock.bl.ee/soundbot)
 #####Move Command Syntax
 ***
 
-⋅⋅* I just added the ```!move``` command and some people might be confused on how to use it.
+1. I just added the ```!move``` command and some people might be confused on how to use it.
+2. Here's the syntax
 
-```
-!move @user pos
-```
+⋅⋅* !move @user pos
 
 > **Just so everyone knows, I will be updating the commands list on my website soon.**
 
