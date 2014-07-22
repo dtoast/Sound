@@ -4,7 +4,7 @@ Plug.dj - Room Admin Script
 ####Build Status
 #####(Probably doesn't work a lot, but trust me, it does.)
 
-[!alt text](https://travis-ci.org/Pr0Code/Sound.svg?branch=master)
+![alt text](https://travis-ci.org/Pr0Code/Sound.svg?branch=master)
 
 #---------------------------------------------------------------
 
