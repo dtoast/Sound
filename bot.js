@@ -19,6 +19,10 @@ Copyright (c) 2014 FourBit (Pr0Code)
             enabled: true,
             limit: 3600000
         },
+        songLength: {
+            enabled: true,
+            limit: 10
+        },
         blacklist: true,
         stats: true,
         historySkip: true,
@@ -205,10 +209,22 @@ Copyright (c) 2014 FourBit (Pr0Code)
         if(settings.stats){
             var a = obj.lastPlay;
             if(typeof a === 'undefined') return void (0);
-            var b = obj.postive;
-            var c = obj.curates;
-            var d = obj.negative;
-            API.sendChat('/em ');
+            var b = a.score.postive;
+            var c = a.score.curates;
+            var d = a.score.negative;
+            API.sendChat('/em ' + a.media._previousAttributes.author + ' - ' +  a.media._previousAttributes.title + ' received ' + b + ' woots, ' + c + ' grabs, and ' + d + ' mehs!');
+        }
+        if(settings.songLength.enabled && obj.media.duration > settings.songLength.limit * 60){
+            API.sendChat('@' + API.getDJ().username + ' your song is greater than the song limit (10 minutes)!');
+            var a = API.getDJ().id;
+            var b = new Array();
+            b.push(a);
+            API.moderateLockWaitList();
+            API.moderateForceSkip();
+            API.sendChat('/em Adding user...');
+            API.moderateAddDJ(b[1]);
+            API.moderateMoveDJ(b[1], 3);
+            b = [];
         }
     }
 
@@ -821,4 +837,5 @@ Copyright (c) 2014 FourBit (Pr0Code)
 
         init();
 
-    }).call(this);
+}).call(this);
+//pls
