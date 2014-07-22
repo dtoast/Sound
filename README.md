@@ -20,7 +20,8 @@ A full list can be found [there](http://astroshock.bl.ee/soundbot)
 1. I just added the ```!move``` command.
 2. Some people might be confused on how to use it.
 3. Here's the syntax
-⋅⋅+ **!move @user pos**
+
+``` !move @user 1-50 ```
 
 > **Just so everyone knows, I will be updating the commands list on my website soon.**
 
