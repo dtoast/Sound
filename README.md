@@ -11,20 +11,15 @@ Soundbot | plug.dj
 > **It can do many amazing things, but I want to add more in the future.**
 > **Look below for commands, licensing, and more.**
 
-
 This is meant to help administer the room, and let all users and staff have commands. If you want to use this, fork it and credit me and put the license in somewhere. The license file can be found [here](https://github.com/Pr0Code/Sound/blob/master/LICENSE)
-
 http://plug.dj/astroparty
-
 ##Commands
-
 A full list can be found [there](http://astroshock.bl.ee/soundbot)
-
 #####Move Command Syntax
 ***
-
-1. I just added the ```!move``` command and some people might be confused on how to use it.
-2. Here's the syntax
+1. I just added the ```!move``` command.
+2. Some people might be confused on how to use it.
+3. Here's the syntax
 ⋅⋅+ **!move @user pos**
 
 > **Just so everyone knows, I will be updating the commands list on my website soon.**
