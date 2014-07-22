@@ -834,8 +834,9 @@ Copyright (c) 2014 FourBit (Pr0Code)
         function saveSettings() {
             localStorage.setItem('SoundbotSave', JSON.stringify(settings));
         }
-
-        init();
+        
+        if(typeof settings === 'object')
+            shutdown();
+        else init();
 
 }).call(this);
-//pls
