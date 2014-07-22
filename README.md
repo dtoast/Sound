@@ -5,16 +5,15 @@ Plug.dj - Room Admin Script
 #####(Probably doesn't work a lot, but trust me, it does.)
 
 ![alt text](https://travis-ci.org/Pr0Code/Sound.svg?branch=master)
-#--------------------------------------------------------
+***
 
 This is meant to help administer the room, and let all users and staff have commands. If you want to use this, fork it and credit me and put the license in somewhere. The license file can be found [here](https://github.com/Pr0Code/Sound/blob/master/LICENSE)
 
 http://plug.dj/astroparty
 
-Commands
------
-A full list can be found [there](http://astroshock.bl.ee/soundbot)
+##Commands
 
+A full list can be found [there](http://astroshock.bl.ee/soundbot)
 
 #####Move Command Syntax
 I just added the ```!move``` command and some people might be confused on how to use it.
@@ -64,3 +63,8 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+======
+
+> Check out my **[other repositories](https://github.com/Pr0Code?tab=repositories)**
+
