@@ -745,8 +745,8 @@ Copyright (c) 2014 FourBit (Pr0Code)
             function hasChatted() {
                 var z = API.getUsers();
                 for (var x in z) {
-                    for (var n = 0; n < b.length; n++) {
-                        if (z[x].username == b[n]) return 'userHasChatted';
+                    for (var n = 0; n < bb.length; n++) {
+                        if (z[x].username == bb[n]) return 'userHasChatted';
                         else return;
                     }
                 }
@@ -761,7 +761,7 @@ Copyright (c) 2014 FourBit (Pr0Code)
                         for (var i in a) {
                             if (a[i].username === data.message.substr(10)) {
                                 API.sendChat('/em [' + data.from + '][!execute] @' + data.message.substr(10) + ' you are being executed for commiting crimes against this community. Any last words?');
-                                b.push(a[i].id);
+                                bb.push(a[i].id);
                                 userData[a[i].id].warn = true;
                                 setInterval(function () {
                                     if (hasChatted() === 'userHasChatted') {
