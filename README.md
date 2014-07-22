@@ -7,9 +7,9 @@ Soundbot
 ![alt text](https://travis-ci.org/Pr0Code/Sound.svg?branch=master)
 ***
 
-> **Soundbot is a plug.dj script that helps staff and users
-> **It can do many amazing things, but I want to add more in the future.
-> **Look below for commands, licensing, and more.
+> **Soundbot is a plug.dj script that helps staff and users**
+> **It can do many amazing things, but I want to add more in the future.**
+> **Look below for commands, licensing, and more.**
 
 
 This is meant to help administer the room, and let all users and staff have commands. If you want to use this, fork it and credit me and put the license in somewhere. The license file can be found [here](https://github.com/Pr0Code/Sound/blob/master/LICENSE)
