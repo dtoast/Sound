@@ -71,4 +71,4 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ======
 
-> Thanks to **[this wiki for providing me some syntax for Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#images)**
+> Thanks to **[this wiki for providing me some syntax for Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)**
