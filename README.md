@@ -61,7 +61,7 @@ AstroShock
 License
 -----
 
-Copyright (c) 2014, Jack Labbe (FourBitus)
+Copyright (c) 2014, Pr0Code (FourBit)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
