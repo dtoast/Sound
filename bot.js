@@ -779,6 +779,8 @@ Please refer to the Readme.md for license stuff
             }
 
             var bb = [];
+            
+            const outro = ["Goodbye.", "will not be missed.", "will be missed.", ":cat:", "I will not miss you >:D", ":3", "bye.", "See ya.", "I'll see you again, never."];
 
             API.on(API.CHAT, function (data) {
                 if (data.message.indexOf('!execute') != -1) {
