@@ -198,10 +198,18 @@ Copyright (c) 2014 FourBit (Pr0Code)
         });
     }
 
-    function eventDjAdvance() {
+    function eventDjAdvance(obj) {
         if (settings.woot) $('#woot').click();
         blacklist();
         hist();
+        if(settings.stats){
+            var a = obj.lastPlay;
+            if(typeof a === 'undefined') return void (0);
+            var b = obj.postive;
+            var c = obj.curates;
+            var d = obj.negative;
+            API.sendChat('/em ');
+        }
     }
 
     function listenFor(a, b) {
