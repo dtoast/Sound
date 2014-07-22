@@ -1,4 +1,4 @@
-Soundbot
+Soundbot | plug.dj
 ======
 
 ####Build Status
