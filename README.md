@@ -15,46 +15,15 @@ Commands
 -----
 A full list can be found [there](http://astroshock.bl.ee/soundbot)
 
-Here is a list of commands (they are current, unless i get too lazy to update :p)
 
-| User Commands |
-
-```
-!help,
-!fight,
-!staff,
-!theme,
-!emoji,
-!cookie,
-!ba,
-!link,
-!ask,
-```
-
-| Bouncer Commands |
+#####Move Command Syntax
+I just added the ```!move``` command and some people might be confused on how to use it.
 
 ```
-!cycle,
-!kick,
-!mute,
-!unmute,
-!ban,
-!settings,
-!lock,
-!unlock,
-!lskip,
-!wlclear,
-!clear,
-!skip,
+!move @user pos
 ```
 
-| Manager Commands |
-
-```
-
-Coming Soon!
-
-```
+> **Just so everyone knows, I will be updating the commands list on my website soon.**
 
 Other Stuff
 -----
