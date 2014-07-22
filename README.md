@@ -6,7 +6,7 @@ Plug.dj - Room Admin Script
 
 [!alt text](https://travis-ci.org/Pr0Code/Sound.svg?branch=master)
 
-#--------------------------------------------------------------------
+#---------------------------------------------------------------
 
 This is meant to help administer the room, and let all users and staff have commands. If you want to use this, fork it and credit me and put the license in somewhere. The license file can be found [here](https://github.com/Pr0Code/Sound/blob/master/LICENSE)
 
