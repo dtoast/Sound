@@ -30,7 +30,8 @@ Please refer to the Readme.md for license stuff
         stats: true,
         historySkip: true,
         party: false,
-        roulette: false
+        roulette: false,
+        userCmds: true
     };
 
     function loadSettings() {
@@ -156,7 +157,7 @@ Please refer to the Readme.md for license stuff
     function motd() {
         if (settings.motd.enabled) {
             var motdInt = setInterval(function () {
-                API.sendChat('/em ' + [Math.floor(Math.random() * motdMsg.length)]);
+                API.sendChat('/em ' + motdMsg[Math.floor(Math.random() * motdMsg.length)]);
             }, settings.motd.interval);
         }
     }
@@ -265,13 +266,13 @@ Please refer to the Readme.md for license stuff
             });
         }
 
-        function eventCommandChat(a) {
-            function pre() {
-                if (a.message.substr(1) === '!') {
+        function eventCommandChat(a){
+            function pre(){
+                if(a.message.substr(1) === '!'){
                     return true;
                 }
             }
-            if (pre) {
+            if(pre){
                 var str = a.message.substr(1).trim();
                 var opt = str.split('@') + 1;
                 var arg = str.lastIndexOf(' ') + 1;
@@ -279,10 +280,17 @@ Please refer to the Readme.md for license stuff
                 var from = a.from;
                 var fromid = a.fromID;
                 var chatid = a.chatID;
-                var check = function () {
-                        if (API.getUser(a.fromID).permission >= 2) {
+                var check = function(){
+                        if(API.getUser(a.fromID).permission >= 2 && settings.userCmds){
                             return true;
-                        } else {
+                        }
+                        else if(API.getUser(a.fromID).permission >= 2 && !settings.userCmds){
+                            return true;
+                        }
+                        else if(API.getUser(a.fromID).permission <= 0 && settings.userCmds){
+                            return true;
+                        }
+                        else if(API.getUser(a.fromID).permission <= 0 && !settings.userCmds){
                             return false;
                         }
                     };
@@ -728,6 +736,48 @@ Please refer to the Readme.md for license stuff
                         }
                     }
                     break;
+                case 'motd':
+                        if(check()){
+                            if(noarg === 'on' || noarg === 'off' || noarg === 'enable' || noarg === 'disable'){
+                                settings.motd.enabled = false;
+                                clearInterval(motdInt);
+                                API.sendChat('/em [' + from + '] Motd disabled.');
+                            }
+                            if(noarg === null || noarg === undefined){
+                                API.sendChat('/em [' + from + '] Current message: ' + motdMsg[Math.floor(Math.random() * motdMsg.length)]);
+                            }
+                            if(noarg !== null || noarg !== undefined || noarg !== 'on' || noarg !== 'off' || noarg !== 'enable' || noarg !== 'disable'){
+                                motdMsg = [];
+                                motdMsg = [noarg];
+                                clearInterval(motdInt);
+                                motd();
+                            }
+                        }
+                        break;
+                    case 'cmdsettings':
+                        if(check()){
+                            if(noarg !== null || noarg !== undefined){
+                                API.sendChat('/em [' + from + '] Command Settings | Usercmds: ' + settings.userCmds);
+                            }
+                            if(noarg === 'users'){
+                                API.sendChat('/em [' + from + '] Users: ' + settings.userCmds + ' | on/enable/off/disable');
+                            }
+                            if(noarg === 'users' && arg === 'on' || arg === 'enable'){
+                                if(!settings.userCmds){
+                                    settings.userCmds = true;
+                                    API.sendChat('/em [' + from + '] Users can now use commands.');
+                                }else{
+                                    API.sendChat('/em [' + from + '] Users already have commands!');
+                                }
+                            }
+                            if(noarg === 'users' && arg === 'off' || arg === 'disable'){
+                                settings.userCmds = false;
+                                API.sendChat('/em [' + from + '] Users no longer have commands.');
+                            }else{
+                                API.sendChat('/em [' + from + '] User commands are already disabled!');
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -780,7 +830,7 @@ Please refer to the Readme.md for license stuff
 
             var bb = [];
 
-            API.on(API.USER_JOIN, function (user) {
+            API.on(API.USER_JOIN, function(user) {
                 userData[user.id] = {
                     warn: false,
                     executeChat: false
