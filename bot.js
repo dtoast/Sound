@@ -11,6 +11,7 @@ Please refer to the Readme.md for license stuff
 */
 (function () {
     var motdMsg = ["Welcome to the FourBit plug.dj room!"];
+    var joinTime = Date.getTime();
     var settings = {
         woot: true,
         motd: {
@@ -578,7 +579,6 @@ Please refer to the Readme.md for license stuff
                     break;
                 case 'grab':
                     if (check()) {
-                        $('.icon-curate').click();
                         $($('.curate').children('.menu').children().children()[0]).mousedown();
                     }
                     break;
@@ -659,6 +659,7 @@ Please refer to the Readme.md for license stuff
                                 API.moderateBanUser(u[i].id, 1, API.BAN.HOUR);
                                 setTimeout(function () {
                                     API.moderateUnbanUser(u[i].id);
+                                    API.moderateUnBanUser(u[i].id);
                                     API.sendChat('/em [' + from + '] Kicked user can login now.');
                                 }, 15000);
                             }
@@ -701,6 +702,28 @@ Please refer to the Readme.md for license stuff
                             if (u[i].username === opt) {
                                 API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a manager!');
                                 API.moderateSetRole(u[i].id, API.ROLE.MANAGER);
+                            }
+                        }
+                    }
+                    break;
+                case 'mehs':
+                    if(check()){
+                        var z = new Array();
+                        for(var i = 0; i < u.length; i++){
+                            for(var c = 0; c < u.length; c++){
+                                if(u[i].vote === -1){
+                                    z.push(u[i].username);
+                                }
+                                if(u[c].vote === -1){
+                                    z.push(u[c].username);
+                                }
+                                if(API.getRoomScore().negative.length === z.length){
+                                    API.sendChat('/em [' + from + '] Users who meh\'d: ' + z[x].join(' ') + '.');
+                                    z = [];
+                                }else{
+                                    API.sendChat('/em [' + from + '] Uh oh! I can\'t retrive mehs!');
+                                    z = [];
+                                }
                             }
                         }
                     }
@@ -780,7 +803,7 @@ Please refer to the Readme.md for license stuff
 
             var bb = [];
             
-            const outro = ["Goodbye.", "will not be missed.", "will be missed.", ":cat:", "I will not miss you >:D", ":3", "bye.", "See ya.", "I'll see you again, never."];
+            var outro = ["Goodbye.", "will not be missed.", "will be missed.", ":cat:", "I will not miss you >:D", ":3", "bye.", "See ya.", "I'll see you again, never."];
 
             API.on(API.CHAT, function (data) {
                 if (data.message.indexOf('!execute') != -1) {
@@ -805,12 +828,14 @@ Please refer to the Readme.md for license stuff
                                             API.moderateBanUser(a[i].id, 1, 1);
                                             clearInterval(this);
                                             clearTimeout(this);
+                                            API.off(API.CHAT, this);
                                             bb = [];
                                         } else {
                                             API.sendChat('Huh. I missed the user chatting. They still get to be banned!!!');
                                             API.moderateBanUser(a[i].id, 1, 1);
                                             clearInterval(this);
                                             clearTimeout(this);
+                                            API.off(API.CHAT, this);
                                             bb = [];
                                         }
                                         a = API.getUsers();
@@ -823,6 +848,7 @@ Please refer to the Readme.md for license stuff
                                                     contentType: "application/json",
                                                     data: '{"service":"moderate.ban_1","body":["' + bb[1] + '"]}'
                                                 });
+                                                API.off(API.CHAT, this);
                                                 bb = [];
                                             }
                                         }
@@ -835,12 +861,9 @@ Please refer to the Readme.md for license stuff
             });
         }
 
-        function saveSettings() {
-            localStorage.setItem('SoundbotSave', JSON.stringify(settings));
-        }
+        function saveSettings(){localStorage.setItem('SoundbotSave', JSON.stringify(settings));}
         
-        if(typeof settings === 'object')
-            shutdown();
+        if(typeof settings === 'object') shutdown();
         else init();
 
 }).call(this);
