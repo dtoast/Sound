@@ -738,10 +738,16 @@ Please refer to the Readme.md for license stuff
                     break;
                 case 'motd':
                         if(check()){
-                            if(noarg === 'on' || noarg === 'off' || noarg === 'enable' || noarg === 'disable'){
+                            if(noarg === 'off' || noarg === 'disable'){
                                 settings.motd.enabled = false;
                                 clearInterval(motdInt);
                                 API.sendChat('/em [' + from + '] Motd disabled.');
+                            }
+                            if(noarg === 'on' || noarg === 'enable'){
+                                  settings.motd.enable = true;
+                                  clearInterval(motdInt);
+                                  motd();
+                                  API.sendChat('/em [' + from + '] Motd enabled.');
                             }
                             if(noarg === null || noarg === undefined){
                                 API.sendChat('/em [' + from + '] Current message: ' + motdMsg[Math.floor(Math.random() * motdMsg.length)]);
