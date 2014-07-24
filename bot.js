@@ -233,7 +233,7 @@ Please refer to the Readme.md for license stuff
     }
 
     function listenFor(a, b) {
-        API.on(API.CHAT, function (z) {
+        API.once(API.CHAT, function (z) {
             a = a.trim();
             b = b.trim();
             for (var i = 0; i < u.length; i++) {
@@ -242,7 +242,7 @@ Please refer to the Readme.md for license stuff
                         if (z.fromID === a || z.fromID === u[i].id && b === false) {
                             return true;
                         } else {
-                            if (z.fromID === a || z.fromID === u[i].id && b === false) {
+                            if (z.fromID !== a || z.fromID !== u[i].id && b === false) {
                                 return false;
                             }
                         }
