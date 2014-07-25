@@ -12,6 +12,7 @@ Please refer to the Readme.md for license stuff
 (function () {
     var motdMsg = ["Welcome to the FourBit plug.dj room!"];
     var joinTime = Date.getTime();
+    var blacklist = ['#SELFIE (Official Music Video)', 'Troll Song'];
     var settings = {
         woot: true,
         motd: {
@@ -189,7 +190,7 @@ Please refer to the Readme.md for license stuff
         }
         if(settings.blacklist){
             var a = obj.media.title;
-            for(var i = 0; i < blackdlist.length; i++){
+            for(var i = 0; i < blacklist.length; i++){
                 if(blacklist[i].title === a){
                     API.sendChat('@' + API.getDJ().username + ' that song is blacklisted!');
                     var b = new Array();
@@ -199,7 +200,7 @@ Please refer to the Readme.md for license stuff
                     }
                     API.moderateLockWaitList(true, false);
                     API.moderateForceSkip();
-                    API.moderateAddDJ(b[1], 5);
+                    API.moderateMoveDJ(b[1], 5);
                     b = [];
                 }
             }
@@ -217,10 +218,12 @@ Please refer to the Readme.md for license stuff
             var a = API.getDJ().id;
             var b = new Array();
             b.push(a);
-            API.moderateLockWaitList();
+            if($('.cycle-toggle').hasClass('disabled')){
+                $(this).click()l
+            }
+            API.moderateLockWaitList(true, false);
             API.moderateForceSkip();
             API.sendChat('/em Adding user...');
-            API.moderateAddDJ(b[1]);
             API.moderateMoveDJ(b[1], 3);
             b = [];
         }
@@ -267,10 +270,10 @@ Please refer to the Readme.md for license stuff
                 }
             }
             if(pre){
-                var str = a.message.substr(1).trim();
+                var str = a.message.substr(2).trim();
                 var opt = str.split('@') + 1;
                 var arg = str.lastIndexOf(' ') + 1;
-                var noarg = str.split(' ') + 1;
+                var noarg = str.split(' ')[1];
                 var from = a.from;
                 var fromid = a.fromID;
                 var chatid = a.chatID;
@@ -292,6 +295,9 @@ Please refer to the Readme.md for license stuff
                 var roul = new Array();
                 var tempRoul = new Array();
                 var safeRoul = new Array();
+                arg = arg.toLowerCase();
+                noarg = noarg.toLowerCase();
+                str = str.toLowerCase();
                 switch (str) {
                 case 'help': if(check()){ API.sendChat('/em [' + from + '] Soundbot was just recoded, so please wait for commands. Ask staff for questions.') }break;
                 case 'web': if(check()){ API.sendChat('/em [' + from + '] FourBit website: Soon!') }break;
@@ -761,7 +767,7 @@ Please refer to the Readme.md for license stuff
                         break;
                     case 'cmdsettings':
                         if(check()){
-                            if(noarg !== null || noarg !== undefined){
+                            if(noarg !== null || noarg !== undefined || noarg === undefined || noarg === null){
                                 API.sendChat('/em [' + from + '] Command Settings | Usercmds: ' + settings.userCmds);
                             }
                             if(noarg === 'users'){
@@ -780,6 +786,178 @@ Please refer to the Readme.md for license stuff
                                 API.sendChat('/em [' + from + '] Users no longer have commands.');
                             }else{
                                 API.sendChat('/em [' + from + '] User commands are already disabled!');
+                            }
+                        }
+                        break;
+                    case 'set':
+                        if(check()){
+                            if(noarg !== null || noarg !== undefined || noarg === undefined || noarg === null){
+                                API.sendChat('/em [' + from + '] Items that can be set: woot, motd, antiafk, songlength, blacklist, stats, historyskip');
+                            }
+                            if(noarg === 'woot'){
+                                if(arg === 'on' || arg === 'enable'){
+                                    if(!settings.woot){
+                                        settings.woot = true;
+                                        saveSettings();
+                                        $('#woot').click();
+                                        API.sendChat('/em [' + from + '] Woot is now enabled.');
+                                    }else{
+                                        API.sendChat('/em [' + from + '] It seems as if autowoot for me is already enabled!');
+                                    }
+                                }else{
+                                    if(arg === 'off' || arg === 'disable'){
+                                        if(settings.woot){
+                                            settings.woot = false;
+                                            saveSettings();
+                                            API.sendChat('/em [' + from + '] Woot is now disabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] It seems as if autowoot for me is already disabled!');
+                                        }
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                    }
+                                }
+                            }
+                            if(noarg === 'motd'){
+                                if(arg === 'on' || arg === 'enable'){
+                                    if(!settings.motd.enabled){
+                                        settings.motd.enabled = true;
+                                        saveSettings();
+                                        clearInterval(motdInt);
+                                        motd();
+                                        API.sendChat('/em [' + from + '] Motd is now enabled.');
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Motd is already enabled!');
+                                    }
+                                }else{
+                                    if(arg === 'off' || arg === 'disable'){
+                                        if(settings.motd.enabled){
+                                            settings.motd.enabled = false;
+                                            saveSettings();
+                                            clearInterval(motdInt);
+                                            API.sendChat('/em [' + from + '] Motd is now disabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Motd is already disabled!');
+                                        }
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                    }
+                                }
+                            }
+                            if(noarg === 'antiafk'){
+                                if(arg === 'on' || arg === 'enable'){
+                                    if(!settings.antiafk.enabled){
+                                        settings.antiafk.enabled = true;
+                                        saveSettings();
+                                        API.sendChat('/em [' + from + '] AntiAFK is now enabled.');
+                                    }else{
+                                        API.sendChat('/em [' + from + '] AntiAFK is already enabled!');
+                                    }
+                                }else{
+                                    if(arg === 'off' || arg === 'disable'){
+                                        if(settings.antiafk.enabled){
+                                            settings.antiafk.enabled = false;
+                                            saveSettings();
+                                            API.sendChat('/em [' + from + '] AntiAFK is now disabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] AntiAFK is already disabled!');
+                                        }
+                                    }
+                                }else{
+                                    API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                }
+                            }
+                            if(noarg === 'songlength'){
+                                if(arg === 'on' || arg === 'enable'){
+                                    if(!settings.songLength.enabled){
+                                        settings.songLength.enabled = true;
+                                        saveSettings();
+                                        API.sendChat('/em [' + from + '] Songlength-check now enabled.');
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Songlength-check is already enabled!');
+                                    }
+                                }else{
+                                    if(arg === 'off' || arg === 'disable'){
+                                        if(settings.songLength.enabled){
+                                            settings.songLength.enabled = false;
+                                            saveSettings();
+                                            API.sendChat('/em [' + from + '] Songlength-check now disabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Sondlength-check is already disabled!');
+                                        }
+                                    }
+                                }else{
+                                    API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                }
+                            }
+                            if(noarg === 'blacklist'){
+                                if(arg === 'on' || arg === 'enable'){
+                                    if(!settings.blacklist){
+                                        settings.blacklist = true;
+                                        saveSettings();
+                                        API.sendChat('/em [' + from + '] Blacklist now enabled (will resume on dj-advance).');
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Blacklist is already enabled!');
+                                    }
+                                }else{
+                                    if(arg === 'off' || arg === 'disable'){
+                                        if(settings.blacklist){
+                                            settings.blacklist = false;
+                                            saveSettings();
+                                            API.sendChat('/em [' + from + '] Blacklist now disabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Blacklist is already disabled!');
+                                        }
+                                    }
+                                }else{
+                                    API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                }
+                            }
+                            if(noarg === 'stats'){
+                                if(arg === 'on' || arg === 'enable'){
+                                    if(!settings.stats){
+                                        settings.stats = true;
+                                        saveSettings();
+                                        API.sendChat('/em [' + from + '] Stats now enabled.');
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Stats are already enabled!');
+                                    }
+                                }else{
+                                    if(arg === 'off' || arg === 'disable'){
+                                        if(settings.stats){
+                                            settings.stats = false;
+                                            saveSettings();
+                                            API.sendChat('/em [' + from + '] Stats now disabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Stats are already disabled!');
+                                        }
+                                    }
+                                }else{
+                                    API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                }
+                            }
+                            if(noarg === 'historyskip'){
+                                if(arg === 'on' || arg === 'enable'){
+                                    if(!settings.historySkip){
+                                        settings.historySkip = true;
+                                        saveSettings();
+                                        API.sendChat('/em [' + from + '] HistorySkip now enabled (will resume on dj-advance).');
+                                    }else{
+                                        API.sendChat('/em [' + from + '] HistorySkip is already enabled!');
+                                    }
+                                }else{
+                                    if(arg === 'off' || arg === 'disable'){
+                                        if(settings.historySkip){
+                                            settings.historySkip = false;
+                                            saveSettings();
+                                            API.sendChat('/em [' + from + '] HistorySkip now disabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from  + '] HistorySkip is already disabled!');
+                                        }
+                                    }
+                                }else{
+                                    API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                }
                             }
                         }
                         break;
