@@ -45,6 +45,7 @@ Please refer to the Readme.md for license stuff
     function init() {
         API.on(API.CHAT, eventDataChat);
         API.on(API.CHAT, eventCommandChat);
+        API.on(API.CHAT, eventFilterChat);
         API.on(API.USER_JOIN, eventJoin);
         API.on(API.USER_LEAVE, eventLeave);
         API.on(API.DJ_ADVANCE, eventDjAdvance);
@@ -61,8 +62,10 @@ Please refer to the Readme.md for license stuff
     function shutdown() {
         API.off(API.CHAT, eventDataChat);
         API.off(API.CHAT, eventCommandChat);
-        API.off(API.CHAT, eventJoin);
+        API.off(API.CHAT, eventFilterChat);
+        API.off(API.USER_JOIN, eventJoin);
         API.off(API.USER_LEAVE, eventLeave);
+        API.off(API.DJ_ADVANCE, eventDjAdvance);
         API.setVolume(15);
         saveSettnigs();
         clearInterval(zux);
@@ -125,13 +128,13 @@ Please refer to the Readme.md for license stuff
                 if (w > settings.antiAfk.limit && !data[a[i].id].warning) {
                     API.sendChat('@' + z[i].username + ' AFK Time: ' + v + ' minutes. Chat soon or I will remove you.');
                     data[a[i].id].warning = true;
-                    setTimeout(function () {
+                    setTimeout(function() {
                         z = API.getWaitList();
                         for (var c in z) {
                             if (data[z[e].id].warning) {
                                 API.sendChat('@' + z[e].username + ' last warning (AFK).');
                                 data[z[e].id].removed = true;
-                                setTimeout(function () {
+                                setTimeout(function() {
                                     z = API.getWaitList();
                                     for (var e in z) {
                                         if (z[e].warning && z[e].removed) {
@@ -159,57 +162,48 @@ Please refer to the Readme.md for license stuff
             var motdInt = setInterval(function () {
                 API.sendChat('/em ' + motdMsg[Math.floor(Math.random() * motdMsg.length)]);
             }, settings.motd.interval);
+            motdInt();
         }
     }
-
-    //Blacklist
-
-    function blacklist() {
-        var a = API.getMedia().title;
-        for (var i = 0; i < blacklist.length; i++) {
-            if (blacklist[i] === a) {
-                API.sendChat('@' + API.getDJ().username + ' that song is blacklisted!');
-                var b = new Array();
-                b.push(API.getDJ().id);
-                if ($('.cycle-toggle').hasClass('disabled')) {
-                    $(this).click();
+    
+    function eventDjAdvance(obj) {
+        if (settings.woot) $('#woot').click();
+        if(settings.historySkip){
+            API.once(API.HISTORY_UPDATE, function(a){
+                var b = obj.media.title;
+                for(var i = 0; i < a.length; i++){
+                    if(a[i].title === b){
+                        API.sendChat('@' + API.getDJ().username + ' that song in the history!');
+                        var c = new Array();
+                        c.push(API.getDJ().id);
+                        if($('.cycle-toggle').hasClass('disabled')){
+                            $(this).click();
+                        }
+                        API.moderateLockWaitList(true, false);
+                        API.moderateForceSkip();
+                        API.moderateMoveDJ(b[1], 5);
+                        c = [];
+                    }
                 }
-                API.moderateLockWaitList(true, false);
-                API.moderateForceSkip();
-                for (var c = 0; c < b.length; c++) {
-                    setTimeout(function () {
-                        API.moderateMoveDJ(b[c], 4);
-                    }, 500);
-                }
-            }
+            });
         }
-    }
-
-    //History skip
-
-    function hist() {
-        API.on(API.HISTORY_UPDATE, function (a) {
-            var b = API.getMedia().title;
-            for (var i = 0; i < a.length; ++i) {
-                if (a[i] === b) {
-                    API.sendChat('@' + API.getDJ().username + ' that song is in history!');
-                    var c = new Array();
-                    c.push(API.getDJ().id);
-                    if ($('.cycle-toggle').hasClass('disabled')) {
+        if(settings.blacklist){
+            var a = obj.media.title;
+            for(var i = 0; i < blackdlist.length; i++){
+                if(blacklist[i].title === a){
+                    API.sendChat('@' + API.getDJ().username + ' that song is blacklisted!');
+                    var b = new Array();
+                    b.push(API.getDJ().id);
+                    if($('.cycle-toggle').hasClass('disabled')){
                         $(this).click();
                     }
                     API.moderateLockWaitList(true, false);
                     API.moderateForceSkip();
-                    API.moderateMoveDJ(b[1], 5);
+                    API.moderateAddDJ(b[1], 5);
+                    b = [];
                 }
             }
-        });
-    }
-
-    function eventDjAdvance(obj) {
-        if (settings.woot) $('#woot').click();
-        blacklist();
-        hist();
+        }
         if(settings.stats){
             var a = obj.lastPlay;
             if(typeof a === 'undefined') return void (0);
@@ -299,62 +293,59 @@ Please refer to the Readme.md for license stuff
                 var tempRoul = new Array();
                 var safeRoul = new Array();
                 switch (str) {
-                case 'help':
-                    API.sendChat('/em [' + from + '] Soundbot was just recoded, so please wait for commands. Ask staff for questions.');
-                    break;
-                case 'web':
-                    API.sendChat('/em [' + from + '] FourBit website: NaN');
-                    break;
-                case 'ping':
-                    API.sendChat('/em [' + from + '] Pong!');
-                    break;
+                case 'help': if(check()){ API.sendChat('/em [' + from + '] Soundbot was just recoded, so please wait for commands. Ask staff for questions.') }break;
+                case 'web': if(check()){ API.sendChat('/em [' + from + '] FourBit website: Soon!') }break;
+                case 'ping': if(check()){ API.sendChat('/em [' + from + '] Pong!') }break;
                 case 'link':
-                    if (API.getMedia().format === 1) {
-                        API.sendChat('/em [' + from + '] Link to current song: http://youtu.be/' + API.getMedia().cid);
-                    } else {
-                        var z = API.getMedia().cid;
-                        SC.get('/tracks', {
-                            ids: id,
-                        }, function (tracks) {
-                            API.sendChat('/em [' + from + '] Link to current song: ' + tracks[0].permalink_url);
-                        });
+                    if(check()){
+                        if (API.getMedia().format === 1) {
+                            API.sendChat('/em [' + from + '] Link to current song: http://youtu.be/' + API.getMedia().cid);
+                        } else {
+                            var z = API.getMedia().cid;
+                            SC.get('/tracks', {
+                                ids: id,
+                            }, function (tracks) {
+                                API.sendChat('/em [' + from + '] Link to current song: ' + tracks[0].permalink_url);
+                            });
+                        }
                     }
                     break;
                 case 'ad':
                     API.sendChat('/em [' + from + '] ADBlock (the version that isn\'t bad): https://www.getadblock.com');
                     break;
                 case 'pic':
-
-                    function t(e, z) {
-                        if (e === null) {
-                            return "";
+                    if(check()){
+                        function t(e, z) {
+                            if (e === null) {
+                                return "";
+                            }
+                            z = z === null ? "big" : z;
+                            var n;
+                            var r;
+                            r = e.match("[\\?&]v=([^&#]*)");
+                            n = r === null ? e : r[1];
+                            if (z == "small") {
+                                return "http://img.youtube.com/vi/" + n + "/2.jpg";
+                            } else {
+                                return "http://img.youtube.com/vi/" + n + "/0.jpg";
+                            }
                         }
-                        z = z === null ? "big" : z;
-                        var n;
-                        var r;
-                        r = e.match("[\\?&]v=([^&#]*)");
-                        n = r === null ? e : r[1];
-                        if (z == "small") {
-                            return "http://img.youtube.com/vi/" + n + "/2.jpg";
+                        var n = API.getMedia();
+                        if (n.format == 1) {
+                            API.sendChat("/em [" + from + "][!pic] " + t(n.cid));
                         } else {
-                            return "http://img.youtube.com/vi/" + n + "/0.jpg";
-                        }
-                    }
-                    var n = API.getMedia();
-                    if (n.format == 1) {
-                        API.sendChat("/em [" + from + "][!pic] " + t(n.cid));
-                    } else {
-                        var r = SC.get("/tracks/" + n.cid, function (e) {
-                            return e.permalink_url;
-                        });
-                        var i = SC.get(r, function (e) {
-                            var t = e.artwork;
-                            return t;
-                        });
-                        if (!i) {
-                            API.sendChat("Um, I kinda couldn't get the Soundcloud album link...");
-                        } else {
-                            API.sendChat("/em [" + from + "][!pic] " + i);
+                            var r = SC.get("/tracks/" + n.cid, function (e) {
+                                return e.permalink_url;
+                            });
+                            var i = SC.get(r, function (e) {
+                                var t = e.artwork;
+                                return t;
+                            });
+                            if (!i) {
+                                API.sendChat("Um, I kinda couldn't get the Soundcloud album link...");
+                            } else {
+                                API.sendChat("/em [" + from + "][!pic] " + i);
+                            }
                         }
                     }
                     break;
@@ -377,12 +368,14 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'join':
-                    for (var i = 0; i < roul.length; i++) {
-                        if (roul[i] !== from && roul.length < 10) {
-                            API.sendChat('/em [' + from + '] Joined roulette!');
-                            roul.push(from);
-                        } else {
-                            API.sendChat('/em [' + from + '] It seems that you already joined!');
+                    if(check()){
+                        for (var i = 0; i < roul.length; i++) {
+                            if (roul[i] !== from && roul.length < 10) {
+                                API.sendChat('/em [' + from + '] Joined roulette!');
+                                roul.push(from);
+                            } else {
+                                API.sendChat('/em [' + from + '] It seems that you already joined!');
+                            }
                         }
                     }
                     break;
@@ -593,6 +586,12 @@ Please refer to the Readme.md for license stuff
                 case 'kill':
                     if (check()) {
                         shutdown();
+                    }
+                    break;
+                case 'reload':
+                    if(check()){
+                        shutdown();
+                        $.getScript('http://raw.githubusercontent.com/Pr0Code/Sound/blob/master/bot.js');
                     }
                     break;
                 case 'vr':
@@ -915,6 +914,39 @@ Please refer to the Readme.md for license stuff
                     }
                 }
             });
+        }
+        
+        function eventFilterChat(a){
+            if(settings.filterChat){
+                var from = a.from;
+                var fromid = a.fromID;
+                var chatid = a.chatID;
+                var msg = a.message;
+                switch(msg){
+                    case 'shit': API.moderateDeleteChat(chatid) break;
+                    case 'fuck': API.moderateDeleteChat(chatid) break;
+                    case 'fak' : API.moderateDeleteChat(chatid) break;
+                    case 'fuk' : API.moderateDeleteChat(chatid) break;
+                    case 'shet': API.moderateDeleteChat(chatid) break;
+                    case 'fan' : API.moderateDeleteChat(chatid) break;
+                    case 'skip': API.moderateDeleteChat(chatid) break;
+                }
+                if(msg.indexOf('fan') !=-1){
+                    API.moderateDeleteChat(chatid);
+                }
+                if(msg.indexOf('fan4fan') !=-1){
+                    API.moderateDeleteChat(chatid);
+                }
+                if(msg.indexOf('friends please') !=-1){
+                    API.moderateDeleteChat(chatid);
+                }
+                if(msg.indexOf('friend4friend') !=-1){
+                    API.moderateDeleteChat(chatid);
+                }
+                if(msg.indexOf('please friend me') !=-1){
+                    API.moderateDeleteChat(chatid);
+                }
+            }
         }
 
         function saveSettings(){localStorage.setItem('SoundbotSave', JSON.stringify(settings));}
