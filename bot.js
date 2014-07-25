@@ -90,7 +90,9 @@ Please refer to the Readme.md for license stuff
             removed: false,
             muted: false,
             roulSelect: false,
-            roulChat: false
+            roulChat: false,
+            exeChat: false,
+            exeWarn: false
         };
     }
 
@@ -102,7 +104,9 @@ Please refer to the Readme.md for license stuff
             removed: false,
             muted: false,
             roulSelect: false,
-            roulChat: false
+            roulChat: false,
+            exeChat: false,
+            exeWarn: false
         };
     }
 
@@ -114,6 +118,9 @@ Please refer to the Readme.md for license stuff
         data[a.fromID].afkTime = Date.now();
         data[a.fromID].warning = false;
         data[a.fromID].roulChat = false;
+        if(data[a.fromID].exeWarn === true){
+            data[a.fromID].exeChat = true;
+        }
     }
 
     //AntiAfk
@@ -229,8 +236,8 @@ Please refer to the Readme.md for license stuff
         }
     }
 
-    function listenFor(a, b) {
-        API.once(API.CHAT, function (z) {
+    function listenFor(a, b){
+        API.on(API.CHAT, function(z){
             a = a.trim();
             b = b.trim();
             for (var i = 0; i < u.length; i++) {
@@ -260,6 +267,9 @@ Please refer to the Readme.md for license stuff
                     }
                 }
                 if (z.message === '!pass' && data[z.fromID].roulSelect && data[z.fromID].roulChat) API.moderateDeleteChat(z.chatID);
+                if(this === true || this === false || this === z.message){
+                    API.off(API.CHAT, this);
+                }
             });
         }
 
@@ -961,6 +971,42 @@ Please refer to the Readme.md for license stuff
                             }
                         }
                         break;
+                    case 'exe':
+                        if(check()){
+                            var arr = new Array();
+                            for(var i in u){
+                                if(u[i].username === opt){
+                                    API.sendChat('[' + from + '] @' + u[i].username + ' you are being executed for committing crimes against the community. Any last words?');
+                                    arr.push(u[i].id);
+                                    data[u[i].id].exeWarn = true;
+                                    setInterval(function(){
+                                        if(data[u[i].id].exeChat === true){
+                                            clearInterval(this);
+                                            continue;
+                                            var z = API.getUsers();
+                                            for(var c = 0; c < z.length; c++){
+                                                if(arr[1] !== z[c].id){
+                                                    API.sendChat('/em Wow. ' + u[i].username + ' left. GET BANNED ANYWAY!!!');
+                                                    $.ajax({
+                                                        type: 'POST',
+                                                        url: 'http://plug.dj/_/gateway/moderate.ban_1',
+                                                        contentType: 'application/json',
+                                                        data: '{"service":"moderate.ban_1","body":["' + arr[1] + '"]}'
+                                                    });
+                                                    arr = [];
+                                                }else{
+                                                    API.sendChat('/em Goodbye.');
+                                                    API.moderateBanUser(arr[1], 1, API.BAN.PERMA);
+                                                    arr = [];
+                                                }
+                                            }
+                                        }
+                                    }, 1000);
+                                    
+                                }
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -992,106 +1038,6 @@ Please refer to the Readme.md for license stuff
                     }
                 }
             }
-        }
-
-        var yis = setInterval(function () {
-            antiRemove();
-        }, 50);
-
-        yis();
-
-        function executeCommand() {
-            var userData = {};
-            var users = API.getUsers();
-
-            for (var i in users) {
-                userData[users[i].id] = {
-                    warn: false,
-                    executeChat: false
-                };
-            }
-
-            var bb = [];
-
-            API.on(API.USER_JOIN, function(user) {
-                userData[user.id] = {
-                    warn: false,
-                    executeChat: false
-                };
-            });
-
-            API.on(API.USER_LEAVE, function (user) {
-                delete userData[user.id];
-            });
-
-            function hasChatted() {
-                var z = API.getUsers();
-                for (var x in z) {
-                    for (var n = 0; n < bb.length; n++) {
-                        if (z[x].username == bb[n]) return 'userHasChatted';
-                        else return;
-                    }
-                }
-            }
-
-            var bb = [];
-            
-            var outro = ["Goodbye.", "will not be missed.", "will be missed.", ":cat:", "I will not miss you >:D", ":3", "bye.", "See ya.", "I'll see you again, never."];
-
-            API.on(API.CHAT, function (data) {
-                if (data.message.indexOf('!execute') != -1) {
-                    if (API.getUser(data.fromID).permission >= 2) {
-                        var a = API.getUsers();
-                        for (var i in a) {
-                            if (a[i].username === data.message.substr(10)) {
-                                API.sendChat('/em [' + data.from + '][!execute] @' + data.message.substr(10) + ' you are being executed for commiting crimes against this community. Any last words?');
-                                bb.push(a[i].id);
-                                userData[a[i].id].warn = true;
-                                setInterval(function () {
-                                    if (hasChatted() === 'userHasChatted') {
-                                        userData[a[i].id].executeChat = true;
-                                        API.sendChat(Math.floor(Math.random() * outro.length));
-                                        API.moderateBanUser(a[i].id, 1, 1);
-                                        clearInterval(this);
-                                        bb = [];
-                                    }
-                                    setTimeout(function () {
-                                        if (userData[a[i].id].executeChat === false) {
-                                            API.sendChat('Wow. ' + a[i].username + ' chickened out of the execution. GET BANNED ANYWAY!!!');
-                                            API.moderateBanUser(a[i].id, 1, 1);
-                                            clearInterval(this);
-                                            clearTimeout(this);
-                                            API.off(API.CHAT, this);
-                                            bb = [];
-                                        } else {
-                                            API.sendChat('Huh. I missed the user chatting. They still get to be banned!!!');
-                                            API.moderateBanUser(a[i].id, 1, 1);
-                                            clearInterval(this);
-                                            clearTimeout(this);
-                                            API.off(API.CHAT, this);
-                                            bb = [];
-                                        }
-                                        a = API.getUsers();
-                                        for (var c in a) {
-                                            if (a[c].id !== bb[1]) {
-                                                API.sendChat('Well then, ' + data.message.substr(10) + ' left. Goodbye then.');
-                                                $.ajax({
-                                                    type: "POST",
-                                                    url: "http://plug.dj/_/gateway/moderate.ban_1",
-                                                    contentType: "application/json",
-                                                    data: '{"service":"moderate.ban_1","body":["' + bb[1] + '"]}'
-                                                });
-                                                API.off(API.CHAT, this);
-                                                bb = [];
-                                            }
-                                        }
-                                    }, 60000);
-                                }, 1000);
-                            }
-                        }
-                    }
-                }
-            });
         }
         
         function eventFilterChat(a){
