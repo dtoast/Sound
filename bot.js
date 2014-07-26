@@ -222,7 +222,7 @@ Please refer to the Readme.md for license stuff
         if(settings.stats){
             var a = obj.lastPlay;
             if(typeof a === 'undefined') return void (0);
-            var b = a.score.postive;
+            var b = a.score.positive;
             var c = a.score.curates;
             var d = a.score.negative;
             API.sendChat('/em ' + a.media._previousAttributes.author + ' - ' +  a.media._previousAttributes.title + ' received ' + b + ' woots, ' + c + ' grabs, and ' + d + ' mehs!');
