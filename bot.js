@@ -309,6 +309,7 @@ Please refer to the Readme.md for license stuff
                         else if(API.getUser(a.fromID).permission <= 0 && !settings.userCmds){
                             return false;
                         }
+                        API.moderateDeleteChat(chatid);
                     };
                 if (a.message.substr(0) === '!') API.moderateDeleteChat(chatid);
                 var roul = new Array();
