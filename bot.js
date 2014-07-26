@@ -310,7 +310,7 @@ Please refer to the Readme.md for license stuff
                             return false;
                         }
                     };
-                if (a.message.substr(1) === '!') API.moderateDeleteChat(chatid);
+                if (a.message.substr(0) === '!') API.moderateDeleteChat(chatid);
                 var roul = new Array();
                 var tempRoul = new Array();
                 var safeRoul = new Array();
