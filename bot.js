@@ -279,7 +279,7 @@ Please refer to the Readme.md for license stuff
                     return true;
                 }
             }
-            if(pre){
+            if(pre()){
                 var str = a.message.substr(2).trim();
                 var opt = str.split('@') + 1;
                 var arg = str.lastIndexOf(' ') + 1;
