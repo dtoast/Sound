@@ -1072,7 +1072,7 @@ Please refer to the Readme.md for license stuff
 
         function saveSettings(){localStorage.setItem('SoundbotSave', JSON.stringify(settings));}
         
-        if(typeof API === 'object') shutdown();
+        if(typeof API === 'undefined') shutdown();
         else init();
 
 }).call(this);
