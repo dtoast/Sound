@@ -1030,13 +1030,27 @@ Please refer to the Readme.md for license stuff
                 var chatid = a.chatID;
                 var msg = a.message;
                 switch(msg){
-                    case 'shit': API.moderateDeleteChat(chatid) break;
-                    case 'fuck': API.moderateDeleteChat(chatid) break;
-                    case 'fak' : API.moderateDeleteChat(chatid) break;
-                    case 'fuk' : API.moderateDeleteChat(chatid) break;
-                    case 'shet': API.moderateDeleteChat(chatid) break;
-                    case 'fan' : API.moderateDeleteChat(chatid) break;
-                    case 'skip': API.moderateDeleteChat(chatid) break;
+                    case 'shit':
+                        API.moderateDeleteChat(chatid);
+                        break;
+                    case 'fuck':
+                        API.moderateDeleteChat(chatid);
+                        break;
+                    case 'fak' :
+                        API.moderateDeleteChat(chatid);
+                        break;
+                    case 'fuk' :
+                        API.moderateDeleteChat(chatid);
+                        break;
+                    case 'shet':
+                        API.moderateDeleteChat(chatid);
+                        break;
+                    case 'fan' :
+                        API.moderateDeleteChat(chatid);
+                        break;
+                    case 'skip':
+                        API.moderateDeleteChat(chatid);
+                        break;
                 }
                 if(msg.indexOf('fan') !=-1){
                     API.moderateDeleteChat(chatid);
