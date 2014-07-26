@@ -856,9 +856,9 @@ Please refer to the Readme.md for license stuff
                                         }else{
                                             API.sendChat('/em [' + from + '] AntiAFK is already disabled!');
                                         }
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
                                     }
-                                }else{
-                                    API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
                                 }
                             }
                             if(noarg === 'songlength'){
