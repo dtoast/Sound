@@ -331,38 +331,15 @@ Please refer to the Readme.md for license stuff
                     break;
                 case 'pic':
                     if(check()){
-                        function t(e, z) {
-                            if (e === null) {
-                                return "";
-                            }
-                            z = z === null ? "big" : z;
-                            var n;
-                            var r;
-                            r = e.match("[\\?&]v=([^&#]*)");
-                            n = r === null ? e : r[1];
-                            if (z == "small") {
-                                return "http://img.youtube.com/vi/" + n + "/2.jpg";
-                            } else {
-                                return "http://img.youtube.com/vi/" + n + "/0.jpg";
-                            }
+                        function getYt(url){
+                            var id = url.match('[\\?&]v=([^&#]*)');
+                            id = id[1];
+                            return id;
                         }
-                        var n = API.getMedia();
-                        if (n.format == 1) {
-                            API.sendChat("/em [" + from + "][!pic] " + t(n.cid));
-                        } else {
-                            var r = SC.get("/tracks/" + n.cid, function (e) {
-                                return e.permalink_url;
-                            });
-                            var i = SC.get(r, function (e) {
-                                var t = e.artwork;
-                                return t;
-                            });
-                            if (!i) {
-                                API.sendChat("Um, I kinda couldn't get the Soundcloud album link...");
-                            } else {
-                                API.sendChat("/em [" + from + "][!pic] " + i);
-                            }
-                        }
+                        var z = $('iframe:first');
+                        var url_id = getYt(z.href);
+                        this.url_id = url_id;
+                        API.sendChat('/em [' + from + '] http://i.ytimg.com/vi/' + url_id + '/mqdefault.jpg');
                     }
                     break;
 
