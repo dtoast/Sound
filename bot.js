@@ -966,7 +966,6 @@ Please refer to the Readme.md for license stuff
                                     setInterval(function(){
                                         if(data[u[i].id].exeChat === true){
                                             clearInterval(this);
-                                            continue;
                                             var z = API.getUsers();
                                             for(var c = 0; c < z.length; c++){
                                                 if(arr[1] !== z[c].id){
