@@ -51,11 +51,6 @@ Please refer to the Readme.md for license stuff
         API.on(API.USER_LEAVE, eventLeave);
         API.on(API.DJ_ADVANCE, eventDjAdvance);
         API.setVolume(0);
-        /*var zux = setInterval(function(){
-            saveSettings();
-            }, 300000);
-        zux();
-        */
         if (settings.woot) $('#woot').click();
         API.sendChat('/em now sprinting!');
     }
@@ -69,8 +64,6 @@ Please refer to the Readme.md for license stuff
         API.off(API.DJ_ADVANCE, eventDjAdvance);
         API.setVolume(15);
         saveSettings();
-        //clearInterval(zux);
-        clearInterval(yis);
         if (settings.motd.enabled) clearInterval(motdInt);
         delete data;
         delete settings;
@@ -294,19 +287,20 @@ Please refer to the Readme.md for license stuff
                 var from = a.from;
                 var fromid = a.fromID;
                 var chatid = a.chatID;
-                var check = function(){
-                        if(API.getUser(a.fromID).permission >= 2 && settings.userCmds){
+                var check = function(ad){
+                        if(API.getUser(a.fromID).permission >= 2 && settings.userCmds && ad){
                             return true;
                         }
-                        else if(API.getUser(a.fromID).permission >= 2 && !settings.userCmds){
+                        else if(API.getUser(a.fromID).permission >= 2 && !settings.userCmds && ad){
                             return true;
                         }
-                        else if(API.getUser(a.fromID).permission <= 0 && settings.userCmds){
+                        else if(API.getUser(a.fromID).permission <= 0 && settings.userCmds && !ad){
                             return true;
                         }
-                        else if(API.getUser(a.fromID).permission <= 0 && !settings.userCmds){
+                        else if(API.getUser(a.fromID).permission <= 0 && !settings.userCmds && !ad){
                             return false;
                         }
+                        if(API.getUser(a.fromID).permission >= 2 && !a) API.sendChat('/em FourBit, please put "true" for staff cmds and "false" for user commands in check()');
                         API.moderateDeleteChat(chatid);
                     };
                 if (a.message.substr(0) === '!') API.moderateDeleteChat(chatid);
@@ -314,11 +308,14 @@ Please refer to the Readme.md for license stuff
                 var tempRoul = new Array();
                 var safeRoul = new Array();
                 switch (str) {
-                case 'help': if(check()){ API.sendChat('/em [' + from + '] Soundbot was just recoded, so please wait for commands. Ask staff for questions.') }break;
-                case 'web': if(check()){ API.sendChat('/em [' + from + '] FourBit website: Soon!') }break;
-                case 'ping': if(check()){ API.sendChat('/em [' + from + '] Pong!') }break;
+                case 'help':
+                    if(check(false)){
+                        API.sendChat('/em [' + from + '] Soundbot was just recoded, so please wait for commands. Ask staff for questions.');
+                    }
+                    break;
+                case 'ping': if(check(false)){ API.sendChat('/em [' + from + '] Pong!') }break;
                 case 'link':
-                    if(check()){
+                    if(check(false)){
                         if (API.getMedia().format === 1) {
                             API.sendChat('/em [' + from + '] Link to current song: http://youtu.be/' + API.getMedia().cid);
                         } else {
@@ -342,7 +339,7 @@ Please refer to the Readme.md for license stuff
                             return id;
                         }
                         var z = $('iframe:first');
-                        var url_id = getYt(z.href);
+                        var url_id = getYt('http://youtu.be/' + API.getMedia().cid + '/');
                         this.url_id = url_id;
                         API.sendChat('/em [' + from + '] http://i.ytimg.com/vi/' + url_id + '/mqdefault.jpg');
                     }
@@ -564,6 +561,11 @@ Please refer to the Readme.md for license stuff
                         }
                     }
                     break;
+                case 'save':
+                    if(check(true)){
+                        saveSettings();
+                        API.sendChat('/em Saved.');
+                    }
                 case 'status':
                     if (check()) {
                         var z = Date.now();
