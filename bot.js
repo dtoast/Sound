@@ -9,7 +9,7 @@ Copyright (c) 2014 FourBit (Pr0Code)
 Please refer to the Readme.md for license stuff
 
 */
-(function () {
+//(function () {
     var motdMsg = ["Welcome to the FourBit plug.dj room!"];
     var joinTime = Date.now();
     var blacklist = ['#SELFIE (Official Music Video)', 'Troll Song'];
@@ -282,12 +282,12 @@ Please refer to the Readme.md for license stuff
 
         function eventCommandChat(a){
             function pre(){
-                if(a.message.substr(1) === '!'){
+                if(a.message.substr(0, 1) === '!'){
                     return true;
                 }
             }
             if(pre()){
-                var str = a.message.substr(2).trim();
+                var str = a.message.substr(1).trim();
                 var opt = str.split('@') + 1;
                 var arg = str.lastIndexOf(' ') + 1;
                 var noarg = str.split(' ')[1];
@@ -1075,4 +1075,4 @@ Please refer to the Readme.md for license stuff
         if(typeof API === 'undefined') shutdown();
         else init();
 
-}).call(this);
+//}).call(this);
