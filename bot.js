@@ -116,7 +116,7 @@ Please refer to the Readme.md for license stuff
 
     function eventDataChat(a) {
         data[a.fromID].afkTime = Date.now();
-        if(data[a.fromID].waning){
+        if(data[a.fromID].warning){
             data[a.fromID].warning = false;
         }
         if(data[a.fromID].removed){
