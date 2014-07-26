@@ -116,8 +116,15 @@ Please refer to the Readme.md for license stuff
 
     function eventDataChat(a) {
         data[a.fromID].afkTime = Date.now();
-        data[a.fromID].warning = false;
-        data[a.fromID].roulChat = false;
+        if(data[a.fromID].waning){
+            data[a.fromID].warning = false;
+        }
+        if(data[a.fromID].removed){
+            data[a.fromID].removed = false;
+        }
+        if(data[a.fromID].roulChat && a.message === '!pass'){
+            data[a.fromID].roulChat = false;
+        }
         if(data[a.fromID].exeWarn === true){
             data[a.fromID].exeChat = true;
         }
