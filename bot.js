@@ -226,7 +226,7 @@ Please refer to the Readme.md for license stuff
             var b = new Array();
             b.push(a);
             if($('.cycle-toggle').hasClass('disabled')){
-                $(this).click()l
+                $(this).click();
             }
             API.moderateLockWaitList(true, false);
             API.moderateForceSkip();
