@@ -568,7 +568,7 @@ Please refer to the Readme.md for license stuff
                     break;
                 case 'status':
                     if (check()) {
-                        var z = Date().getTime();
+                        var z = Date.getTime();
                         var y = Math.floor(joinTime - z);
                         API.sendChat('/em [' + from + '] Uptime: ' + y + ' ~ Party: ' + settings.party + ' ~ Blacklist: ' + settings.blacklist);
                     }
