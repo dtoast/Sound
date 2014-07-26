@@ -68,7 +68,7 @@ Please refer to the Readme.md for license stuff
         API.off(API.USER_LEAVE, eventLeave);
         API.off(API.DJ_ADVANCE, eventDjAdvance);
         API.setVolume(15);
-        saveSettnigs();
+        saveSettings();
         clearInterval(zux);
         clearInterval(yis);
         if (settings.motd.enabled) clearInterval(motdInt);
