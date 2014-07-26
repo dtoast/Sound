@@ -273,6 +273,48 @@ Please refer to the Readme.md for license stuff
             });
         }
 
+        var chatFilter = ['fanme','funme','becomemyfan','trocofa','fanforfan','fan4fan','fan4fan','hazcanfanz','fun4fun','fun4fun',
+                'meufa','fanz','isnowyourfan','reciprocate','fansme','givefan','fanplz','fanpls','plsfan','plzfan','becomefan','tradefan',
+                'fanifan','bemyfan','retribui','gimmefan','fansatfan','fansplz','fanspls','ifansback','fanforfan','addmefan','retribuo',
+                'fantome','becomeafan','fan-to-fan','fantofan','canihavefan','pleasefan','addmeinfan','iwantfan','fanplease','ineedfan',
+                'ineedafan','iwantafan','bymyfan','fannme','returnfan','bymyfan','givemeafan','sejameufa','sejameusfa','sejameuf��',
+                'sejameusf��','f��please','f��pls','f��plz','fanxfan','addmetofan','fanzafan','fanzefan','becomeinfan','backfan',
+                'viremmeuseguidor','viremmeuseguir','fanisfan','funforfun','anyfanaccept','anyfanme','fan4fan','fan4fan','turnmyfan',
+                'turnifan','beafanofme','comemyfan','plzzfan','plssfan','procurofan','comebackafan','fanyfan','givemefan','fan=fan',
+                'fan=fan','fan+fan','fan+fan','fanorfan','beacomeafanofme','beacomemyfan','bcomeafanofme','bcomemyfan','fanstofan',
+                'bemefan','trocarfan','fanforme','fansforme','allforfan','fansintofans','fanintofan','f(a)nme','prestomyfan',
+                'presstomyfan','fanpleace','fanspleace','givemyafan','addfan','addsmetofan','f4f','canihasfan','canihavefan',
+                'givetomeafan','givemyfan','phanme','fanforafan','fanvsfan','fanturniturn','fanturninturn','sejammeufa',
+                'sejammeusfa','befanofme','faninfan','addtofan','fanthisaccount','fanmyaccount','fanback','addmeforfan',
+                'fans4fan','fans4fan','fanme','fanmyaccount','fanback','addmeforfan','fans4fan','fans4fan','fanme','turnfanwhocontribute',
+                "bemefan","bemyfan","beacomeafanofme","beacomemyfan","becameyafan","becomeafan",
+                "becomefan","becomeinfan","becomemyfan","becomemyfans","bouncerplease","bouncerpls",
+                "brbrbrbr","brbrbrbr","bymyfan","canihasfan","canihavefan","caralho",
+                "clickmynametobecomeafan","comebackafan","comemyfan","dosfanos","everyonefan",
+                "everyonefans","exchangefan","f4f","f&n","f(a)nme","f@nme","��@nme","f4f","f4n4f4n",
+                "f4nforf4n","f4nme","f4n4f4n","fan:four:fan",
+                'fanme','funme','becomemyfan','trocofa','fanforfan','fan4fan','fan4fan','hazcanfanz',
+                'fun4fun','fun4fun','meufa','fanz','isnowyourfan','reciprocate','fansme','givefan',
+                'fanplz','fanpls','plsfan','plzfan','becomefan','tradefan','fanifan','bemyfan',
+                'retribui','gimmefan','fansatfan','fansplz','fanspls','ifansback','fanforfan',
+                'addmefan','retribuo','fantome','becomeafan','fan-to-fan','fantofan',
+                'canihavefan','pleasefan','addmeinfan','iwantfan','fanplease','ineedfan',
+                'ineedafan','iwantafan','bymyfan','fannme','returnfan','bymyfan','givemeafan',
+                'sejameufa','sejameusfa','sejameufã','sejameusfã','fãplease','fãpls','fãplz',
+                'fanxfan','addmetofan','fanzafan','fanzefan','becomeinfan','backfan',
+                'viremmeuseguidor','viremmeuseguir','fanisfan','funforfun','anyfanaccept',
+                'anyfanme','fan4fan','fan4fan','turnmyfan','turnifan','beafanofme','comemyfan',
+                'plzzfan','plssfan','procurofan','comebackafan','fanyfan','givemefan','fan=fan',
+                'fan=fan','fan+fan','fan+fan','fanorfan','beacomeafanofme','beacomemyfan',
+                'bcomeafanofme','bcomemyfan','fanstofan','bemefan','trocarfan','fanforme',
+                'fansforme','allforfan','fnme','fnforfn','fansintofans','fanintofan','f(a)nme','prestomyfan',
+                'presstomyfan','fanpleace','fanspleace','givemyafan','addfan','addsmetofan',
+                'f4f','canihasfan','canihavefan','givetomeafan','givemyfan','phanme','but i need please fan',
+                'fanforafan','fanvsfan','fanturniturn','fanturninturn','sejammeufa',
+                'sejammeusfa','befanofme','faninfan','addtofan','fanthisaccount',
+                'fanmyaccount','fanback','addmeforfan','fans4fan','fans4fan','fanme','bemyfanpls','befanpls','f4f','fanyfan'
+            ];
+
         function eventCommandChat(a){
             function pre(){
                 if(a.message.substr(0, 1) === '!'){
@@ -287,23 +329,14 @@ Please refer to the Readme.md for license stuff
                 var from = a.from;
                 var fromid = a.fromID;
                 var chatid = a.chatID;
-                var check = function(ad){
-                        if(API.getUser(a.fromID).permission >= 2 && settings.userCmds && ad){
-                            return true;
-                        }
-                        else if(API.getUser(a.fromID).permission >= 2 && !settings.userCmds && ad){
-                            return true;
-                        }
-                        else if(API.getUser(a.fromID).permission <= 0 && settings.userCmds && !ad){
-                            return true;
-                        }
-                        else if(API.getUser(a.fromID).permission <= 0 && !settings.userCmds && !ad){
-                            return false;
-                        }
-                        if(API.getUser(a.fromID).permission >= 2 && !a) API.sendChat('/em FourBit, please put "true" for staff cmds and "false" for user commands in check()');
-                        API.moderateDeleteChat(chatid);
-                    };
-                if (a.message.substr(0) === '!') API.moderateDeleteChat(chatid);
+                var check = function(staff){
+                    if(staff === undefined) staff = false;
+                    if(API.getUser(a.fromID).permission >= 2 && settings.userCmds || !settings.userCmds && staff) return true;
+                    else if(API.getUser(a.fromID).permission <= 1 && settings.userCmds && !staff){
+                        return true;
+                    }else if(API.getUser(a.fromID).permission <= 1 && !settings.userCmds && !staff) return false;
+                    API.moderateDeleteChat(a.chatID);
+                };
                 var roul = new Array();
                 var tempRoul = new Array();
                 var safeRoul = new Array();
@@ -332,7 +365,7 @@ Please refer to the Readme.md for license stuff
                     API.sendChat('/em [' + from + '] ADBlock (the version that isn\'t bad): https://www.getadblock.com');
                     break;
                 case 'pic':
-                    if(check()){
+                    if(check(false)){
                         function getYt(url){
                             var id = url.match('[\\?&]v=([^&#]*)');
                             id = id[1];
@@ -348,7 +381,7 @@ Please refer to the Readme.md for license stuff
                     //For now, bouncer + commands. User cmds will be done later.
                     //Start roulette
                 case 'roul':
-                    if (check()) {
+                    if (check(true)) {
                         if (noarg === 'start' && !settings.roulette) {
                             API.sendChat('/em [' + from + '] Started roulette! Type "!join" to play.');
                             settings.roulette = true;
@@ -363,7 +396,7 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'join':
-                    if(check()){
+                    if(check(true)){
                         for (var i = 0; i < roul.length; i++) {
                             if (roul[i] !== from && roul.length < 10) {
                                 API.sendChat('/em [' + from + '] Joined roulette!');
@@ -375,7 +408,7 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'start':
-                    if (check() && settings.roulette) {
+                    if (check(true) && settings.roulette) {
                         API.sendChat('/em [' + from + '] Game started!');
                         var y = Math.floor(Math.random() * roul.length);
                         var z = setInterval(function () {
@@ -411,7 +444,7 @@ Please refer to the Readme.md for license stuff
 
                     //End Roulette
                 case 'add':
-                    if (check()) {
+                    if (check(true)) {
                         for (var i in u) {
                             if (u[i].username === opt) {
                                 API.sendChat('/em [' + from + ' used add]');
@@ -422,7 +455,7 @@ Please refer to the Readme.md for license stuff
                     break;
 
                 case 'remove':
-                    if (check()) {
+                    if (check(true)) {
                         for (var i in u) {
                             if (u[i].username === opt) {
                                 API.sendChat('/em [' + from + ' used remove]');
@@ -433,7 +466,7 @@ Please refer to the Readme.md for license stuff
                     break;
 
                 case 'move':
-                    if (check()) {
+                    if (check(true)) {
                         for (var i in u) {
                             if (u[i].username === opt) {
                                 if (arg !== null || undefined) {
@@ -457,13 +490,13 @@ Please refer to the Readme.md for license stuff
                     break;
 
                 case 'skip':
-                    if (check()) {
+                    if (check(true)) {
                         API.moderateForceSkip();
                     }
                     break;
 
                 case 'lockskip':
-                    if (check()) {
+                    if (check(true)) {
                         if (noarg === 'op') {
                             API.sendChat('/em [' + from + ' used lockskip]');
                             var b = new Array();
@@ -491,7 +524,7 @@ Please refer to the Readme.md for license stuff
                     break;
 
                 case 'ban':
-                    if (check()) {
+                    if (check(true)) {
                         for (var i in u) {
                             if (u[i].username === opt) {
                                 if (arg !== null || undefined) {
@@ -567,35 +600,35 @@ Please refer to the Readme.md for license stuff
                         API.sendChat('/em Saved.');
                     }
                 case 'status':
-                    if (check()) {
+                    if (check(true)) {
                         var z = Date.now();
                         var y = Math.floor(joinTime - z);
                         API.sendChat('/em [' + from + '] Uptime: ' + y + ' ~ Party: ' + settings.party + ' ~ Blacklist: ' + settings.blacklist);
                     }
                     break;
                 case 'woot':
-                    if (check()) {
+                    if (check(true)) {
                         $('#woot').click();
                     }
                     break;
                 case 'grab':
-                    if (check()) {
+                    if (check(true)) {
                         $($('.curate').children('.menu').children().children()[0]).mousedown();
                     }
                     break;
                 case 'kill':
-                    if (check()) {
+                    if (check(true)) {
                         shutdown();
                     }
                     break;
                 case 'reload':
-                    if(check()){
+                    if(check(true)){
                         shutdown();
                         $.getScript('http://raw.githubusercontent.com/Pr0Code/Sound/blob/master/bot.js');
                     }
                     break;
                 case 'vr':
-                    if (check()) {
+                    if (check(true)) {
                         //Broken down to show how I'm get percentages.
                         var z = API.getRoomScore();
                         var y = new Array();
@@ -612,7 +645,7 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'clear':
-                    if (check()) {
+                    if (check(true)) {
                         var z = $('#chat-messages').children();
                         for (var i = 0; i < z.length; i++) {
                             for (var c = 0; c < z[i].classList.length; c++) {
@@ -625,18 +658,19 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'lock':
-                    if (check()) {
+                    if (check(true)) {
                         API.sendChat('/em [' + from + ' used lock]');
                         API.moderateLockWaitList(true, false);
                     }
                     break;
                 case 'cycle':
-                    if (check()) {
+                    if (check(true)) {
                         API.sendChat('/em [' + from + ' used cycle]');
+                        $('.cycle-toggle').click();
                     }
                     break;
                 case 'mute':
-                    if (check()) {
+                    if (check(true)) {
                         for (var i in u) {
                             if (u[i].username === opt) {
                                 data[u[i].id].mute = true;
@@ -646,7 +680,7 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'unmute':
-                    if (check()) {
+                    if (check(true)) {
                         if (data[fromid].mute === true) {
                             API.sendChat('/em [' + from + '] Tried unmuting themselves, but can\'t! Muahahahaha!!!');
                         } else {
@@ -659,7 +693,7 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'kick':
-                    if (check()) {
+                    if (check(true)) {
                         for (var i in u) {
                             if (u[i].username === opt) {
                                 API.sendChat('/em [' + from + ' used kick]');
@@ -674,7 +708,7 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'reg':
-                    if (check()) {
+                    if (check(true)) {
                         for (var i in u) {
                             if (u[i].username === opt) {
                                 API.sendChat('/em [' + from + '] Removed ' + u[i].username + ' from the staff!');
@@ -684,7 +718,7 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'rdj':
-                    if (check()) {
+                    if (check(true)) {
                         for (var i in u) {
                             if (u[i].username === opt) {
                                 API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a Resident DJ!');
@@ -694,7 +728,7 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'bouncer':
-                    if (check()) {
+                    if (check(true)) {
                         for (var i in u) {
                             if (u[i].username === opt) {
                                 API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a bouncer!');
@@ -704,7 +738,7 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'manager':
-                    if (check()) {
+                    if (check(true)) {
                         for (var i in u) {
                             if (u[i].username === opt) {
                                 API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a manager!');
@@ -714,7 +748,7 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'mehs':
-                    if(check()){
+                    if(check(true)){
                         var z = new Array();
                         for(var i = 0; i < u.length; i++){
                             for(var c = 0; c < u.length; c++){
@@ -736,7 +770,7 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'motd':
-                        if(check()){
+                        if(check(true)){
                             if(noarg === 'off' || noarg === 'disable'){
                                 settings.motd.enabled = false;
                                 clearInterval(motdInt);
@@ -760,7 +794,7 @@ Please refer to the Readme.md for license stuff
                         }
                         break;
                     case 'cmdsettings':
-                        if(check()){
+                        if(check(true)){
                             if(noarg !== null || noarg !== undefined || noarg === undefined || noarg === null){
                                 API.sendChat('/em [' + from + '] Command Settings | Usercmds: ' + settings.userCmds);
                             }
@@ -784,7 +818,7 @@ Please refer to the Readme.md for license stuff
                         }
                         break;
                     case 'set':
-                        if(check()){
+                        if(check(true)){
                             if(noarg !== null || noarg !== undefined || noarg === undefined || noarg === null){
                                 API.sendChat('/em [' + from + '] Items that can be set: woot, motd, antiafk, songlength, blacklist, stats, historyskip');
                             }
@@ -956,7 +990,7 @@ Please refer to the Readme.md for license stuff
                         }
                         break;
                     case 'exe':
-                        if(check()){
+                        if(check(true)){
                             var arr = new Array();
                             for(var i in u){
                                 if(u[i].username === opt){
