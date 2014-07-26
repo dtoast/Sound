@@ -228,7 +228,7 @@ Please refer to the Readme.md for license stuff
             API.sendChat('/em ' + a.media._previousAttributes.author + ' - ' +  a.media._previousAttributes.title + ' received ' + b + ' woots, ' + c + ' grabs, and ' + d + ' mehs!');
         }
         if(settings.songLength.enabled && obj.media.duration > settings.songLength.limit * 60){
-            settings.stats = false;
+            if(settings.stats) settings.stats = false;
             API.sendChat('@' + API.getDJ().username + ' your song is greater than the song limit (10 minutes)!');
             var a = API.getDJ().id;
             var b = new Array();
@@ -239,8 +239,9 @@ Please refer to the Readme.md for license stuff
             API.moderateLockWaitList(true, false);
             API.moderateForceSkip();
             API.sendChat('/em Adding user...');
-            API.moderateMoveDJ(b[1], 3);
+            API.moderateMoveDJ(b[1], 1);
             b = [];
+            settings.stats = true;
         }
     }
 
