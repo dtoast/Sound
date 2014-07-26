@@ -312,9 +312,6 @@ Please refer to the Readme.md for license stuff
                 var roul = new Array();
                 var tempRoul = new Array();
                 var safeRoul = new Array();
-                arg = arg.toLowerCase();
-                noarg = noarg.toLowerCase();
-                str = str.toLowerCase();
                 switch (str) {
                 case 'help': if(check()){ API.sendChat('/em [' + from + '] Soundbot was just recoded, so please wait for commands. Ask staff for questions.') }break;
                 case 'web': if(check()){ API.sendChat('/em [' + from + '] FourBit website: Soon!') }break;
