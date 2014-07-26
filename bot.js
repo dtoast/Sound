@@ -74,9 +74,7 @@ Please refer to the Readme.md for license stuff
         if (settings.motd.enabled) clearInterval(motdInt);
         delete data;
         delete settings;
-        delete userData;
-        delete executeCommand();
-        API.sendChat('Soundbot Shutdown.');
+        API.sendChat('/em Soundbot Shutdown.');
     }
 
     //Userdata
