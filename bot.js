@@ -11,7 +11,7 @@ Please refer to the Readme.md for license stuff
 */
 (function () {
     var motdMsg = ["Welcome to the FourBit plug.dj room!"];
-    var joinTime = Date.getTime();
+    var joinTime = Date.now();
     var blacklist = ['#SELFIE (Official Music Video)', 'Troll Song'];
     var settings = {
         woot: true,
@@ -568,7 +568,7 @@ Please refer to the Readme.md for license stuff
                     break;
                 case 'status':
                     if (check()) {
-                        var z = Date.getTime();
+                        var z = Date.now();
                         var y = Math.floor(joinTime - z);
                         API.sendChat('/em [' + from + '] Uptime: ' + y + ' ~ Party: ' + settings.party + ' ~ Blacklist: ' + settings.blacklist);
                     }
