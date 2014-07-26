@@ -902,9 +902,9 @@ Please refer to the Readme.md for license stuff
                                         }else{
                                             API.sendChat('/em [' + from + '] Blacklist is already disabled!');
                                         }
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
                                     }
-                                }else{
-                                    API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
                                 }
                             }
                             if(noarg === 'stats'){
@@ -925,9 +925,9 @@ Please refer to the Readme.md for license stuff
                                         }else{
                                             API.sendChat('/em [' + from + '] Stats are already disabled!');
                                         }
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
                                     }
-                                }else{
-                                    API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
                                 }
                             }
                             if(noarg === 'historyskip'){
@@ -948,9 +948,9 @@ Please refer to the Readme.md for license stuff
                                         }else{
                                             API.sendChat('/em [' + from  + '] HistorySkip is already disabled!');
                                         }
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
                                     }
-                                }else{
-                                    API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
                                 }
                             }
                         }
