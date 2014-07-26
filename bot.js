@@ -51,7 +51,7 @@ Please refer to the Readme.md for license stuff
         API.on(API.USER_LEAVE, eventLeave);
         API.on(API.DJ_ADVANCE, eventDjAdvance);
         API.setVolume(0);
-        var zux = setInterval(saveSettings, 300000);
+        var zux = setInterval(function(){saveSettings()}, 300000);
         zux();
         if (settings.woot) $('#woot').click();
         API.sendChat('/em now sprinting!');
