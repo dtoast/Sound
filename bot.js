@@ -339,7 +339,7 @@ Please refer to the Readme.md for license stuff
                             return id;
                         }
                         var z = $('iframe:first');
-                        var url_id = getYt('http://youtu.be/' + API.getMedia().cid + '/');
+                        var url_id = getYt('https://www.youtube.com/watch?v=' + API.getMedia().cid);
                         this.url_id = url_id;
                         API.sendChat('/em [' + from + '] http://i.ytimg.com/vi/' + url_id + '/mqdefault.jpg');
                     }
