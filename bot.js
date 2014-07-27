@@ -353,8 +353,8 @@ Please refer to the Readme.md for license stuff
                 var roul = new Array();
                 var tempRoul = new Array();
                 var safeRoul = new Array();
-                command(str, arg, noarg, opt, from, fromid, chatid, check());
-                function command(str, arg, noarg, opt, from, fromid, chatid, check()){
+                command(str, arg, noarg, opt, from, fromid, chatid);
+                function command(str, arg, noarg, opt, from, fromid, chatid){
                     switch(str){
                     case 'help':
                         if(check(false)){
