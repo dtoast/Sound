@@ -353,707 +353,710 @@ Please refer to the Readme.md for license stuff
                 var roul = new Array();
                 var tempRoul = new Array();
                 var safeRoul = new Array();
-                switch(str){
-                case 'help':
-                    if(check(false)){
-                        API.sendChat('/em [' + from + '] Soundbot was just recoded, so please wait for commands. Ask staff for questions.');
-                    }
-                    break;
-                case 'ping': if(check(false)){ API.sendChat('/em [' + from + '] Pong!') }break;
-                case 'link':
-                    if(check(false)){
-                        if (API.getMedia().format === 1) {
-                            API.sendChat('/em [' + from + '] Link to current song: http://youtu.be/' + API.getMedia().cid);
-                        } else {
-                            var z = API.getMedia().cid;
-                            SC.get('/tracks', {
-                                ids: z,
-                            }, function (tracks) {
-                                API.sendChat('/em [' + from + '] Link to current song: ' + tracks[0].permalink_url);
-                            });
+                command(str, arg, noarg, opt, from, fromid, chatid, check());
+                function command(str, arg, noarg, opt, from, fromid, chatid, check()){
+                    switch(str){
+                    case 'help':
+                        if(check(false)){
+                            API.sendChat('/em [' + from + '] Soundbot was just recoded, so please wait for commands. Ask staff for questions.');
                         }
-                    }
-                    break;
-                case 'ad':
-                    if(check(false)){
-                        API.sendChat('/em [' + from + '] ADBlock (the version that isn\'t bad): https://www.getadblock.com');
-                    }
-                    break;
-                case 'pic':
-                    if(check(false)){
-                        function getYt(url){
-                            var id = url.match('[\\?&]v=([^&#]*)');
-                            id = id[1];
-                            return id;
-                        }
-                        var z = $('iframe:first');
-                        var url_id = getYt('https://www.youtube.com/watch?v=' + API.getMedia().cid);
-                        this.url_id = url_id;
-                        API.sendChat('/em [' + from + '] http://i.ytimg.com/vi/' + url_id + '/maxresdefault.jpg');
-                    }
-                    break;
-
-                    //For now, bouncer + commands. User cmds will be done later.
-                    
-                case 'opt':
-                    if(check(true)){
-                        API.sendChat('/em ' + from + '][test] ' + opt);
-                    }
-                    break;
-                    
-                    //Start roulette
-                case 'roul':
-                    if (check(true)) {
-                        if (noarg === 'start' && !settings.roulette) {
-                            API.sendChat('/em [' + from + '] Started roulette! Type "!join" to play.');
-                            settings.roulette = true;
-                        }
-                        if (noarg === 'stop' && settings.roulette) {
-                            clearInterval();
-                            settings.roulette = false;
-                            data.roulSelect = false;
-                            data.roulChat = false;
-                            API.sendChat('/em [' + from + '] Stopped roulette! :frowning:');
-                        }
-                    }
-                    break;
-                case 'join':
-                    if(check(true)){
-                        for (var i = 0; i < roul.length; i++) {
-                            if (roul[i] !== from && roul.length < 10) {
-                                API.sendChat('/em [' + from + '] Joined roulette!');
-                                roul.push(from);
+                        break;
+                    case 'ping': if(check(false)){ API.sendChat('/em [' + from + '] Pong!') }break;
+                    case 'link':
+                        if(check(false)){
+                            if (API.getMedia().format === 1) {
+                                API.sendChat('/em [' + from + '] Link to current song: http://youtu.be/' + API.getMedia().cid);
                             } else {
-                                API.sendChat('/em [' + from + '] It seems that you already joined!');
+                                var z = API.getMedia().cid;
+                                SC.get('/tracks', {
+                                    ids: z,
+                                }, function (tracks) {
+                                    API.sendChat('/em [' + from + '] Link to current song: ' + tracks[0].permalink_url);
+                                });
                             }
                         }
-                    }
-                    break;
-                case 'start':
-                    if (check(true) && settings.roulette) {
-                        API.sendChat('/em [' + from + '] Game started!');
-                        var y = Math.floor(Math.random() * roul.length);
-                        var z = setInterval(function () {
-                            API.sendChat('@' + roul[y] + ' you have the gun! Type !pass to pass it!!!');
-                            tempRoul.push(y);
-                            if (tempRoul[1] === roul[y]) {
-                                for (var i = 0; i < u.length; i++) {
-                                    if (tempRoul === u[i].username) {
-                                        if (data[u[i].id].roulSelect && !data[u[i].id].roulChat) {
-                                            data[u[i].id].roulChat = true;
-                                            if (listenFor(u[i].id, false) === true && listenFor(u[i].id, true) === '!pass') {
-                                                API.sendChat('/em [' + from + '] Passed the gun!');
-                                                data[u[i].id].roulSelect = false;
-                                                data[u[i].id].roulChat = false;
-                                                tempRoul.pop(u[i].username);
-                                                safeRoul.push(u[i].username);
-                                                roul.pop(u[i].username);
-                                            }
-                                        }
-                                    } else {
-                                        clearInterval(this);
-                                        z();
-                                    }
+                        break;
+                    case 'ad':
+                        if(check(false)){
+                            API.sendChat('/em [' + from + '] ADBlock (the version that isn\'t bad): https://www.getadblock.com');
+                        }
+                        break;
+                    case 'pic':
+                        if(check(false)){
+                            function getYt(url){
+                                var id = url.match('[\\?&]v=([^&#]*)');
+                                id = id[1];
+                                return id;
+                            }
+                            var z = $('iframe:first');
+                            var url_id = getYt('https://www.youtube.com/watch?v=' + API.getMedia().cid);
+                            this.url_id = url_id;
+                            API.sendChat('/em [' + from + '] http://i.ytimg.com/vi/' + url_id + '/maxresdefault.jpg');
+                        }
+                        break;
+    
+                        //For now, bouncer + commands. User cmds will be done later.
+                        
+                    case 'opt':
+                        if(check(true)){
+                            API.sendChat('/em ' + from + '][test] ' + opt);
+                        }
+                        break;
+                        
+                        //Start roulette
+                    case 'roul':
+                        if (check(true)) {
+                            if (noarg === 'start' && !settings.roulette) {
+                                API.sendChat('/em [' + from + '] Started roulette! Type "!join" to play.');
+                                settings.roulette = true;
+                            }
+                            if (noarg === 'stop' && settings.roulette) {
+                                clearInterval();
+                                settings.roulette = false;
+                                data.roulSelect = false;
+                                data.roulChat = false;
+                                API.sendChat('/em [' + from + '] Stopped roulette! :frowning:');
+                            }
+                        }
+                        break;
+                    case 'join':
+                        if(check(true)){
+                            for (var i = 0; i < roul.length; i++) {
+                                if (roul[i] !== from && roul.length < 10) {
+                                    API.sendChat('/em [' + from + '] Joined roulette!');
+                                    roul.push(from);
+                                } else {
+                                    API.sendChat('/em [' + from + '] It seems that you already joined!');
                                 }
-                            } else {
-                                clearInterval(this);
-                                z();
                             }
-                        }, 2000);
-                        z();
-                    }
-                    break;
-
-                    //End Roulette
-                case 'add':
-                    if (check(true)) {
-                        for (var i in u) {
-                            if (u[i].username === opt) {
-                                API.sendChat('/em [' + from + ' used add]');
-                                API.moderateAddDJ(u[i].id);
-                            } else API.sendChat('/em [' + from + '] User not found.');
                         }
-                    }
-                    break;
-
-                case 'remove':
-                    if (check(true)) {
-                        for (var i in u) {
-                            if (u[i].username === opt) {
-                                API.sendChat('/em [' + from + ' used remove]');
-                                API.moderateRemoveDJ(u[i].id);
-                            } else API.sendChat('/em [' + from + '] User not found.');
-                        }
-                    }
-                    break;
-
-                case 'move':
-                    if (check(true)) {
-                        for (var i in u) {
-                            if (u[i].username === opt) {
-                                if (arg !== null || undefined) {
-                                    API.sendChat('/em [' + from + ' used move]');
-                                    var z = API.getWaitList();
-                                    var y = parseInt(arg);
-                                    for (var c = 0; c < z.length; c++) {
-                                        if (z[c].username !== u[i].username) {
-                                            API.moderateAddDJ(u[c].id);
-                                            API.moderateMoveDJ(u[c].id, y);
+                        break;
+                    case 'start':
+                        if (check(true) && settings.roulette) {
+                            API.sendChat('/em [' + from + '] Game started!');
+                            var y = Math.floor(Math.random() * roul.length);
+                            var z = setInterval(function () {
+                                API.sendChat('@' + roul[y] + ' you have the gun! Type !pass to pass it!!!');
+                                tempRoul.push(y);
+                                if (tempRoul[1] === roul[y]) {
+                                    for (var i = 0; i < u.length; i++) {
+                                        if (tempRoul === u[i].username) {
+                                            if (data[u[i].id].roulSelect && !data[u[i].id].roulChat) {
+                                                data[u[i].id].roulChat = true;
+                                                if (listenFor(u[i].id, false) === true && listenFor(u[i].id, true) === '!pass') {
+                                                    API.sendChat('/em [' + from + '] Passed the gun!');
+                                                    data[u[i].id].roulSelect = false;
+                                                    data[u[i].id].roulChat = false;
+                                                    tempRoul.pop(u[i].username);
+                                                    safeRoul.push(u[i].username);
+                                                    roul.pop(u[i].username);
+                                                }
+                                            }
                                         } else {
-                                            if (z[c].username === u[i].username) {
-                                                API.moderateMoveDJ(u[c].id, y);
-                                            }
+                                            clearInterval(this);
+                                            z();
                                         }
                                     }
+                                } else {
+                                    clearInterval(this);
+                                    z();
                                 }
-                            } else API.sendChat('/em [' + from + '] User not found.');
+                            }, 2000);
+                            z();
                         }
-                    }
-                    break;
-
-                case 'skip':
-                    if (check(true)) {
-                        API.moderateForceSkip();
-                    }
-                    break;
-
-                case 'lockskip':
-                    if (check(true)) {
-                        if (noarg === 'op') {
-                            API.sendChat('/em [' + from + ' used lockskip]');
-                            var b = new Array();
-                            b.push(API.getDJ());
-                            if ($('.cycle-toggle').hasClass('disabled')) $(this).click();
-                            API.moderateLockWaitList(true, false);
-                            API.moderateForceSkip();
-                            API.sendChat('@' + b[1].username + ' please pick another song because that one is overplayed!');
-                            setTimeout(function () {
-                                API.moderateMoveDJ(b[1].id, 5);
-                            }, 500);
-                        }
-                        if (noarg !== 'op' || noarg === null || noarg === undefined) {
-                            API.sendChat('/em [' + from + ' used lockskip]');
-                            var b = new Array();
-                            b.push(API.getDJ().id);
-                            if ($('.cycle-toggle').hasClass('disabled')) $(this).click();
-                            API.moderateLockWaitList(true, false);
-                            API.moderateForceSkip();
-                            setTimeout(function () {
-                                API.moderateMoveDJ(b[1], 5);
-                            }, 500);
-                        }
-                    }
-                    break;
-
-                case 'ban':
-                    if (check(true)) {
-                        for (var i in u) {
-                            if (u[i].username === opt) {
-                                if (arg !== null || undefined) {
-                                    var z = parseInt(arg);
-                                    if (z === 1) {
-                                        API.sendChat('/em [' + from + ' used ban]');
-                                        API.moderateBanUser(u[i].username, 1, API.BAN.HOUR);
-                                    }
-                                    if (z === 2) {
-                                        API.sendChat('/em [' + from + ' used ban]');
-                                        API.moderateBanUser(u[i].username, 1, API.BAN.DAY);
-                                    }
-                                    if (z === 3) {
-                                        API.sendChat('/em [' + from + ' used ban]');
-                                        API.moderateBanUser(u[i].username, 1, API.BAN.PERMA);
-                                    } else if (z >= 4) API.sendChat('/em [' + from + '] Valid inputs are 1, 2, 3.');
-                                }
-                            } else API.sendChat('/em [' + from + '] User not found.');
-                        }
-                    }
-                    break;
-                case 'party':
-                    if (API.getUser(fromid).permission === 5) {
-                        if (!settings.party && noarg === null || noarg === undefined || arg === null || arg === undefined || opt === null || opt === undefined) {
-                            settings.party = true;
-                            API.sendChat('/em [' + from + ' started a party]');
-                            API.moderateLockWaitList(true, true);
-                            var z = API.getUsers();
-                            var y = new Array();
-                            for (var i = 0; i < z.length; i++) {
-                                if (z[i].permission === 1) {
-                                    y.push(z[i].id);
-                                }
-                            }
-                            var x = setInterval(function () {
-                                if (y.length !== 0) {
-                                    for (var c = 0; c < y.length; c++) {
-                                        API.moderateAddDJ(y[c].id);
-                                    }
-                                } else clearInterval(x);
-                            }, 6e3);
-                            API.moderateForceSkip();
-                            $.ajax({
-                                type: 'POST',
-                                url: 'http://plug.dj/_/gateway/moderate.update_name_1',
-                                contentType: 'application/json',
-                                data: '{"service":"moderate.update_name_1","body":["Join the party! | FourBit"]}'
-                            });
-                            if ($('.cycle-toggle').hasClass('disabled')) {
-                                $(this).click();
-                            }
-                        } else {
-                            API.sendChat('/em [' + from + '] It seems that a party is already in progress!');
-                        }
-                        if (settings.party && noarg === 'end' || settings.party && noarg === 'stop') {
-                            API.sendChat('/em [' + from + ' stopped the current party]');
-                            $.ajax({
-                                type: 'POST',
-                                url: 'http://plug.dj/_/gateway/moderate.update_name_1',
-                                contentType: 'application/json',
-                                data: '{"service":"moderate.update_name_1","body":["FourBitProductions | plug.dj"]}'
-                            });
-                            API.moderateLockWaitList(false);
-                            if ($('.cycle-toggle').hasClass('enabled')) {
-                                $(this).click();
-                            }
-                        }
-                    }
-                    break;
-                case 'save':
-                    if(check(true)){
-                        saveSettings();
-                        API.sendChat('/em Saved.');
-                    }
-                case 'status':
-                    if (check(true)) {
-                        var z = Date.now();
-                        var y = Math.floor(joinTime - z);
-                        API.sendChat('/em [' + from + '] Uptime: ' + y + ' ~ Party: ' + settings.party + ' ~ Blacklist: ' + settings.blacklist);
-                    }
-                    break;
-                case 'woot':
-                    if (check(true)) {
-                        $('#woot').click();
-                    }
-                    break;
-                case 'grab':
-                    if (check(true)) {
-                        $($('.curate').children('.menu').children().children()[0]).mousedown();
-                    }
-                    break;
-                case 'kill':
-                    if (check(true)) {
-                        shutdown();
-                    }
-                    break;
-                case 'reload':
-                    if(check(true)){
-                        shutdown();
-                        $.getScript('http://raw.githubusercontent.com/Pr0Code/Sound/blob/master/bot.js');
-                    }
-                    break;
-                case 'vr':
-                    if (check(true)) {
-                        //Broken down to show how I'm get percentages.
-                        var z = API.getRoomScore();
-                        var y = new Array();
-                        //Exclude bot
-                        var w = Math.floor(u.length - 1);
-                        //Get woot percent
-                        var b = Math.floor((w / z.positive) * 100);
-                        //Get cur percent
-                        var c = Math.floor((w / z.curates) * 100);
-                        //Get meh percent
-                        var d = Math.floor((w / z.negative) * 100);
-                        //Send
-                        API.sendChat('/em [' + from + '] Votes: ' + b + '% wooted, ' + c + '% grabbed, ' + d + '% meh\'d!');
-                    }
-                    break;
-                case 'clear':
-                    if (check(true)) {
-                        var z = $('#chat-messages').children();
-                        for (var i = 0; i < z.length; i++) {
-                            for (var c = 0; c < z[i].classList.length; c++) {
-                                if (z[i].classList[c].indexOf('cid-') === 0) {
-                                    API.moderateDeleteChat(z[i].classList[c].substr(4));
-                                }
-                            }
-                        }
-                        API.sendChat('/em [' + from + ' used clear]');
-                    }
-                    break;
-                case 'lock':
-                    if (check(true)) {
-                        API.sendChat('/em [' + from + ' used lock]');
-                        API.moderateLockWaitList(true, false);
-                    }
-                    break;
-                case 'cycle':
-                    if (check(true)) {
-                        API.sendChat('/em [' + from + ' used cycle]');
-                        $('.cycle-toggle').click();
-                    }
-                    break;
-                case 'mute':
-                    if (check(true)) {
-                        for (var i in u) {
-                            if (u[i].username === opt) {
-                                data[u[i].id].mute = true;
-                                API.sendChat('/em [' + from + ' muted ' + u[i].username + ']');
-                            }
-                        }
-                    }
-                    break;
-                case 'unmute':
-                    if (check(true)) {
-                        if (data[fromid].mute === true) {
-                            API.sendChat('/em [' + from + '] Tried unmuting themselves, but can\'t! Muahahahaha!!!');
-                        } else {
+                        break;
+    
+                        //End Roulette
+                    case 'add':
+                        if (check(true)) {
                             for (var i in u) {
                                 if (u[i].username === opt) {
-                                    data[u[i].id].mute = false;
-                                }
-                            }
-                        }
-                    }
-                    break;
-                case 'kick':
-                    if (check(true)) {
-                        for (var i in u) {
-                            if (u[i].username === opt) {
-                                API.sendChat('/em [' + from + ' used kick]');
-                                API.moderateBanUser(u[i].id, 1, API.BAN.HOUR);
-                                setTimeout(function () {
-                                    API.moderateUnbanUser(u[i].id);
-                                    API.moderateUnBanUser(u[i].id);
-                                    API.sendChat('/em [' + from + '] Kicked user can login now.');
-                                }, 15000);
-                            }
-                        }
-                    }
-                    break;
-                case 'reg':
-                    if (check(true)) {
-                        for (var i in u) {
-                            if (u[i].username === opt) {
-                                API.sendChat('/em [' + from + '] Removed ' + u[i].username + ' from the staff!');
-                                API.moderateSetRole(u[i].id, API.ROLE.NONE);
-                            }
-                        }
-                    }
-                    break;
-                case 'rdj':
-                    if (check(true)) {
-                        for (var i in u) {
-                            if (u[i].username === opt) {
-                                API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a Resident DJ!');
-                                API.moderateSetRole(u[i].id, API.ROLE.RESIDENTDJ);
-                            }
-                        }
-                    }
-                    break;
-                case 'bouncer':
-                    if (check(true)) {
-                        for (var i in u) {
-                            if (u[i].username === opt) {
-                                API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a bouncer!');
-                                API.moderateSetRole(u[i].id, API.ROLE.BOUNCER);
-                            }
-                        }
-                    }
-                    break;
-                case 'manager':
-                    if (check(true)) {
-                        for (var i in u) {
-                            if (u[i].username === opt) {
-                                API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a manager!');
-                                API.moderateSetRole(u[i].id, API.ROLE.MANAGER);
-                            }
-                        }
-                    }
-                    break;
-                case 'mehs':
-                    if(check(true)){
-                        var z = new Array();
-                        for(var i = 0; i < u.length; i++){
-                            for(var c = 0; c < u.length; c++){
-                                if(u[i].vote === -1){
-                                    z.push(u[i].username);
-                                }
-                                if(u[c].vote === -1){
-                                    z.push(u[c].username);
-                                }
-                                if(API.getRoomScore().negative.length === z.length){
-                                    API.sendChat('/em [' + from + '] Users who meh\'d: ' + z[x].join(' ') + '.');
-                                    z = [];
-                                }else{
-                                    API.sendChat('/em [' + from + '] Uh oh! I can\'t retrive mehs!');
-                                    z = [];
-                                }
-                            }
-                        }
-                    }
-                    break;
-                case 'motd':
-                        if(check(true)){
-                            if(noarg === 'off' || noarg === 'disable'){
-                                settings.motd.enabled = false;
-                                clearInterval(motdInt);
-                                API.sendChat('/em [' + from + '] Motd disabled.');
-                            }
-                            if(noarg === 'on' || noarg === 'enable'){
-                                  settings.motd.enable = true;
-                                  clearInterval(motdInt);
-                                  motd();
-                                  API.sendChat('/em [' + from + '] Motd enabled.');
-                            }
-                            if(noarg === null || noarg === undefined){
-                                API.sendChat('/em [' + from + '] Current message: ' + motdMsg[Math.floor(Math.random() * motdMsg.length)]);
-                            }
-                            if(noarg !== null || noarg !== undefined || noarg !== 'on' || noarg !== 'off' || noarg !== 'enable' || noarg !== 'disable'){
-                                motdMsg = [];
-                                motdMsg = [noarg];
-                                clearInterval(motdInt);
-                                motd();
+                                    API.sendChat('/em [' + from + ' used add]');
+                                    API.moderateAddDJ(u[i].id);
+                                } else API.sendChat('/em [' + from + '] User not found.');
                             }
                         }
                         break;
-                    case 'cmdsettings':
-                        if(check(true)){
-                            if(noarg !== null || noarg !== undefined || noarg === undefined || noarg === null){
-                                API.sendChat('/em [' + from + '] Command Settings | Usercmds: ' + settings.userCmds);
-                            }
-                            if(noarg === 'users'){
-                                API.sendChat('/em [' + from + '] Users: ' + settings.userCmds + ' | on/enable/off/disable');
-                            }
-                            if(noarg === 'users' && arg === 'on' || arg === 'enable'){
-                                if(!settings.userCmds){
-                                    settings.userCmds = true;
-                                    API.sendChat('/em [' + from + '] Users can now use commands.');
-                                }else{
-                                    API.sendChat('/em [' + from + '] Users already have commands!');
-                                }
-                            }
-                            if(noarg === 'users' && arg === 'off' || arg === 'disable'){
-                                settings.userCmds = false;
-                                API.sendChat('/em [' + from + '] Users no longer have commands.');
-                            }else{
-                                API.sendChat('/em [' + from + '] User commands are already disabled!');
+    
+                    case 'remove':
+                        if (check(true)) {
+                            for (var i in u) {
+                                if (u[i].username === opt) {
+                                    API.sendChat('/em [' + from + ' used remove]');
+                                    API.moderateRemoveDJ(u[i].id);
+                                } else API.sendChat('/em [' + from + '] User not found.');
                             }
                         }
                         break;
-                    case 'set':
-                        if(check(true)){
-                            if(noarg !== null || noarg !== undefined || noarg === undefined || noarg === null){
-                                API.sendChat('/em [' + from + '] Items that can be set: woot, motd, antiafk, songlength, blacklist, stats, historyskip');
-                            }
-                            if(noarg === 'woot'){
-                                if(arg === 'on' || arg === 'enable'){
-                                    if(!settings.woot){
-                                        settings.woot = true;
-                                        saveSettings();
-                                        $('#woot').click();
-                                        API.sendChat('/em [' + from + '] Woot is now enabled.');
-                                    }else{
-                                        API.sendChat('/em [' + from + '] It seems as if autowoot for me is already enabled!');
-                                    }
-                                }else{
-                                    if(arg === 'off' || arg === 'disable'){
-                                        if(settings.woot){
-                                            settings.woot = false;
-                                            saveSettings();
-                                            API.sendChat('/em [' + from + '] Woot is now disabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] It seems as if autowoot for me is already disabled!');
-                                        }
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                    }
-                                }
-                            }
-                            if(noarg === 'motd'){
-                                if(arg === 'on' || arg === 'enable'){
-                                    if(!settings.motd.enabled){
-                                        settings.motd.enabled = true;
-                                        saveSettings();
-                                        clearInterval(motdInt);
-                                        motd();
-                                        API.sendChat('/em [' + from + '] Motd is now enabled.');
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Motd is already enabled!');
-                                    }
-                                }else{
-                                    if(arg === 'off' || arg === 'disable'){
-                                        if(settings.motd.enabled){
-                                            settings.motd.enabled = false;
-                                            saveSettings();
-                                            clearInterval(motdInt);
-                                            API.sendChat('/em [' + from + '] Motd is now disabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Motd is already disabled!');
-                                        }
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                    }
-                                }
-                            }
-                            if(noarg === 'antiafk'){
-                                if(arg === 'on' || arg === 'enable'){
-                                    if(!settings.antiafk.enabled){
-                                        settings.antiafk.enabled = true;
-                                        saveSettings();
-                                        API.sendChat('/em [' + from + '] AntiAFK is now enabled.');
-                                    }else{
-                                        API.sendChat('/em [' + from + '] AntiAFK is already enabled!');
-                                    }
-                                }else{
-                                    if(arg === 'off' || arg === 'disable'){
-                                        if(settings.antiafk.enabled){
-                                            settings.antiafk.enabled = false;
-                                            saveSettings();
-                                            API.sendChat('/em [' + from + '] AntiAFK is now disabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] AntiAFK is already disabled!');
-                                        }
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                    }
-                                }
-                            }
-                            if(noarg === 'songlength'){
-                                if(arg === 'on' || arg === 'enable'){
-                                    if(!settings.songLength.enabled){
-                                        settings.songLength.enabled = true;
-                                        saveSettings();
-                                        API.sendChat('/em [' + from + '] Songlength-check now enabled.');
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Songlength-check is already enabled!');
-                                    }
-                                }else{
-                                    if(arg === 'off' || arg === 'disable'){
-                                        if(settings.songLength.enabled){
-                                            settings.songLength.enabled = false;
-                                            saveSettings();
-                                            API.sendChat('/em [' + from + '] Songlength-check now disabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Sondlength-check is already disabled!');
-                                        }
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                    }
-                                }
-                            }
-                            if(noarg === 'blacklist'){
-                                if(arg === 'on' || arg === 'enable'){
-                                    if(!settings.blacklist){
-                                        settings.blacklist = true;
-                                        saveSettings();
-                                        API.sendChat('/em [' + from + '] Blacklist now enabled (will resume on dj-advance).');
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Blacklist is already enabled!');
-                                    }
-                                }else{
-                                    if(arg === 'off' || arg === 'disable'){
-                                        if(settings.blacklist){
-                                            settings.blacklist = false;
-                                            saveSettings();
-                                            API.sendChat('/em [' + from + '] Blacklist now disabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Blacklist is already disabled!');
-                                        }
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                    }
-                                }
-                            }
-                            if(noarg === 'stats'){
-                                if(arg === 'on' || arg === 'enable'){
-                                    if(!settings.stats){
-                                        settings.stats = true;
-                                        saveSettings();
-                                        API.sendChat('/em [' + from + '] Stats now enabled.');
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Stats are already enabled!');
-                                    }
-                                }else{
-                                    if(arg === 'off' || arg === 'disable'){
-                                        if(settings.stats){
-                                            settings.stats = false;
-                                            saveSettings();
-                                            API.sendChat('/em [' + from + '] Stats now disabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Stats are already disabled!');
-                                        }
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                    }
-                                }
-                            }
-                            if(noarg === 'historyskip'){
-                                if(arg === 'on' || arg === 'enable'){
-                                    if(!settings.historySkip){
-                                        settings.historySkip = true;
-                                        saveSettings();
-                                        API.sendChat('/em [' + from + '] HistorySkip now enabled (will resume on dj-advance).');
-                                    }else{
-                                        API.sendChat('/em [' + from + '] HistorySkip is already enabled!');
-                                    }
-                                }else{
-                                    if(arg === 'off' || arg === 'disable'){
-                                        if(settings.historySkip){
-                                            settings.historySkip = false;
-                                            saveSettings();
-                                            API.sendChat('/em [' + from + '] HistorySkip now disabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from  + '] HistorySkip is already disabled!');
-                                        }
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case 'exe':
-                        if(check(true)){
-                            var arr = new Array();
-                            for(var i in u){
-                                if(u[i].username === opt){
-                                    API.sendChat('[' + from + '] @' + u[i].username + ' you are being executed for committing crimes against the community. Any last words?');
-                                    arr.push(u[i].id);
-                                    data[u[i].id].exeWarn = true;
-                                    setInterval(function(){
-                                        if(data[u[i].id].exeChat === true){
-                                            clearInterval(this);
-                                            var z = API.getUsers();
-                                            for(var c = 0; c < z.length; c++){
-                                                if(arr[1] !== z[c].id){
-                                                    API.sendChat('/em Wow. ' + u[i].username + ' left. GET BANNED ANYWAY!!!');
-                                                    $.ajax({
-                                                        type: 'POST',
-                                                        url: 'http://plug.dj/_/gateway/moderate.ban_1',
-                                                        contentType: 'application/json',
-                                                        data: '{"service":"moderate.ban_1","body":["' + arr[1] + '"]}'
-                                                    });
-                                                    arr = [];
-                                                }else{
-                                                    API.sendChat('/em Goodbye.');
-                                                    API.moderateBanUser(arr[1], 1, API.BAN.PERMA);
-                                                    arr = [];
+    
+                    case 'move':
+                        if (check(true)) {
+                            for (var i in u) {
+                                if (u[i].username === opt) {
+                                    if (arg !== null || undefined) {
+                                        API.sendChat('/em [' + from + ' used move]');
+                                        var z = API.getWaitList();
+                                        var y = parseInt(arg);
+                                        for (var c = 0; c < z.length; c++) {
+                                            if (z[c].username !== u[i].username) {
+                                                API.moderateAddDJ(u[c].id);
+                                                API.moderateMoveDJ(u[c].id, y);
+                                            } else {
+                                                if (z[c].username === u[i].username) {
+                                                    API.moderateMoveDJ(u[c].id, y);
                                                 }
                                             }
                                         }
-                                    }, 1000);
-                                    
+                                    }
+                                } else API.sendChat('/em [' + from + '] User not found.');
+                            }
+                        }
+                        break;
+    
+                    case 'skip':
+                        if (check(true)) {
+                            API.moderateForceSkip();
+                        }
+                        break;
+    
+                    case 'lockskip':
+                        if (check(true)) {
+                            if (noarg === 'op') {
+                                API.sendChat('/em [' + from + ' used lockskip]');
+                                var b = new Array();
+                                b.push(API.getDJ());
+                                if ($('.cycle-toggle').hasClass('disabled')) $(this).click();
+                                API.moderateLockWaitList(true, false);
+                                API.moderateForceSkip();
+                                API.sendChat('@' + b[1].username + ' please pick another song because that one is overplayed!');
+                                setTimeout(function () {
+                                    API.moderateMoveDJ(b[1].id, 5);
+                                }, 500);
+                            }
+                            if (noarg !== 'op' || noarg === null || noarg === undefined) {
+                                API.sendChat('/em [' + from + ' used lockskip]');
+                                var b = new Array();
+                                b.push(API.getDJ().id);
+                                if ($('.cycle-toggle').hasClass('disabled')) $(this).click();
+                                API.moderateLockWaitList(true, false);
+                                API.moderateForceSkip();
+                                setTimeout(function () {
+                                    API.moderateMoveDJ(b[1], 5);
+                                }, 500);
+                            }
+                        }
+                        break;
+    
+                    case 'ban':
+                        if (check(true)) {
+                            for (var i in u) {
+                                if (u[i].username === opt) {
+                                    if (arg !== null || undefined) {
+                                        var z = parseInt(arg);
+                                        if (z === 1) {
+                                            API.sendChat('/em [' + from + ' used ban]');
+                                            API.moderateBanUser(u[i].username, 1, API.BAN.HOUR);
+                                        }
+                                        if (z === 2) {
+                                            API.sendChat('/em [' + from + ' used ban]');
+                                            API.moderateBanUser(u[i].username, 1, API.BAN.DAY);
+                                        }
+                                        if (z === 3) {
+                                            API.sendChat('/em [' + from + ' used ban]');
+                                            API.moderateBanUser(u[i].username, 1, API.BAN.PERMA);
+                                        } else if (z >= 4) API.sendChat('/em [' + from + '] Valid inputs are 1, 2, 3.');
+                                    }
+                                } else API.sendChat('/em [' + from + '] User not found.');
+                            }
+                        }
+                        break;
+                    case 'party':
+                        if (API.getUser(fromid).permission === 5) {
+                            if (!settings.party && noarg === null || noarg === undefined || arg === null || arg === undefined || opt === null || opt === undefined) {
+                                settings.party = true;
+                                API.sendChat('/em [' + from + ' started a party]');
+                                API.moderateLockWaitList(true, true);
+                                var z = API.getUsers();
+                                var y = new Array();
+                                for (var i = 0; i < z.length; i++) {
+                                    if (z[i].permission === 1) {
+                                        y.push(z[i].id);
+                                    }
+                                }
+                                var x = setInterval(function () {
+                                    if (y.length !== 0) {
+                                        for (var c = 0; c < y.length; c++) {
+                                            API.moderateAddDJ(y[c].id);
+                                        }
+                                    } else clearInterval(x);
+                                }, 6e3);
+                                API.moderateForceSkip();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'http://plug.dj/_/gateway/moderate.update_name_1',
+                                    contentType: 'application/json',
+                                    data: '{"service":"moderate.update_name_1","body":["Join the party! | FourBit"]}'
+                                });
+                                if ($('.cycle-toggle').hasClass('disabled')) {
+                                    $(this).click();
+                                }
+                            } else {
+                                API.sendChat('/em [' + from + '] It seems that a party is already in progress!');
+                            }
+                            if (settings.party && noarg === 'end' || settings.party && noarg === 'stop') {
+                                API.sendChat('/em [' + from + ' stopped the current party]');
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'http://plug.dj/_/gateway/moderate.update_name_1',
+                                    contentType: 'application/json',
+                                    data: '{"service":"moderate.update_name_1","body":["FourBitProductions | plug.dj"]}'
+                                });
+                                API.moderateLockWaitList(false);
+                                if ($('.cycle-toggle').hasClass('enabled')) {
+                                    $(this).click();
                                 }
                             }
                         }
                         break;
-                    case '!loc':
+                    case 'save':
                         if(check(true)){
-                            window.location.reload();
-                            setTimeout(function(){
-                                $.getScript('http://raw.githubusercontent.com/Pr0Code/Sound/blob/master/bot.js');
-                            }, 5000);
+                            saveSettings();
+                            API.sendChat('/em Saved.');
+                        }
+                    case 'status':
+                        if (check(true)) {
+                            var z = Date.now();
+                            var y = Math.floor(joinTime - z);
+                            API.sendChat('/em [' + from + '] Uptime: ' + y + ' ~ Party: ' + settings.party + ' ~ Blacklist: ' + settings.blacklist);
                         }
                         break;
+                    case 'woot':
+                        if (check(true)) {
+                            $('#woot').click();
+                        }
+                        break;
+                    case 'grab':
+                        if (check(true)) {
+                            $($('.curate').children('.menu').children().children()[0]).mousedown();
+                        }
+                        break;
+                    case 'kill':
+                        if (check(true)) {
+                            shutdown();
+                        }
+                        break;
+                    case 'reload':
+                        if(check(true)){
+                            shutdown();
+                            $.getScript('http://raw.githubusercontent.com/Pr0Code/Sound/blob/master/bot.js');
+                        }
+                        break;
+                    case 'vr':
+                        if (check(true)) {
+                            //Broken down to show how I'm get percentages.
+                            var z = API.getRoomScore();
+                            var y = new Array();
+                            //Exclude bot
+                            var w = Math.floor(u.length - 1);
+                            //Get woot percent
+                            var b = Math.floor((w / z.positive) * 100);
+                            //Get cur percent
+                            var c = Math.floor((w / z.curates) * 100);
+                            //Get meh percent
+                            var d = Math.floor((w / z.negative) * 100);
+                            //Send
+                            API.sendChat('/em [' + from + '] Votes: ' + b + '% wooted, ' + c + '% grabbed, ' + d + '% meh\'d!');
+                        }
+                        break;
+                    case 'clear':
+                        if (check(true)) {
+                            var z = $('#chat-messages').children();
+                            for (var i = 0; i < z.length; i++) {
+                                for (var c = 0; c < z[i].classList.length; c++) {
+                                    if (z[i].classList[c].indexOf('cid-') === 0) {
+                                        API.moderateDeleteChat(z[i].classList[c].substr(4));
+                                    }
+                                }
+                            }
+                            API.sendChat('/em [' + from + ' used clear]');
+                        }
+                        break;
+                    case 'lock':
+                        if (check(true)) {
+                            API.sendChat('/em [' + from + ' used lock]');
+                            API.moderateLockWaitList(true, false);
+                        }
+                        break;
+                    case 'cycle':
+                        if (check(true)) {
+                            API.sendChat('/em [' + from + ' used cycle]');
+                            $('.cycle-toggle').click();
+                        }
+                        break;
+                    case 'mute':
+                        if (check(true)) {
+                            for (var i in u) {
+                                if (u[i].username === opt) {
+                                    data[u[i].id].mute = true;
+                                    API.sendChat('/em [' + from + ' muted ' + u[i].username + ']');
+                                }
+                            }
+                        }
+                        break;
+                    case 'unmute':
+                        if (check(true)) {
+                            if (data[fromid].mute === true) {
+                                API.sendChat('/em [' + from + '] Tried unmuting themselves, but can\'t! Muahahahaha!!!');
+                            } else {
+                                for (var i in u) {
+                                    if (u[i].username === opt) {
+                                        data[u[i].id].mute = false;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 'kick':
+                        if (check(true)) {
+                            for (var i in u) {
+                                if (u[i].username === opt) {
+                                    API.sendChat('/em [' + from + ' used kick]');
+                                    API.moderateBanUser(u[i].id, 1, API.BAN.HOUR);
+                                    setTimeout(function () {
+                                        API.moderateUnbanUser(u[i].id);
+                                        API.moderateUnBanUser(u[i].id);
+                                        API.sendChat('/em [' + from + '] Kicked user can login now.');
+                                    }, 15000);
+                                }
+                            }
+                        }
+                        break;
+                    case 'reg':
+                        if (check(true)) {
+                            for (var i in u) {
+                                if (u[i].username === opt) {
+                                    API.sendChat('/em [' + from + '] Removed ' + u[i].username + ' from the staff!');
+                                    API.moderateSetRole(u[i].id, API.ROLE.NONE);
+                                }
+                            }
+                        }
+                        break;
+                    case 'rdj':
+                        if (check(true)) {
+                            for (var i in u) {
+                                if (u[i].username === opt) {
+                                    API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a Resident DJ!');
+                                    API.moderateSetRole(u[i].id, API.ROLE.RESIDENTDJ);
+                                }
+                            }
+                        }
+                        break;
+                    case 'bouncer':
+                        if (check(true)) {
+                            for (var i in u) {
+                                if (u[i].username === opt) {
+                                    API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a bouncer!');
+                                    API.moderateSetRole(u[i].id, API.ROLE.BOUNCER);
+                                }
+                            }
+                        }
+                        break;
+                    case 'manager':
+                        if (check(true)) {
+                            for (var i in u) {
+                                if (u[i].username === opt) {
+                                    API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a manager!');
+                                    API.moderateSetRole(u[i].id, API.ROLE.MANAGER);
+                                }
+                            }
+                        }
+                        break;
+                    case 'mehs':
+                        if(check(true)){
+                            var z = new Array();
+                            for(var i = 0; i < u.length; i++){
+                                for(var c = 0; c < u.length; c++){
+                                    if(u[i].vote === -1){
+                                        z.push(u[i].username);
+                                    }
+                                    if(u[c].vote === -1){
+                                        z.push(u[c].username);
+                                    }
+                                    if(API.getRoomScore().negative.length === z.length){
+                                        API.sendChat('/em [' + from + '] Users who meh\'d: ' + z[x].join(' ') + '.');
+                                        z = [];
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Uh oh! I can\'t retrive mehs!');
+                                        z = [];
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 'motd':
+                            if(check(true)){
+                                if(noarg === 'off' || noarg === 'disable'){
+                                    settings.motd.enabled = false;
+                                    clearInterval(motdInt);
+                                    API.sendChat('/em [' + from + '] Motd disabled.');
+                                }
+                                if(noarg === 'on' || noarg === 'enable'){
+                                      settings.motd.enable = true;
+                                      clearInterval(motdInt);
+                                      motd();
+                                      API.sendChat('/em [' + from + '] Motd enabled.');
+                                }
+                                if(noarg === null || noarg === undefined){
+                                    API.sendChat('/em [' + from + '] Current message: ' + motdMsg[Math.floor(Math.random() * motdMsg.length)]);
+                                }
+                                if(noarg !== null || noarg !== undefined || noarg !== 'on' || noarg !== 'off' || noarg !== 'enable' || noarg !== 'disable'){
+                                    motdMsg = [];
+                                    motdMsg = [noarg];
+                                    clearInterval(motdInt);
+                                    motd();
+                                }
+                            }
+                            break;
+                        case 'cmdsettings':
+                            if(check(true)){
+                                if(noarg !== null || noarg !== undefined || noarg === undefined || noarg === null){
+                                    API.sendChat('/em [' + from + '] Command Settings | Usercmds: ' + settings.userCmds);
+                                }
+                                if(noarg === 'users'){
+                                    API.sendChat('/em [' + from + '] Users: ' + settings.userCmds + ' | on/enable/off/disable');
+                                }
+                                if(noarg === 'users' && arg === 'on' || arg === 'enable'){
+                                    if(!settings.userCmds){
+                                        settings.userCmds = true;
+                                        API.sendChat('/em [' + from + '] Users can now use commands.');
+                                    }else{
+                                        API.sendChat('/em [' + from + '] Users already have commands!');
+                                    }
+                                }
+                                if(noarg === 'users' && arg === 'off' || arg === 'disable'){
+                                    settings.userCmds = false;
+                                    API.sendChat('/em [' + from + '] Users no longer have commands.');
+                                }else{
+                                    API.sendChat('/em [' + from + '] User commands are already disabled!');
+                                }
+                            }
+                            break;
+                        case 'set':
+                            if(check(true)){
+                                if(noarg !== null || noarg !== undefined || noarg === undefined || noarg === null){
+                                    API.sendChat('/em [' + from + '] Items that can be set: woot, motd, antiafk, songlength, blacklist, stats, historyskip');
+                                }
+                                if(noarg === 'woot'){
+                                    if(arg === 'on' || arg === 'enable'){
+                                        if(!settings.woot){
+                                            settings.woot = true;
+                                            saveSettings();
+                                            $('#woot').click();
+                                            API.sendChat('/em [' + from + '] Woot is now enabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] It seems as if autowoot for me is already enabled!');
+                                        }
+                                    }else{
+                                        if(arg === 'off' || arg === 'disable'){
+                                            if(settings.woot){
+                                                settings.woot = false;
+                                                saveSettings();
+                                                API.sendChat('/em [' + from + '] Woot is now disabled.');
+                                            }else{
+                                                API.sendChat('/em [' + from + '] It seems as if autowoot for me is already disabled!');
+                                            }
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                        }
+                                    }
+                                }
+                                if(noarg === 'motd'){
+                                    if(arg === 'on' || arg === 'enable'){
+                                        if(!settings.motd.enabled){
+                                            settings.motd.enabled = true;
+                                            saveSettings();
+                                            clearInterval(motdInt);
+                                            motd();
+                                            API.sendChat('/em [' + from + '] Motd is now enabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Motd is already enabled!');
+                                        }
+                                    }else{
+                                        if(arg === 'off' || arg === 'disable'){
+                                            if(settings.motd.enabled){
+                                                settings.motd.enabled = false;
+                                                saveSettings();
+                                                clearInterval(motdInt);
+                                                API.sendChat('/em [' + from + '] Motd is now disabled.');
+                                            }else{
+                                                API.sendChat('/em [' + from + '] Motd is already disabled!');
+                                            }
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                        }
+                                    }
+                                }
+                                if(noarg === 'antiafk'){
+                                    if(arg === 'on' || arg === 'enable'){
+                                        if(!settings.antiafk.enabled){
+                                            settings.antiafk.enabled = true;
+                                            saveSettings();
+                                            API.sendChat('/em [' + from + '] AntiAFK is now enabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] AntiAFK is already enabled!');
+                                        }
+                                    }else{
+                                        if(arg === 'off' || arg === 'disable'){
+                                            if(settings.antiafk.enabled){
+                                                settings.antiafk.enabled = false;
+                                                saveSettings();
+                                                API.sendChat('/em [' + from + '] AntiAFK is now disabled.');
+                                            }else{
+                                                API.sendChat('/em [' + from + '] AntiAFK is already disabled!');
+                                            }
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                        }
+                                    }
+                                }
+                                if(noarg === 'songlength'){
+                                    if(arg === 'on' || arg === 'enable'){
+                                        if(!settings.songLength.enabled){
+                                            settings.songLength.enabled = true;
+                                            saveSettings();
+                                            API.sendChat('/em [' + from + '] Songlength-check now enabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Songlength-check is already enabled!');
+                                        }
+                                    }else{
+                                        if(arg === 'off' || arg === 'disable'){
+                                            if(settings.songLength.enabled){
+                                                settings.songLength.enabled = false;
+                                                saveSettings();
+                                                API.sendChat('/em [' + from + '] Songlength-check now disabled.');
+                                            }else{
+                                                API.sendChat('/em [' + from + '] Sondlength-check is already disabled!');
+                                            }
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                        }
+                                    }
+                                }
+                                if(noarg === 'blacklist'){
+                                    if(arg === 'on' || arg === 'enable'){
+                                        if(!settings.blacklist){
+                                            settings.blacklist = true;
+                                            saveSettings();
+                                            API.sendChat('/em [' + from + '] Blacklist now enabled (will resume on dj-advance).');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Blacklist is already enabled!');
+                                        }
+                                    }else{
+                                        if(arg === 'off' || arg === 'disable'){
+                                            if(settings.blacklist){
+                                                settings.blacklist = false;
+                                                saveSettings();
+                                                API.sendChat('/em [' + from + '] Blacklist now disabled.');
+                                            }else{
+                                                API.sendChat('/em [' + from + '] Blacklist is already disabled!');
+                                            }
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                        }
+                                    }
+                                }
+                                if(noarg === 'stats'){
+                                    if(arg === 'on' || arg === 'enable'){
+                                        if(!settings.stats){
+                                            settings.stats = true;
+                                            saveSettings();
+                                            API.sendChat('/em [' + from + '] Stats now enabled.');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Stats are already enabled!');
+                                        }
+                                    }else{
+                                        if(arg === 'off' || arg === 'disable'){
+                                            if(settings.stats){
+                                                settings.stats = false;
+                                                saveSettings();
+                                                API.sendChat('/em [' + from + '] Stats now disabled.');
+                                            }else{
+                                                API.sendChat('/em [' + from + '] Stats are already disabled!');
+                                            }
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                        }
+                                    }
+                                }
+                                if(noarg === 'historyskip'){
+                                    if(arg === 'on' || arg === 'enable'){
+                                        if(!settings.historySkip){
+                                            settings.historySkip = true;
+                                            saveSettings();
+                                            API.sendChat('/em [' + from + '] HistorySkip now enabled (will resume on dj-advance).');
+                                        }else{
+                                            API.sendChat('/em [' + from + '] HistorySkip is already enabled!');
+                                        }
+                                    }else{
+                                        if(arg === 'off' || arg === 'disable'){
+                                            if(settings.historySkip){
+                                                settings.historySkip = false;
+                                                saveSettings();
+                                                API.sendChat('/em [' + from + '] HistorySkip now disabled.');
+                                            }else{
+                                                API.sendChat('/em [' + from  + '] HistorySkip is already disabled!');
+                                            }
+                                        }else{
+                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case 'exe':
+                            if(check(true)){
+                                var arr = new Array();
+                                for(var i in u){
+                                    if(u[i].username === opt){
+                                        API.sendChat('[' + from + '] @' + u[i].username + ' you are being executed for committing crimes against the community. Any last words?');
+                                        arr.push(u[i].id);
+                                        data[u[i].id].exeWarn = true;
+                                        setInterval(function(){
+                                            if(data[u[i].id].exeChat === true){
+                                                clearInterval(this);
+                                                var z = API.getUsers();
+                                                for(var c = 0; c < z.length; c++){
+                                                    if(arr[1] !== z[c].id){
+                                                        API.sendChat('/em Wow. ' + u[i].username + ' left. GET BANNED ANYWAY!!!');
+                                                        $.ajax({
+                                                            type: 'POST',
+                                                            url: 'http://plug.dj/_/gateway/moderate.ban_1',
+                                                            contentType: 'application/json',
+                                                            data: '{"service":"moderate.ban_1","body":["' + arr[1] + '"]}'
+                                                        });
+                                                        arr = [];
+                                                    }else{
+                                                        API.sendChat('/em Goodbye.');
+                                                        API.moderateBanUser(arr[1], 1, API.BAN.PERMA);
+                                                        arr = [];
+                                                    }
+                                                }
+                                            }
+                                        }, 1000);
+                                        
+                                    }
+                                }
+                            }
+                            break;
+                        case '!loc':
+                            if(check(true)){
+                                window.location.reload();
+                                setTimeout(function(){
+                                    $.getScript('http://raw.githubusercontent.com/Pr0Code/Sound/blob/master/bot.js');
+                                }, 5000);
+                            }
+                            break;
+                    }
                 }
             }
         }
