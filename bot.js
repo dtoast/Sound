@@ -331,6 +331,7 @@ Please refer to the Readme.md for license stuff
                 var fromid = a.fromID;
                 var chatid = a.chatID;
                 var check = function(staff){
+                    API.moderateDeleteChat(a.chatID);
                     if(staff === undefined) staff = false;
                     if(API.getUser(a.fromID).permission >= 2 && settings.userCmds || !settings.userCmds && staff) return true;
                     else if(API.getUser(a.fromID).permission <= 1 && settings.userCmds && !staff){
