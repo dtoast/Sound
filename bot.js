@@ -321,8 +321,8 @@ Please refer to the Readme.md for license stuff
             }
             if(pre()){
                 var str = a.message.substr(1).trim();
-                var opt = str.split('@') + 1;
-                var arg = str.lastIndexOf(' ') + 1;
+                var opt = str.split('@')[1];
+                var arg = str.lastIndexOf(' ')[1];
                 var noarg = str.split(' ')[1];
                 var from = a.from;
                 var fromid = a.fromID;
