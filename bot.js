@@ -326,9 +326,9 @@ Please refer to the Readme.md for license stuff
                 var str      = a.message.substr(1).trim();
                 var hi       = str.split(' ');
                 var noarg    = hi.slice(2).join(' ').toString();
-                var opt      = hi[1].substr(1);
+                var opt      = hi.substr(1);
                 var args     = hi.lastIndexOf(' ') + 1;
-                var arg      = h[1].substr(args);
+                var arg      = hi.substr(args);
                 var from     = a.from;
                 var fromid   = a.fromID;
                 var chatid   = a.chatID;
