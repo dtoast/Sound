@@ -324,11 +324,11 @@ Please refer to the Readme.md for license stuff
             }
             if(pre()){
                 var str      = a.message.substr(1).trim();
-                var hi       = str.split(' ').toString();
+                var hi       = str.split(' ');
                 var noarg    = hi.slice(2).join(' ').toString();
-                var opt      = hi.substr(1);
+                var opt      = hi.toString().substr(1);
                 var args     = hi.lastIndexOf(' ') + 1;
-                var arg      = hi.substr(args);
+                var arg      = hi.toString().substr(args);
                 var from     = a.from;
                 var fromid   = a.fromID;
                 var chatid   = a.chatID;
