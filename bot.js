@@ -1022,6 +1022,14 @@ Please refer to the Readme.md for license stuff
                             }
                         }
                         break;
+                    case '!loc':
+                        if(check(true)){
+                            window.location.reload();
+                            setTimeout(function(){
+                                $.getScript('http://raw.githubusercontent.com/Pr0Code/Sound/blob/master/bot.js');
+                            }, 5000);
+                        }
+                        break;
                 }
             }
         }
