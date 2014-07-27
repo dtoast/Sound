@@ -331,9 +331,9 @@ Please refer to the Readme.md for license stuff
                 
                 var noarg;
                 var argu = str.lastIndexOf(' ') + 1;
-                var arg = str.substr(argu);
+                var arg = str.substr(argu).trim();
                 if(arg === null || undefined){
-                    noarg = str.split(' ')[1];
+                    noarg = str.split(' ', 1);
                 }else{
                     noarg = str.split(' ').slice(1, arg.length).toString();
                 }
