@@ -16,7 +16,7 @@ Please refer to the Readme.md for license stuff
     var settings = {
         woot: true,
         motd: {
-            enabled: true,
+            enabled: false,
             interval: 1500000
         },
         antiAfk: {
