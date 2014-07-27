@@ -9,7 +9,7 @@ Copyright (c) 2014 FourBit (Pr0Code)
 Please refer to the Readme.md for license stuff
 
 */
-//(function () {
+(function () {
     var motdMsg = ["Welcome to the FourBit plug.dj room!"];
     var joinTime = Date.now();
     var blacklist = ['#SELFIE (Official Music Video)', 'Troll Song'];
@@ -65,9 +65,7 @@ Please refer to the Readme.md for license stuff
         API.setVolume(15);
         saveSettings();
         if (settings.motd.enabled) clearInterval(motdInt);
-        delete data;
-        delete settings;
-        API.sendChat('/em Soundbot Shutdown.');
+        API.sendChat('/em Shutdown.');
     }
 
     //Userdata
@@ -354,7 +352,7 @@ Please refer to the Readme.md for license stuff
                         } else {
                             var z = API.getMedia().cid;
                             SC.get('/tracks', {
-                                ids: id,
+                                ids: z,
                             }, function (tracks) {
                                 API.sendChat('/em [' + from + '] Link to current song: ' + tracks[0].permalink_url);
                             });
@@ -1109,4 +1107,4 @@ Please refer to the Readme.md for license stuff
         if(typeof API === 'undefined') shutdown();
         else init();
 
-//}).call(this);
+}).call(this);
