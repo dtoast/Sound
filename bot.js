@@ -324,7 +324,11 @@ Please refer to the Readme.md for license stuff
             }
             if(pre()){
                 var str = a.message.substr(1).trim();
-                var opt = str.split('@') + 1;
+                
+                var lolz = str.lastIndexOf(' ') - 4;
+                var opti = str.indexOf('@') + 1;
+                var opt = str.substr(opti, lolz);
+                
                 var noarg;
                 var argu = a.lastIndexOf(' ') + 1;
                 var arg = str.substr(argu);
@@ -333,6 +337,7 @@ Please refer to the Readme.md for license stuff
                 }else{
                     noarg = str.split(' ').slice(1, arg.length).toString();
                 }
+                
                 var from = a.from;
                 var fromid = a.fromID;
                 var chatid = a.chatID;
