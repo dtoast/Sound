@@ -52,6 +52,7 @@ Please refer to the Readme.md for license stuff
         API.on(API.DJ_ADVANCE, eventDjAdvance);
         API.setVolume(0);
         if (settings.woot) $('#woot').click();
+        motd();
         API.sendChat('/em now sprinting!');
     }
 
@@ -275,8 +276,8 @@ Please refer to the Readme.md for license stuff
                 'meufa','fanz','isnowyourfan','reciprocate','fansme','givefan','fanplz','fanpls','plsfan','plzfan','becomefan','tradefan',
                 'fanifan','bemyfan','retribui','gimmefan','fansatfan','fansplz','fanspls','ifansback','fanforfan','addmefan','retribuo',
                 'fantome','becomeafan','fan-to-fan','fantofan','canihavefan','pleasefan','addmeinfan','iwantfan','fanplease','ineedfan',
-                'ineedafan','iwantafan','bymyfan','fannme','returnfan','bymyfan','givemeafan','sejameufa','sejameusfa','sejameuf��',
-                'sejameusf��','f��please','f��pls','f��plz','fanxfan','addmetofan','fanzafan','fanzefan','becomeinfan','backfan',
+                'ineedafan','iwantafan','bymyfan','fannme','returnfan','bymyfan','givemeafan','sejameufa','sejameusfa',
+                'fanzkai','addmetofan','fanzafan','fanzefan','becomeinfan','backfan',
                 'viremmeuseguidor','viremmeuseguir','fanisfan','funforfun','anyfanaccept','anyfanme','fan4fan','fan4fan','turnmyfan',
                 'turnifan','beafanofme','comemyfan','plzzfan','plssfan','procurofan','comebackafan','fanyfan','givemefan','fan=fan',
                 'fan=fan','fan+fan','fan+fan','fanorfan','beacomeafanofme','beacomemyfan','bcomeafanofme','bcomemyfan','fanstofan',
@@ -289,7 +290,7 @@ Please refer to the Readme.md for license stuff
                 "becomefan","becomeinfan","becomemyfan","becomemyfans","bouncerplease","bouncerpls",
                 "brbrbrbr","brbrbrbr","bymyfan","canihasfan","canihavefan","caralho",
                 "clickmynametobecomeafan","comebackafan","comemyfan","dosfanos","everyonefan",
-                "everyonefans","exchangefan","f4f","f&n","f(a)nme","f@nme","��@nme","f4f","f4n4f4n",
+                "everyonefans","exchangefan","f4f","f&n","f(a)nme","f@nme","f4f","f4n4f4n",
                 "f4nforf4n","f4nme","f4n4f4n","fan:four:fan",
                 'fanme','funme','becomemyfan','trocofa','fanforfan','fan4fan','fan4fan','hazcanfanz',
                 'fun4fun','fun4fun','meufa','fanz','isnowyourfan','reciprocate','fansme','givefan',
@@ -1106,6 +1107,12 @@ Please refer to the Readme.md for license stuff
                 }
                 if(msg.indexOf('please friend me') !=-1){
                     API.moderateDeleteChat(chatid);
+                }
+                for(var i = 0; i < chatFilter.length; i++){
+                    if(msg === chatFilter[i]){
+                        API.sendChat('@' + a.from + ' please do not ask for fans!');
+                        API.moderateDeleteChat(a.chatID);
+                    }
                 }
             }
         }
