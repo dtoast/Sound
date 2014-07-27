@@ -325,12 +325,13 @@ Please refer to the Readme.md for license stuff
             if(pre()){
                 var str = a.message.substr(1).trim();
                 var opt = str.split('@') + 1;
-                var arg = str.lastIndexOf(' ') + 1;
                 var noarg;
+                var argu = a.lastIndexOf(' ') + 1;
+                var arg = str.substr(argu);
                 if(arg === null || undefined){
-                    noarg = str.split(' ').slice(1);
+                    noarg = str.split(' ')[1];
                 }else{
-                    noarg = str.split(' ').slice(1, arg.length);
+                    noarg = str.split(' ').slice(1, arg.length).toString();
                 }
                 var from = a.from;
                 var fromid = a.fromID;
@@ -347,7 +348,7 @@ Please refer to the Readme.md for license stuff
                 var roul = new Array();
                 var tempRoul = new Array();
                 var safeRoul = new Array();
-                switch (str) {
+                switch(str){
                 case 'help':
                     if(check(false)){
                         API.sendChat('/em [' + from + '] Soundbot was just recoded, so please wait for commands. Ask staff for questions.');
