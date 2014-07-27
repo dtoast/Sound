@@ -375,7 +375,9 @@ Please refer to the Readme.md for license stuff
                     }
                     break;
                 case 'ad':
-                    API.sendChat('/em [' + from + '] ADBlock (the version that isn\'t bad): https://www.getadblock.com');
+                    if(check(false)){
+                        API.sendChat('/em [' + from + '] ADBlock (the version that isn\'t bad): https://www.getadblock.com');
+                    }
                     break;
                 case 'pic':
                     if(check(false)){
@@ -392,6 +394,13 @@ Please refer to the Readme.md for license stuff
                     break;
 
                     //For now, bouncer + commands. User cmds will be done later.
+                    
+                case 'opt':
+                    if(check(true)){
+                        API.sendChat('/em ' + from + '][test] ' + opt);
+                    }
+                    break;
+                    
                     //Start roulette
                 case 'roul':
                     if (check(true)) {
