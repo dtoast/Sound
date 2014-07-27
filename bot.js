@@ -330,7 +330,7 @@ Please refer to the Readme.md for license stuff
                 var opt = str.substr(opti, lolz);
                 
                 var noarg;
-                var argu = a.lastIndexOf(' ') + 1;
+                var argu = str.lastIndexOf(' ') + 1;
                 var arg = str.substr(argu);
                 if(arg === null || undefined){
                     noarg = str.split(' ')[1];
