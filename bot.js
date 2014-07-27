@@ -372,7 +372,7 @@ Please refer to the Readme.md for license stuff
                         var z = $('iframe:first');
                         var url_id = getYt('https://www.youtube.com/watch?v=' + API.getMedia().cid);
                         this.url_id = url_id;
-                        API.sendChat('/em [' + from + '] http://i.ytimg.com/vi/' + url_id + '/mqdefault.jpg');
+                        API.sendChat('/em [' + from + '] http://i.ytimg.com/vi/' + url_id + '/maxresdefault.jpg');
                     }
                     break;
 
