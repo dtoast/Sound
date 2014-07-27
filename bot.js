@@ -324,7 +324,7 @@ Please refer to the Readme.md for license stuff
             }
             if(pre()){
                 var str      = a.message.substr(1).trim();
-                var hi       = str.split(' ');
+                var hi       = str.split(' ').toString();
                 var noarg    = hi.slice(2).join(' ').toString();
                 var opt      = hi.substr(1);
                 var args     = hi.lastIndexOf(' ') + 1;
