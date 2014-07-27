@@ -164,9 +164,11 @@ Please refer to the Readme.md for license stuff
 
     function motd() {
         if (settings.motd.enabled) {
-            var motdInt = setInterval(function () {
-                API.sendChat('/em ' + motdMsg[Math.floor(Math.random() * motdMsg.length)]);
-            }, settings.motd.interval);
+            var motdInt = function(){
+                setInterval(function(){
+                    API.sendChat('/em ' + motdMsg[Math.floor(Math.random() * motdMsg.length)]);
+                }, settings.motd.interval);
+            };
             motdInt();
         }
     }
