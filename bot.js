@@ -323,37 +323,20 @@ Please refer to the Readme.md for license stuff
                 }
             }
             if(pre()){
-                var str = a.message.substr(1).trim();
-                
-                var lolz = str.lastIndexOf(' ') - 4;
-                var opti = str.indexOf('@') + 1;
-                var opt = str.substr(opti, lolz);
-                
-                var noarg;
-                var argu = str.lastIndexOf(' ') + 1;
-                var arg = str.substr(argu).trim();
-                if(arg === null || undefined){
-                    noarg = str.split(' ', 1);
-                }else{
-                    noarg = str.split(' ').slice(1, arg.length).toString();
-                }
-                
-                var from = a.from;
-                var fromid = a.fromID;
-                var chatid = a.chatID;
-                var check = function(staff){
-                    API.moderateDeleteChat(a.chatID);
-                    if(staff === undefined) staff = false;
-                    if(API.getUser(a.fromID).permission >= 2 && settings.userCmds || !settings.userCmds && staff) return true;
-                    else if(API.getUser(a.fromID).permission <= 1 && settings.userCmds && !staff){
-                        return true;
-                    }else if(API.getUser(a.fromID).permission <= 1 && !settings.userCmds && !staff) return false;
-                    API.moderateDeleteChat(a.chatID);
-                };
-                var roul = new Array();
+                var str      = a.message.substr(1).trim();
+                var hi       = str.split(' ');
+                var noarg    = hi.slice(2).join(' ').toString();
+                var opt      = hi[1].substr(1);
+                var args     = hi.lastIndexOf(' ') + 1;
+                var arg      = h[1].substr(args);
+                var from     = a.from;
+                var fromid   = a.fromID;
+                var chatid   = a.chatID;
+                var check    = function(e){API.moderateDeleteChat(a.chatID);if(e===undefined)e=false;if(API.getUser(a.fromID).permission>=2&&settings.userCmds||!settings.userCmds&&e)return true;else if(API.getUser(a.fromID).permission<=1&&settings.userCmds&&!e){return true}else if(API.getUser(a.fromID).permission<=1&&!settings.userCmds&&!e)return false;API.moderateDeleteChat(a.chatID)}
+                var roul     = new Array();
                 var tempRoul = new Array();
                 var safeRoul = new Array();
-                    switch(str){
+                switch(str){
                     case 'help':
                         if(check(false)){
                             API.sendChat('/em [' + from + '] Soundbot was just recoded, so please wait for commands. Ask staff for questions.');
@@ -625,7 +608,7 @@ Please refer to the Readme.md for license stuff
                         if (check(true)) {
                             var z = Date.now();
                             var y = Math.floor(joinTime - z);
-                            API.sendChat('/em [' + from + '] Uptime: ' + y + ' ~ Party: ' + settings.party + ' ~ Blacklist: ' + settings.blacklist);
+                            API.sendChat('/em [' + from + '] Uptime: ' + y + ' ~ Party: ' + settings.party + ' ~ Usercmds: ' + settings.userCmds);
                         }
                         break;
                     case 'woot':
@@ -635,6 +618,7 @@ Please refer to the Readme.md for license stuff
                         break;
                     case 'grab':
                         if (check(true)) {
+                            $('#curate').click();
                             $($('.curate').children('.menu').children().children()[0]).mousedown();
                         }
                         break;
@@ -685,6 +669,11 @@ Please refer to the Readme.md for license stuff
                             API.moderateLockWaitList(true, false);
                         }
                         break;
+                    case 'unlock':
+                        if(check(true)){
+                            API.sendChat('/em [' + from + ' used unlock]');
+                            API.moderateLockWaitList(false);
+                        }
                     case 'cycle':
                         if (check(true)) {
                             API.sendChat('/em [' + from + ' used cycle]');
@@ -721,7 +710,7 @@ Please refer to the Readme.md for license stuff
                                     API.sendChat('/em [' + from + ' used kick]');
                                     API.moderateBanUser(u[i].id, 1, API.BAN.HOUR);
                                     setTimeout(function () {
-                                        API.moderateUnbanUser(u[i].id);
+                                        API.moderateUnBanUser(u[i].id);
                                         API.moderateUnBanUser(u[i].id);
                                         API.sendChat('/em [' + from + '] Kicked user can login now.');
                                     }, 15000);
