@@ -315,7 +315,7 @@ Please refer to the Readme.md for license stuff
                 'sejammeusfa','befanofme','faninfan','addtofan','fanthisaccount',
                 'fanmyaccount','fanback','addmeforfan','fans4fan','fans4fan','fanme','bemyfanpls','befanpls','f4f','fanyfan'
             ];
-
+            
         function eventCommandChat(a){
             function pre(){
                 if(a.message.substr(0, 1) === '!'){
