@@ -325,10 +325,10 @@ Please refer to the Readme.md for license stuff
             if(pre()){
                 var str      = a.message.substr(1).trim();
                 var hi       = str.split(' ');
-                var noarg    = hi.slice(2).join(' ').toString();
-                var opt      = hi.toString().substr(1);
-                var args     = hi.lastIndexOf(' ') + 1;
-                var arg      = hi.toString().substr(args);
+                var noarg    = hi[2].toString();
+                var opt      = hi[1].toString().substr(1);
+                var args     = hi[1].lastIndexOf(' ') + 1;
+                var arg      = hi[3].toString().substr(args);
                 var from     = a.from;
                 var fromid   = a.fromID;
                 var chatid   = a.chatID;
