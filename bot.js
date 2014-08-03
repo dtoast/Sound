@@ -8,7 +8,7 @@ Copyright (c) 2014 FourBit (Pr0Code)
 
 Please refer to the Readme.md for license stuff
 
-Spundbot is being updated for the new plug update. Also includes improvements throughout all code.
+Soundbot is being updated for the new plug update. Also includes improvements throughout all code.
 
 */
 (function () {
