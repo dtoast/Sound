@@ -8,13 +8,24 @@ Copyright (c) 2014 FourBit (Pr0Code)
 
 Please refer to the Readme.md for license stuff
 
-Soundbot is being updated for the new plug update. Also includes improvements throughout all code.
-
 */
-(function () {
     var motdMsg = ["Welcome to the FourBit plug.dj room!"];
     var joinTime = Date.now();
     var blacklist = ['#SELFIE (Official Music Video)', 'Troll Song'];
+    var cmds = {};
+    var rcon = false;
+    var util = {
+        getMath: function(a){
+            a = Math.floor(a / 6000);
+            var b = (a - Math.floor(a / 60) * 60);
+            var c = (a - b) / 60;
+            var e = '';
+            e += c + 'h';
+            e += b < 10 ? '0' : '';
+            e += b;
+            return e;
+        }
+    };
     var settings = {
         woot: true,
         motd: {
@@ -34,37 +45,48 @@ Soundbot is being updated for the new plug update. Also includes improvements th
         historySkip: true,
         party: false,
         roulette: false,
-        userCmds: true
+        userCmds: true,
+        filter: true,
+        cooldown: false
     };
 
     function loadSettings() {
         var a = JSON.parse(localStorage.getItem('SoundbotSave'));
-        if (a) settings = a;
+        if (a){
+            var b = Object.keys(settings);
+          for(var i = 0; i < b.length; i++){
+            settings[b[i]] = a[b[i]];
+          }
+        }
         else if (typeof a === undefined) saveSettings();
     }
 
     //Init() and shutdown()
 
-    function init() {
-        API.on(API.CHAT, eventDataChat);
-        API.on(API.CHAT, eventCommandChat);
-        API.on(API.CHAT, eventFilterChat);
-        API.on(API.USER_JOIN, eventJoin);
-        API.on(API.USER_LEAVE, eventLeave);
-        API.on(API.DJ_ADVANCE, eventDjAdvance);
+    function init(){
+        API.on({
+            'chat':eventDataChat,
+            'chat':eventCommandChat,
+            'chat':eventFilterChat,
+            'userJoin':eventJoin,
+            'userLeave':eventLeave,
+            'djAdvance':eventDjAdvance
+        });
         API.setVolume(0);
         if (settings.woot) $('#woot').click();
         motd();
         API.sendChat('/em now sprinting!');
     }
 
-    function shutdown() {
-        API.off(API.CHAT, eventDataChat);
-        API.off(API.CHAT, eventCommandChat);
-        API.off(API.CHAT, eventFilterChat);
-        API.off(API.USER_JOIN, eventJoin);
-        API.off(API.USER_LEAVE, eventLeave);
-        API.off(API.DJ_ADVANCE, eventDjAdvance);
+    function shutdown(){
+        API.off({
+            'chat':eventDataChat,
+            'chat':eventCommandChat,
+            'chat':eventFilterChat,
+            'userJoin':eventJoin,
+            'userLeave':eventLeave,
+            'djAdvance':eventDjAdvance
+        });
         API.setVolume(15);
         saveSettings();
         if (settings.motd.enabled) clearInterval(motdInt);
@@ -84,7 +106,10 @@ Soundbot is being updated for the new plug update. Also includes improvements th
             roulSelect: false,
             roulChat: false,
             exeChat: false,
-            exeWarn: false
+            exeWarn: false,
+            afk: false,
+            afkMsg = 'I\'m away right now. Message me later!',
+            lolomgwtfbbqc: false
         };
     }
 
@@ -98,7 +123,10 @@ Soundbot is being updated for the new plug update. Also includes improvements th
             roulSelect: false,
             roulChat: false,
             exeChat: false,
-            exeWarn: false
+            exeWarn: false,
+            afk: false,
+            afkMsg = 'I\'m away right now. Message me later!',
+            lolomgwtfbbqc: false
         };
     }
 
@@ -107,18 +135,55 @@ Soundbot is being updated for the new plug update. Also includes improvements th
     }
 
     function eventDataChat(a) {
-        data[a.fromID].afkTime = Date.now();
-        if(data[a.fromID].warning){
-            data[a.fromID].warning = false;
+        data[a.fid].afkTime = Date.now();
+        if(data[a.fid].warning){
+            data[a.fid].warning = false;
         }
-        if(data[a.fromID].removed){
-            data[a.fromID].removed = false;
+        if(data[a.fid].removed){
+            data[a.fid].removed = false;
         }
-        if(data[a.fromID].roulChat && a.message === '!pass'){
-            data[a.fromID].roulChat = false;
+        if(data[a.fid].roulChat && a.message === '!pass'){
+            data[a.fid].roulChat = false;
         }
-        if(data[a.fromID].exeWarn === true){
-            data[a.fromID].exeChat = true;
+        if(data[a.fid].exeWarn === true){
+            data[a.fid].exeChat = true;
+        }
+        if(data[a.fid].afk === true){
+            data[a.fid].afk = false;
+        }
+        if(a.message === '!lolomgwtfbbq' && data[a.fid].lolomgwtfbbqc){
+            API.sendChat('/em The end is near... for you...');
+            setTimeout(function(){
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateBanUser(a.fid, 0, -1);
+                API.moderateUnBanUser(a.fid,0,-1);
+                API.sendChat('>:D');
+                API.sendChat('But the user can login now ;D');
+                data[a.fid].lolomgwtfbbqc = false;
+            }, 2000);
         }
     }
 
@@ -132,15 +197,15 @@ Soundbot is being updated for the new plug update. Also includes improvements th
                 var x = data[z[i].id].afktime;
                 var w = y - x;
                 var v = Math.floor((y - x) / 50000) % 60;
-                if (w > settings.antiAfk.limit && !data[a[i].id].warning) {
+                if (w > settings.antiAfk.limit && !data[z[i].id].warning) {
                     API.sendChat('@' + z[i].username + ' AFK Time: ' + v + ' minutes. Chat soon or I will remove you.');
-                    data[a[i].id].warning = true;
+                    data[z[i].id].warning = true;
                     setTimeout(function() {
                         z = API.getWaitList();
                         for (var c in z) {
-                            if (data[z[e].id].warning) {
-                                API.sendChat('@' + z[e].username + ' last warning (AFK).');
-                                data[z[e].id].removed = true;
+                            if (data[z[c].id].warning) {
+                                API.sendChat('@' + z[c].username + ' last warning (AFK).');
+                                data[z[c].id].removed = true;
                                 setTimeout(function() {
                                     z = API.getWaitList();
                                     for (var e in z) {
@@ -166,7 +231,8 @@ Soundbot is being updated for the new plug update. Also includes improvements th
 
     function motd() {
         if (settings.motd.enabled) {
-            var motdInt = function(){
+          var motdInt;
+            motdInt = function(){
                 setInterval(function(){
                     API.sendChat('/em ' + motdMsg[Math.floor(Math.random() * motdMsg.length)]);
                 }, settings.motd.interval);
@@ -183,7 +249,7 @@ Soundbot is being updated for the new plug update. Also includes improvements th
                 for(var i = 0; i < a.length; i++){
                     if(a[i].title === b){
                         API.sendChat('@' + API.getDJ().username + ' that song in the history!');
-                        var c = new Array();
+                        var c = [];
                         c.push(API.getDJ().id);
                         if($('.cycle-toggle').hasClass('disabled')){
                             $(this).click();
@@ -201,7 +267,7 @@ Soundbot is being updated for the new plug update. Also includes improvements th
             for(var i = 0; i < blacklist.length; i++){
                 if(blacklist[i].title === a){
                     API.sendChat('@' + API.getDJ().username + ' that song is blacklisted!');
-                    var b = new Array();
+                    var b = [];
                     b.push(API.getDJ().id);
                     if($('.cycle-toggle').hasClass('disabled')){
                         $(this).click();
@@ -213,29 +279,29 @@ Soundbot is being updated for the new plug update. Also includes improvements th
                 }
             }
         }
+      if(rcon){settings.stats=true;}
         if(settings.stats){
-            var a = obj.lastPlay;
-            if(typeof a === 'undefined') return void (0);
-            var b = a.score.positive;
-            var c = a.score.curates;
-            var d = a.score.negative;
-            API.sendChat('/em ' + a.media._previousAttributes.author + ' - ' +  a.media._previousAttributes.title + ' received ' + b + ' woots, ' + c + ' grabs, and ' + d + ' mehs!');
+            var z = obj.lastPlay;
+            if(typeof z === 'undefined') return void (0);
+            var y = z.score.positive;
+            var x = z.score.curates;
+            var w = z.score.negative;
+            API.sendChat('/em ' + z.media._previousAttributes.author + ' - ' +  z.media._previousAttributes.title + ' received ' + y + ' woots, ' + x + ' grabs, and ' + w + ' mehs!');
         }
         if(settings.songLength.enabled && obj.media.duration > settings.songLength.limit * 60){
             if(settings.stats) settings.stats = false;
             API.sendChat('@' + API.getDJ().username + ' your song is greater than the song limit (10 minutes)!');
-            var a = API.getDJ().id;
-            var b = new Array();
-            b.push(a);
+            var aa = API.getDJ().id;
+            var bb = [];
+            bb.push(aa);
             if($('.cycle-toggle').hasClass('disabled')){
                 $(this).click();
             }
             API.moderateLockWaitList(true, false);
             API.moderateForceSkip();
             API.sendChat('/em Adding user...');
-            API.moderateMoveDJ(b[1], 1);
-            b = [];
-            settings.stats = true;
+            API.moderateMoveDJ(bb[1], 1);
+            bb = [];
         }
     }
 
@@ -246,33 +312,34 @@ Soundbot is being updated for the new plug update. Also includes improvements th
             for (var i = 0; i < u.length; i++) {
                 if (u[i].id === a) {
                     if (b === false) {
-                        if (z.fromID === a || z.fromID === u[i].id && b === false) {
+                        if (z.fid === a || z.fid === u[i].id && b === false) {
                             return true;
                         } else {
-                            if (z.fromID !== a || z.fromID !== u[i].id && b === false) {
+                            if (z.fid !== a || z.fid !== u[i].id && b === false) {
                                 return false;
                             }
                         }
                     }
                     if (b === true) {
-                        if (z.fromID === a || z.fromID === u[i].id) {
+                        if (z.fid === a || z.fid === u[i].id) {
                             return true;
 
                             } else {
-                                if (z.fromID !== a || z.fromID !== u[i].id && b === true) {
+                                if (z.fid !== a || z.fid !== u[i].id && b === true) {
                                     return false;
                                 }
                             }
-                            if (z.fromID === a || a.fromID === u[i].id && b === true){
+                            if (z.fid === a || a.fid === u[i].id && b === true){
                                 return z.message;
                             }
                         }
                     }
                 }
-                if (z.message === '!pass' && data[z.fromID].roulSelect && data[z.fromID].roulChat) API.moderateDeleteChat(z.chatID);
+                if (z.message === '!pass' && data[z.fid].roulSelect && data[z.fid].roulChat) API.moderateDeleteChat(z.cid);
                 if(this === true || this === false || this === z.message){
                     API.off(API.CHAT, this);
                 }
+                API.off(API.CHAT, this);
             });
         }
 
@@ -319,815 +386,276 @@ Soundbot is being updated for the new plug update. Also includes improvements th
             ];
             
         function eventCommandChat(a){
-            function pre(){
-                if(a.message.substr(0, 1) === '!'){
-                    return true;
-                }
-            }
-            if(pre()){
-                var str      = a.message.substr(1).trim();
-                var hi       = str.split(' ');
-                var noarg    = hi[2].toString();
-                var opt      = hi[1].toString().substr(1);
-                var args     = hi[1].lastIndexOf(' ') + 1;
-                var arg      = hi[3].toString().substr(args);
-                var from     = a.from;
-                var fromid   = a.fromID;
-                var chatid   = a.chatID;
-                var check    = function(e){API.moderateDeleteChat(a.chatID);if(e===undefined)e=false;if(API.getUser(a.fromID).permission>=2&&settings.userCmds||!settings.userCmds&&e)return true;else if(API.getUser(a.fromID).permission<=1&&settings.userCmds&&!e){return true}else if(API.getUser(a.fromID).permission<=1&&!settings.userCmds&&!e)return false;API.moderateDeleteChat(a.chatID)}
-                var roul     = new Array();
-                var tempRoul = new Array();
-                var safeRoul = new Array();
+            if(a.message.substr(0,1)=='!'&&a.message.substr(2)!==' '||a.message.substr(2)!=='!'){
+                var str = a.message.substr(1).split(' ')[0].toLowerCase(),cdata = {message:a.message,fid:a.fid,from:a.from,cid:a.cid},a;
                 switch(str){
-                    case 'help':
-                        if(check(false)){
-                            API.sendChat('/em [' + from + '] Soundbot was just recoded, so please wait for commands. Ask staff for questions.');
-                        }
-                        break;
-                    case 'ping': if(check(false)){ API.sendChat('/em [' + from + '] Pong!') }break;
-                    case 'link':
-                        if(check(false)){
-                            if (API.getMedia().format === 1) {
-                                API.sendChat('/em [' + from + '] Link to current song: http://youtu.be/' + API.getMedia().cid);
-                            } else {
-                                var z = API.getMedia().cid;
-                                SC.get('/tracks', {
-                                    ids: z,
-                                }, function (tracks) {
-                                    API.sendChat('/em [' + from + '] Link to current song: ' + tracks[0].permalink_url);
-                                });
-                            }
-                        }
-                        break;
-                    case 'ad':
-                        if(check(false)){
-                            API.sendChat('/em [' + from + '] ADBlock (the version that isn\'t bad): https://www.getadblock.com');
-                        }
-                        break;
-                    case 'pic':
-                        if(check(false)){
-                            function getYt(url){
-                                var id = url.match('[\\?&]v=([^&#]*)');
-                                id = id[1];
-                                return id;
-                            }
-                            var z = $('iframe:first');
-                            var url_id = getYt('https://www.youtube.com/watch?v=' + API.getMedia().cid);
-                            this.url_id = url_id;
-                            API.sendChat('/em [' + from + '] http://i.ytimg.com/vi/' + url_id + '/maxresdefault.jpg');
-                        }
-                        break;
-    
-                        //For now, bouncer + commands. User cmds will be done later.
-                        
-                    case 'opt':
-                        if(check(true)){
-                            API.sendChat('/em ' + from + '][test] ' + opt);
-                        }
-                        break;
-                        
-                        //Start roulette
-                    case 'roul':
-                        if (check(true)) {
-                            if (noarg === 'start' && !settings.roulette) {
-                                API.sendChat('/em [' + from + '] Started roulette! Type "!join" to play.');
-                                settings.roulette = true;
-                            }
-                            if (noarg === 'stop' && settings.roulette) {
-                                clearInterval();
-                                settings.roulette = false;
-                                data.roulSelect = false;
-                                data.roulChat = false;
-                                API.sendChat('/em [' + from + '] Stopped roulette! :frowning:');
-                            }
-                        }
-                        break;
-                    case 'join':
-                        if(check(true)){
-                            for (var i = 0; i < roul.length; i++) {
-                                if (roul[i] !== from && roul.length < 10) {
-                                    API.sendChat('/em [' + from + '] Joined roulette!');
-                                    roul.push(from);
-                                } else {
-                                    API.sendChat('/em [' + from + '] It seems that you already joined!');
-                                }
-                            }
-                        }
-                        break;
-                    case 'start':
-                        if (check(true) && settings.roulette) {
-                            API.sendChat('/em [' + from + '] Game started!');
-                            var y = Math.floor(Math.random() * roul.length);
-                            var z = setInterval(function () {
-                                API.sendChat('@' + roul[y] + ' you have the gun! Type !pass to pass it!!!');
-                                tempRoul.push(y);
-                                if (tempRoul[1] === roul[y]) {
-                                    for (var i = 0; i < u.length; i++) {
-                                        if (tempRoul === u[i].username) {
-                                            if (data[u[i].id].roulSelect && !data[u[i].id].roulChat) {
-                                                data[u[i].id].roulChat = true;
-                                                if (listenFor(u[i].id, false) === true && listenFor(u[i].id, true) === '!pass') {
-                                                    API.sendChat('/em [' + from + '] Passed the gun!');
-                                                    data[u[i].id].roulSelect = false;
-                                                    data[u[i].id].roulChat = false;
-                                                    tempRoul.pop(u[i].username);
-                                                    safeRoul.push(u[i].username);
-                                                    roul.pop(u[i].username);
-                                                }
-                                            }
-                                        } else {
-                                            clearInterval(this);
-                                            z();
-                                        }
-                                    }
-                                } else {
-                                    clearInterval(this);
-                                    z();
-                                }
-                            }, 2000);
-                            z();
-                        }
-                        break;
-    
-                        //End Roulette
-                    case 'add':
-                        if (check(true)) {
-                            for (var i in u) {
-                                if (u[i].username === opt) {
-                                    API.sendChat('/em [' + from + ' used add]');
-                                    API.moderateAddDJ(u[i].id);
-                                } else API.sendChat('/em [' + from + '] User not found.');
-                            }
-                        }
-                        break;
-    
-                    case 'remove':
-                        if (check(true)) {
-                            for (var i in u) {
-                                if (u[i].username === opt) {
-                                    API.sendChat('/em [' + from + ' used remove]');
-                                    API.moderateRemoveDJ(u[i].id);
-                                } else API.sendChat('/em [' + from + '] User not found.');
-                            }
-                        }
-                        break;
-    
-                    case 'move':
-                        if (check(true)) {
-                            for (var i in u) {
-                                if (u[i].username === opt) {
-                                    if (arg !== null || undefined) {
-                                        API.sendChat('/em [' + from + ' used move]');
-                                        var z = API.getWaitList();
-                                        var y = parseInt(arg);
-                                        for (var c = 0; c < z.length; c++) {
-                                            if (z[c].username !== u[i].username) {
-                                                API.moderateAddDJ(u[c].id);
-                                                API.moderateMoveDJ(u[c].id, y);
-                                            } else {
-                                                if (z[c].username === u[i].username) {
-                                                    API.moderateMoveDJ(u[c].id, y);
-                                                }
-                                            }
-                                        }
-                                    }
-                                } else API.sendChat('/em [' + from + '] User not found.');
-                            }
-                        }
-                        break;
-    
-                    case 'skip':
-                        if (check(true)) {
-                            API.moderateForceSkip();
-                        }
-                        break;
-    
-                    case 'lockskip':
-                        if (check(true)) {
-                            if (noarg === 'op') {
-                                API.sendChat('/em [' + from + ' used lockskip]');
-                                var b = new Array();
-                                b.push(API.getDJ());
-                                if ($('.cycle-toggle').hasClass('disabled')) $(this).click();
-                                API.moderateLockWaitList(true, false);
-                                API.moderateForceSkip();
-                                API.sendChat('@' + b[1].username + ' please pick another song because that one is overplayed!');
-                                setTimeout(function () {
-                                    API.moderateMoveDJ(b[1].id, 5);
-                                }, 500);
-                            }
-                            if (noarg !== 'op' || noarg === null || noarg === undefined) {
-                                API.sendChat('/em [' + from + ' used lockskip]');
-                                var b = new Array();
-                                b.push(API.getDJ().id);
-                                if ($('.cycle-toggle').hasClass('disabled')) $(this).click();
-                                API.moderateLockWaitList(true, false);
-                                API.moderateForceSkip();
-                                setTimeout(function () {
-                                    API.moderateMoveDJ(b[1], 5);
-                                }, 500);
-                            }
-                        }
-                        break;
-    
-                    case 'ban':
-                        if (check(true)) {
-                            for (var i in u) {
-                                if (u[i].username === opt) {
-                                    if (arg !== null || undefined) {
-                                        var z = parseInt(arg);
-                                        if (z === 1) {
-                                            API.sendChat('/em [' + from + ' used ban]');
-                                            API.moderateBanUser(u[i].username, 1, API.BAN.HOUR);
-                                        }
-                                        if (z === 2) {
-                                            API.sendChat('/em [' + from + ' used ban]');
-                                            API.moderateBanUser(u[i].username, 1, API.BAN.DAY);
-                                        }
-                                        if (z === 3) {
-                                            API.sendChat('/em [' + from + ' used ban]');
-                                            API.moderateBanUser(u[i].username, 1, API.BAN.PERMA);
-                                        } else if (z >= 4) API.sendChat('/em [' + from + '] Valid inputs are 1, 2, 3.');
-                                    }
-                                } else API.sendChat('/em [' + from + '] User not found.');
-                            }
-                        }
-                        break;
-                    case 'party':
-                        if (API.getUser(fromid).permission === 5) {
-                            if (!settings.party && noarg === null || noarg === undefined || arg === null || arg === undefined || opt === null || opt === undefined) {
-                                settings.party = true;
-                                API.sendChat('/em [' + from + ' started a party]');
-                                API.moderateLockWaitList(true, true);
-                                var z = API.getUsers();
-                                var y = new Array();
-                                for (var i = 0; i < z.length; i++) {
-                                    if (z[i].permission === 1) {
-                                        y.push(z[i].id);
-                                    }
-                                }
-                                var x = setInterval(function () {
-                                    if (y.length !== 0) {
-                                        for (var c = 0; c < y.length; c++) {
-                                            API.moderateAddDJ(y[c].id);
-                                        }
-                                    } else clearInterval(x);
-                                }, 6e3);
-                                API.moderateForceSkip();
-                                $.ajax({
-                                    type: 'POST',
-                                    url: 'http://plug.dj/_/gateway/moderate.update_name_1',
-                                    contentType: 'application/json',
-                                    data: '{"service":"moderate.update_name_1","body":["Join the party! | FourBit"]}'
-                                });
-                                if ($('.cycle-toggle').hasClass('disabled')) {
-                                    $(this).click();
-                                }
-                            } else {
-                                API.sendChat('/em [' + from + '] It seems that a party is already in progress!');
-                            }
-                            if (settings.party && noarg === 'end' || settings.party && noarg === 'stop') {
-                                API.sendChat('/em [' + from + ' stopped the current party]');
-                                $.ajax({
-                                    type: 'POST',
-                                    url: 'http://plug.dj/_/gateway/moderate.update_name_1',
-                                    contentType: 'application/json',
-                                    data: '{"service":"moderate.update_name_1","body":["FourBitProductions | plug.dj"]}'
-                                });
-                                API.moderateLockWaitList(false);
-                                if ($('.cycle-toggle').hasClass('enabled')) {
-                                    $(this).click();
-                                }
-                            }
-                        }
-                        break;
-                    case 'save':
-                        if(check(true)){
-                            saveSettings();
-                            API.sendChat('/em Saved.');
-                        }
-                    case 'status':
-                        if (check(true)) {
-                            var z = Date.now();
-                            var y = Math.floor(joinTime - z);
-                            API.sendChat('/em [' + from + '] Uptime: ' + y + ' ~ Party: ' + settings.party + ' ~ Usercmds: ' + settings.userCmds);
-                        }
-                        break;
-                    case 'woot':
-                        if (check(true)) {
-                            $('#woot').click();
-                        }
-                        break;
-                    case 'grab':
-                        if (check(true)) {
-                            $('#curate').click();
-                            $($('.curate').children('.menu').children().children()[0]).mousedown();
-                        }
-                        break;
-                    case 'kill':
-                        if (check(true)) {
-                            shutdown();
-                        }
-                        break;
-                    case 'reload':
-                        if(check(true)){
-                            shutdown();
-                            $.getScript('http://raw.githubusercontent.com/Pr0Code/Sound/blob/master/bot.js');
-                        }
-                        break;
-                    case 'vr':
-                        if (check(true)) {
-                            //Broken down to show how I'm get percentages.
-                            var z = API.getRoomScore();
-                            var y = new Array();
-                            //Exclude bot
-                            var w = Math.floor(u.length - 1);
-                            //Get woot percent
-                            var b = Math.floor((w / z.positive) * 100);
-                            //Get cur percent
-                            var c = Math.floor((w / z.curates) * 100);
-                            //Get meh percent
-                            var d = Math.floor((w / z.negative) * 100);
-                            //Send
-                            API.sendChat('/em [' + from + '] Votes: ' + b + '% wooted, ' + c + '% grabbed, ' + d + '% meh\'d!');
-                        }
-                        break;
-                    case 'clear':
-                        if (check(true)) {
-                            var z = $('#chat-messages').children();
-                            for (var i = 0; i < z.length; i++) {
-                                for (var c = 0; c < z[i].classList.length; c++) {
-                                    if (z[i].classList[c].indexOf('cid-') === 0) {
-                                        API.moderateDeleteChat(z[i].classList[c].substr(4));
-                                    }
-                                }
-                            }
-                            API.sendChat('/em [' + from + ' used clear]');
-                        }
-                        break;
-                    case 'lock':
-                        if (check(true)) {
-                            API.sendChat('/em [' + from + ' used lock]');
-                            API.moderateLockWaitList(true, false);
-                        }
-                        break;
-                    case 'unlock':
-                        if(check(true)){
-                            API.sendChat('/em [' + from + ' used unlock]');
-                            API.moderateLockWaitList(false);
-                        }
-                    case 'cycle':
-                        if (check(true)) {
-                            API.sendChat('/em [' + from + ' used cycle]');
-                            $('.cycle-toggle').click();
-                        }
-                        break;
-                    case 'mute':
-                        if (check(true)) {
-                            for (var i in u) {
-                                if (u[i].username === opt) {
-                                    data[u[i].id].mute = true;
-                                    API.sendChat('/em [' + from + ' muted ' + u[i].username + ']');
-                                }
-                            }
-                        }
-                        break;
-                    case 'unmute':
-                        if (check(true)) {
-                            if (data[fromid].mute === true) {
-                                API.sendChat('/em [' + from + '] Tried unmuting themselves, but can\'t! Muahahahaha!!!');
-                            } else {
-                                for (var i in u) {
-                                    if (u[i].username === opt) {
-                                        data[u[i].id].mute = false;
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case 'kick':
-                        if (check(true)) {
-                            for (var i in u) {
-                                if (u[i].username === opt) {
-                                    API.sendChat('/em [' + from + ' used kick]');
-                                    API.moderateBanUser(u[i].id, 1, API.BAN.HOUR);
-                                    setTimeout(function () {
-                                        API.moderateUnBanUser(u[i].id);
-                                        API.moderateUnBanUser(u[i].id);
-                                        API.sendChat('/em [' + from + '] Kicked user can login now.');
-                                    }, 15000);
-                                }
-                            }
-                        }
-                        break;
-                    case 'reg':
-                        if (check(true)) {
-                            for (var i in u) {
-                                if (u[i].username === opt) {
-                                    API.sendChat('/em [' + from + '] Removed ' + u[i].username + ' from the staff!');
-                                    API.moderateSetRole(u[i].id, API.ROLE.NONE);
-                                }
-                            }
-                        }
-                        break;
-                    case 'rdj':
-                        if (check(true)) {
-                            for (var i in u) {
-                                if (u[i].username === opt) {
-                                    API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a Resident DJ!');
-                                    API.moderateSetRole(u[i].id, API.ROLE.RESIDENTDJ);
-                                }
-                            }
-                        }
-                        break;
-                    case 'bouncer':
-                        if (check(true)) {
-                            for (var i in u) {
-                                if (u[i].username === opt) {
-                                    API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a bouncer!');
-                                    API.moderateSetRole(u[i].id, API.ROLE.BOUNCER);
-                                }
-                            }
-                        }
-                        break;
-                    case 'manager':
-                        if (check(true)) {
-                            for (var i in u) {
-                                if (u[i].username === opt) {
-                                    API.sendChat('/em [' + from + '] Set ' + u[i].username + ' as a manager!');
-                                    API.moderateSetRole(u[i].id, API.ROLE.MANAGER);
-                                }
-                            }
-                        }
-                        break;
-                    case 'mehs':
-                        if(check(true)){
-                            var z = new Array();
-                            for(var i = 0; i < u.length; i++){
-                                for(var c = 0; c < u.length; c++){
-                                    if(u[i].vote === -1){
-                                        z.push(u[i].username);
-                                    }
-                                    if(u[c].vote === -1){
-                                        z.push(u[c].username);
-                                    }
-                                    if(API.getRoomScore().negative.length === z.length){
-                                        API.sendChat('/em [' + from + '] Users who meh\'d: ' + z[x].join(' ') + '.');
-                                        z = [];
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Uh oh! I can\'t retrive mehs!');
-                                        z = [];
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case 'motd':
-                            if(check(true)){
-                                if(noarg === 'off' || noarg === 'disable'){
-                                    settings.motd.enabled = false;
-                                    clearInterval(motdInt);
-                                    API.sendChat('/em [' + from + '] Motd disabled.');
-                                }
-                                if(noarg === 'on' || noarg === 'enable'){
-                                      settings.motd.enable = true;
-                                      clearInterval(motdInt);
-                                      motd();
-                                      API.sendChat('/em [' + from + '] Motd enabled.');
-                                }
-                                if(noarg === null || noarg === undefined){
-                                    API.sendChat('/em [' + from + '] Current message: ' + motdMsg[Math.floor(Math.random() * motdMsg.length)]);
-                                }
-                                if(noarg !== null || noarg !== undefined || noarg !== 'on' || noarg !== 'off' || noarg !== 'enable' || noarg !== 'disable'){
-                                    motdMsg = [];
-                                    motdMsg = [noarg];
-                                    clearInterval(motdInt);
-                                    motd();
-                                }
-                            }
-                            break;
-                        case 'cmdsettings':
-                            if(check(true)){
-                                if(noarg !== null || noarg !== undefined || noarg === undefined || noarg === null){
-                                    API.sendChat('/em [' + from + '] Command Settings | Usercmds: ' + settings.userCmds);
-                                }
-                                if(noarg === 'users'){
-                                    API.sendChat('/em [' + from + '] Users: ' + settings.userCmds + ' | on/enable/off/disable');
-                                }
-                                if(noarg === 'users' && arg === 'on' || arg === 'enable'){
-                                    if(!settings.userCmds){
-                                        settings.userCmds = true;
-                                        API.sendChat('/em [' + from + '] Users can now use commands.');
-                                    }else{
-                                        API.sendChat('/em [' + from + '] Users already have commands!');
-                                    }
-                                }
-                                if(noarg === 'users' && arg === 'off' || arg === 'disable'){
-                                    settings.userCmds = false;
-                                    API.sendChat('/em [' + from + '] Users no longer have commands.');
-                                }else{
-                                    API.sendChat('/em [' + from + '] User commands are already disabled!');
-                                }
-                            }
-                            break;
-                        case 'set':
-                            if(check(true)){
-                                if(noarg !== null || noarg !== undefined || noarg === undefined || noarg === null){
-                                    API.sendChat('/em [' + from + '] Items that can be set: woot, motd, antiafk, songlength, blacklist, stats, historyskip');
-                                }
-                                if(noarg === 'woot'){
-                                    if(arg === 'on' || arg === 'enable'){
-                                        if(!settings.woot){
-                                            settings.woot = true;
-                                            saveSettings();
-                                            $('#woot').click();
-                                            API.sendChat('/em [' + from + '] Woot is now enabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] It seems as if autowoot for me is already enabled!');
-                                        }
-                                    }else{
-                                        if(arg === 'off' || arg === 'disable'){
-                                            if(settings.woot){
-                                                settings.woot = false;
-                                                saveSettings();
-                                                API.sendChat('/em [' + from + '] Woot is now disabled.');
-                                            }else{
-                                                API.sendChat('/em [' + from + '] It seems as if autowoot for me is already disabled!');
-                                            }
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                        }
-                                    }
-                                }
-                                if(noarg === 'motd'){
-                                    if(arg === 'on' || arg === 'enable'){
-                                        if(!settings.motd.enabled){
-                                            settings.motd.enabled = true;
-                                            saveSettings();
-                                            clearInterval(motdInt);
-                                            motd();
-                                            API.sendChat('/em [' + from + '] Motd is now enabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Motd is already enabled!');
-                                        }
-                                    }else{
-                                        if(arg === 'off' || arg === 'disable'){
-                                            if(settings.motd.enabled){
-                                                settings.motd.enabled = false;
-                                                saveSettings();
-                                                clearInterval(motdInt);
-                                                API.sendChat('/em [' + from + '] Motd is now disabled.');
-                                            }else{
-                                                API.sendChat('/em [' + from + '] Motd is already disabled!');
-                                            }
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                        }
-                                    }
-                                }
-                                if(noarg === 'antiafk'){
-                                    if(arg === 'on' || arg === 'enable'){
-                                        if(!settings.antiafk.enabled){
-                                            settings.antiafk.enabled = true;
-                                            saveSettings();
-                                            API.sendChat('/em [' + from + '] AntiAFK is now enabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] AntiAFK is already enabled!');
-                                        }
-                                    }else{
-                                        if(arg === 'off' || arg === 'disable'){
-                                            if(settings.antiafk.enabled){
-                                                settings.antiafk.enabled = false;
-                                                saveSettings();
-                                                API.sendChat('/em [' + from + '] AntiAFK is now disabled.');
-                                            }else{
-                                                API.sendChat('/em [' + from + '] AntiAFK is already disabled!');
-                                            }
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                        }
-                                    }
-                                }
-                                if(noarg === 'songlength'){
-                                    if(arg === 'on' || arg === 'enable'){
-                                        if(!settings.songLength.enabled){
-                                            settings.songLength.enabled = true;
-                                            saveSettings();
-                                            API.sendChat('/em [' + from + '] Songlength-check now enabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Songlength-check is already enabled!');
-                                        }
-                                    }else{
-                                        if(arg === 'off' || arg === 'disable'){
-                                            if(settings.songLength.enabled){
-                                                settings.songLength.enabled = false;
-                                                saveSettings();
-                                                API.sendChat('/em [' + from + '] Songlength-check now disabled.');
-                                            }else{
-                                                API.sendChat('/em [' + from + '] Sondlength-check is already disabled!');
-                                            }
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                        }
-                                    }
-                                }
-                                if(noarg === 'blacklist'){
-                                    if(arg === 'on' || arg === 'enable'){
-                                        if(!settings.blacklist){
-                                            settings.blacklist = true;
-                                            saveSettings();
-                                            API.sendChat('/em [' + from + '] Blacklist now enabled (will resume on dj-advance).');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Blacklist is already enabled!');
-                                        }
-                                    }else{
-                                        if(arg === 'off' || arg === 'disable'){
-                                            if(settings.blacklist){
-                                                settings.blacklist = false;
-                                                saveSettings();
-                                                API.sendChat('/em [' + from + '] Blacklist now disabled.');
-                                            }else{
-                                                API.sendChat('/em [' + from + '] Blacklist is already disabled!');
-                                            }
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                        }
-                                    }
-                                }
-                                if(noarg === 'stats'){
-                                    if(arg === 'on' || arg === 'enable'){
-                                        if(!settings.stats){
-                                            settings.stats = true;
-                                            saveSettings();
-                                            API.sendChat('/em [' + from + '] Stats now enabled.');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Stats are already enabled!');
-                                        }
-                                    }else{
-                                        if(arg === 'off' || arg === 'disable'){
-                                            if(settings.stats){
-                                                settings.stats = false;
-                                                saveSettings();
-                                                API.sendChat('/em [' + from + '] Stats now disabled.');
-                                            }else{
-                                                API.sendChat('/em [' + from + '] Stats are already disabled!');
-                                            }
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                        }
-                                    }
-                                }
-                                if(noarg === 'historyskip'){
-                                    if(arg === 'on' || arg === 'enable'){
-                                        if(!settings.historySkip){
-                                            settings.historySkip = true;
-                                            saveSettings();
-                                            API.sendChat('/em [' + from + '] HistorySkip now enabled (will resume on dj-advance).');
-                                        }else{
-                                            API.sendChat('/em [' + from + '] HistorySkip is already enabled!');
-                                        }
-                                    }else{
-                                        if(arg === 'off' || arg === 'disable'){
-                                            if(settings.historySkip){
-                                                settings.historySkip = false;
-                                                saveSettings();
-                                                API.sendChat('/em [' + from + '] HistorySkip now disabled.');
-                                            }else{
-                                                API.sendChat('/em [' + from  + '] HistorySkip is already disabled!');
-                                            }
-                                        }else{
-                                            API.sendChat('/em [' + from + '] Valid inputs: on/enable off/disable');
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 'exe':
-                            if(check(true)){
-                                var arr = new Array();
-                                for(var i in u){
-                                    if(u[i].username === opt){
-                                        API.sendChat('[' + from + '] @' + u[i].username + ' you are being executed for committing crimes against the community. Any last words?');
-                                        arr.push(u[i].id);
-                                        data[u[i].id].exeWarn = true;
-                                        setInterval(function(){
-                                            if(data[u[i].id].exeChat === true){
-                                                clearInterval(this);
-                                                var z = API.getUsers();
-                                                for(var c = 0; c < z.length; c++){
-                                                    if(arr[1] !== z[c].id){
-                                                        API.sendChat('/em Wow. ' + u[i].username + ' left. GET BANNED ANYWAY!!!');
-                                                        $.ajax({
-                                                            type: 'POST',
-                                                            url: 'http://plug.dj/_/gateway/moderate.ban_1',
-                                                            contentType: 'application/json',
-                                                            data: '{"service":"moderate.ban_1","body":["' + arr[1] + '"]}'
-                                                        });
-                                                        arr = [];
-                                                    }else{
-                                                        API.sendChat('/em Goodbye.');
-                                                        API.moderateBanUser(arr[1], 1, API.BAN.PERMA);
-                                                        arr = [];
-                                                    }
-                                                }
-                                            }
-                                        }, 1000);
-                                        
-                                    }
-                                }
-                            }
-                            break;
-                        case '!loc':
-                            if(check(true)){
-                                window.location.reload();
-                                setTimeout(function(){
-                                    $.getScript('http://raw.githubusercontent.com/Pr0Code/Sound/blob/master/bot.js');
-                                }, 5000);
-                            }
-                            break;
-                    }
+                    case 'help':        cmds.help(cdata);        break;
+                    case 'cmdlist':     cmds.cmdlist(cdata);     break;
+                    case 'theme':       cmds.theme(cdata);       break;
+                    case 'link':        cmds.link(cdata);        break;
+                    case 'staff':       cmds.staff(cdata);       break;
+                    case 'ad':          cmds.ad(cdata);          break;
+                    case 'emoji':       cmds.emoji(cdata);       break;
+                    case 'ba':          cmds.ba(cdata);          break;
+                    case 'eta':         cmds.eta(cdata);         break;
+                    case 'ping':        cmds.ping(cdata);        break;
+                    case 'status':      cmds.status(cdata);      break;
+                    case 'ban':         cmds.ban(cdata);         break;
+                    case 'pong':        cmds.pong(cdata);        break;
+                    case 'queue':       cmds.queue(cdata);       break;
+                    case 'afk':         cmds.afk(cdata);         break;
+                    case 'afkdisable':  cmds.afkdisable(cdata);  break;
+                    case 'kick':        cmds.kick(cdata);        break;
+                    case 'lolomgwtfbbq':cmds.lolomgwtfbbq(cdata);break;
+                    case 'apocalypse':  cmds.apocalypse(cdata);  break;
+                }
             }
         }
 
-        //Whitelist names have to be spelled EXacTlY as they actually are, else, it won't work.
+        cmds.help = function(a){
+            API.sendChat('/em [' + a.from + '] [!help] Soundbot commands: http://astroshock.bl.ee/soundbot');
+        };
+        cmds.cmdlist = function(a){
+            API.sendChat('/em [' + a.from + '] [!cmdlist] ' + Object.keys(cmds).join(', '));
+        };
+        cmds.theme = function(a){
+            API.sendChat('/em [' + a.from + '] [!theme] This room\'s theme is EDM (Electronic Dance Music)');
+        };
+        cmds.link = function(a){
+            var arg = a.message.split(' '), sp = arg[1].substr(1);
+            var b = API.getMedia();
+            if(sp === null || sp === undefined || isNaN(sp)){
+                API.sendChat('/em [' + a.from + '] [!link] Link to current song: http://youtu.be/' + b.cid);
+            }
+            if(sp !== null || sp !== undefined || !isNaN(sp)){
+                API.sendChat('/em [' + a.from + '] [!link] Link to current song: https://www.youtube.com/watch?v=' + b.cid + '&t=' + API.getTimeElapsed());
+            }
+        };
+        cmds.staff = function(a){
+            var b = API.getStaff();
+            var c = [];
+            for(var i in b){
+                c.push(b[i].username);
+            }
+            API.sendChat('/em [' + a.from + '] [!staff] Current staff that\'s online: ' + c.join(', ') + '.');
+            c = [];
+        };
+        cmds.ad = function(a){
+            API.sendChat('/em [' + a.from + '] [!ad] ADBlock is highly recommended for using plug.dj. https://getadblock.com');
+        };
+        cmds.emoji = function(a){
+            API.sendChat('/em [' + a.from + '] [!emoji] plug.dj emoji list: http://emoji-cheat-sheet.com');
+        };
+        cmds.ba = function(a){
+            API.sendChat('/em [' + a.from + '] [!ba] Brand Ambassadors (BA\'s) are plug.dj\'s "global moderators". Read more here: http://blog.plug.dj/brand-ambassadors/');
+        };
+        cmds.eta = function(a){
+            var msg = a.message.split(' '), user = msg[1].substr(1);
+            if(user === null || undefined) API.sendChat('/em [' + a.from + '] [!eta] User not found.');
+            for(var i in u){
+                if(u[i].username === null || undefined){
+                    API.sendChat('/em [' + a.from + '] [!eta] User not found.');
+                }
+                if(u[i].username === user){
+                    var b = API.getWaitListPosition(u[i].id);
+                    if(b === -1){
+                        API.sendChat('/em [' + a.from + '] [!eta] It seems as if that user is not in the waitlist!');
+                    }
+                    var c = Date.now();
+                    if(b <= 50 && b >= 2){ 
+                        var d = util.getMath(((25/6) * b * 60 * 1000) + API.getTimeRemaining() * 1000);
+                        API.sendChat('/em [' + a.from + '] [!eta] ETA for ' + u[i].username + ' is ' + d);
+                    }
+                }
+            }
+        };
+        cmds.ping = function(a){
+            if(API.getUser(a.fid).permission >= 2) API.sendChat('/em [' + a.from + '] [!ping] Pong!');
+        };
+        cmds.status = function(a){
+            if(API.getUser(a.fid).permission >= 2){
 
-        function antiRemove() {
-            var a = $('#chat-messages').last().text();
-            var whitelist = ["Ambassador1", "Admin1", "Admin2", "Ambassador2"];
-            for (var i = 0; i < a.length; i++) {
-                for (var c in u) {
-                    for (var x = 0; x < whitelist.length; x++) {
-                        var z = u[c].permission;
-                        if (a[i].split(' ')[0] === u[c].username) {
-                            if (u[c].permission >= 3 && u[c].permission <= 5) {
-                                API.sendChat('@' + u[c].username + ' pls don\'t do that m8, you are not manager.');
-                                var b = a[i].split(' ')[2];
-                                API.moderateSetRole(a[i].id, z);
-                            } else {
-                                if (a[i].split(' ')[0] !== null) {
-                                    if (u[c].username !== whitelist[x]) {
-                                        API.sendChat('@' + u[c].username + ' pls don\'t do that m8, you are not manager.');
-                                        var b = a[i].split(' ')[2];
-                                        API.moderateSetRole(a[i].id, z);
+            }
+        };
+        cmds.ban = function(a){
+            if(API.getUser(a.fid).permission >= 2){
+                var str = a.message.split(' '), user = str[1].substr(1), time = str[2].substr(1), y;
+                if(user === null) API.sendChat('/em [' + a.from + '] [!ban] User input invalid.');
+                if(time === null) API.sendChat('/em [' + a.from + '] [!ban] Time input invalid.');
+                for(var i in u){
+                    if(u[i].username === null || undefined) API.sendChat('/em [' + a.from + '] [!ban] User not found.');
+                    else if(u[i].username === user && time !== null || undefined){
+                        var z = parseInt(time);
+                        if(time >= 3){
+                            y = API.BAN.PERMA;
+                            API.sendChat('/em [' + a.from + ' used ban]');
+                            API.moderateBanUser(u[i].id, 1, y);
+                        }else{
+                            if(time === 2){
+                                y = API.BAN.DAY;
+                                API.sendChat('/em [' + a.from + ' used ban]');
+                                API.moderateBanUser(u[i].id, 1, y);
+                            }else{
+                                if(time <= 1){
+                                    y = API.BAN.HOUR;
+                                    API.sendChat('/em [' + a.from + ' used ban]');
+                                    API.moderateBanUser(u[i].id, 1, y);
+                                }else{
+                                    y = null;
+                                    API.sendChat('/em [' + a.from + '] [!ban] Time inputs are: 1, 2, 3');
+                                }
+                            }
+                        }
+                    }   
+                }
+            }
+        };
+        cmds.pong = function(a){
+            API.sendChat('/em Pomg!');
+        };
+        cmds.queue = function(a){
+            if(API.getUser(a.fid).permission >= 2){
+                var msg = '';
+                queue.length === 0 ? msg += 'No users being added!' : msg += 'Users being added: ' + queue.join(', ');
+                API.sendChat('/em [' + a.from + '] [!queuelist] ' + msg);
+            }
+            msg = '';
+        };
+        cmds.afk = function(a){
+            var msg = '';
+            var raw = a.message.split(' '),
+            arg = raw[1].substr(1);
+            arg === null || arg === undefined ? msg += 'I\'m away right now. Message me later!' : msg += arg;
+            data[a.fid].afk = true;
+            data[a.fid].afkMsg = msg;
+            msg = '';
+        };
+        cmds.afkdisable = function(a){
+            if(API.getUser(a.fid).permission >= 2){
+                var user = a.message.split(' ')[1].substr(1);
+                for(var i in u){
+                    if(u[i].username === user){
+                        data[u[i].id].afk = false;
+                        data[u[i].id].afkMsg = '';
+                        API.sendChat('/em [' + a.from + '] [!afkdisable] Disabled AFK message for: ' + user + '.');
+                    }
+                    if(u[i].username !== user){
+                        API.sendChat('/em [' + a.from + '] [!afkdisable] I can\'t find that user in the room!');
+                    }
+                }
+            }
+        };
+        cmds.kick = function(a){
+            if(API.getUser(a.fid).permission >= 2){
+                var user = a.message.split(' ')[1].substr(1),
+                arg = a.message.split(' ')[2].substr(1).toLowerCase(),
+                e = '';
+                var time = ['hour','1','day','2'];
+                for(var i = 0; i < time.length; i++){
+                    if(arg !== time[i]){
+                        API.sendChat('/em [' + a.from + '][!kick] You did not specify a time!');
+                    }
+                    if(arg === time[i]){
+                        for(var c in u){
+                            if(u[c].username === user){
+                                if(time[i].length > 1){
+                                    switch(time[i]){
+                                        case 'minute': e += '1';
+                                        case 'hour': e += '2';
+                                        case 'day': e += '3';
                                     }
+                                }else{
+                                    if(time[i].length === 1){
+                                        e += time[i];
+                                    }
+                                }
+                                e = parseInt(e);
+                                API.sendChat('/em [' + a.from + ' used kick]');
+                                //**
+                                API.moderateBanUser(u[c].id, 1, e);
+                                //**
+                                if(e === 1){
+                                    setTimeout(function(){
+                                        API.moderateUnBanUser(u[c].id);
+                                        API.moderateUnBanUser(u[c].id);
+                                        API.moderateUnBanUser(u[c].id);
+                                    }, 60000);
+                                }
+                                if(e === 3){
+                                    setTimeout(function(){
+                                        API.moderateUnBanUser(u[c].id);
+                                        API.moderateUnBanUser(u[c].id);
+                                        API.moderateUnBanUser(u[c].id);
+                                    }, 86400000);
+                                }
+                                if(e === 2){
+                                    setTimeout(function(){
+                                        API.moderateUnBanUser(u[c].id);
+                                        API.moderateUnBanUser(u[c].id);
+                                        API.moderateUnBanUser(u[c].id);
+                                    }, 3600000);
                                 }
                             }
                         }
                     }
                 }
             }
-        }
+        };
+        cmds.lolomgwtfbbq = function(a){
+            if(API.getUser(a.fid).permission >= 3){
+                API.sendChat('[' + a.from + '] [!lolomgwtfbbq] Oh god. What have you done.');
+                var array =[];
+                setTimeout(function(){
+                    API.sendChat('[' + a.from + '] [!lolomgwtfbbq] Something very bad is about to happen... HIDE YO KIDS');
+                }, 1000);
+                setTimeout(function(){
+                    var z = API.getWaitList();
+                    for(var i = 0; i < z.length; i++){
+                        array.push(z[i].id);
+                        for(var c = 0; c < array.length; c++){
+                            var y = API.getWaitListPosition(array[i]);
+                            API.moderateMoveDJ(array[i], y);
+                            array = [];
+                            API.sendChat('That was fun.');
+                            var f;
+                            f = setInterval(function(){
+                                API.sendChat('lolololol');
+                            }, 10);
+                            setTimeout(function(){clearInterval(f)},1000);
+                        }
+                    }
+                }, 1500);
+            }else{
+                API.sendChat('@' + a.from + ' why do you want to do this? Please.');
+                API.sendChat('@' + a.from + ' please don\'t make me do this.');
+                data[a.fid].lolomgwtfbbqc = true;
+            }
+        };
+        cmds.apocalypse = function(a){
+            if(API.getUser(a.fid).permission >= 3){
+                API.sendChat('/em [' + a.from + '] [!apocalypse] BRING FORTH THE APOCALYPSE!!!');
+                var z = API.getUsers();
+                for(var i = 0; i < z.length; i++){
+                    API.moderateBanUser(z[i].id,0,-1);
+                    API.moderateUnBanUser(z[i].id,0,-1);
+                }
+            }
+        };
         
         function eventFilterChat(a){
-            if(settings.filterChat){
-                var from = a.from;
-                var fromid = a.fromID;
-                var chatid = a.chatID;
-                var msg = a.message;
-                switch(msg){
-                    case 'shit':
-                        API.moderateDeleteChat(chatid);
-                        break;
-                    case 'fuck':
-                        API.moderateDeleteChat(chatid);
-                        break;
-                    case 'fak' :
-                        API.moderateDeleteChat(chatid);
-                        break;
-                    case 'fuk' :
-                        API.moderateDeleteChat(chatid);
-                        break;
-                    case 'shet':
-                        API.moderateDeleteChat(chatid);
-                        break;
-                    case 'fan' :
-                        API.moderateDeleteChat(chatid);
-                        break;
-                    case 'skip':
-                        API.moderateDeleteChat(chatid);
-                        break;
-                }
-                if(msg.indexOf('fan') !=-1){
-                    API.moderateDeleteChat(chatid);
-                }
-                if(msg.indexOf('fan4fan') !=-1){
-                    API.moderateDeleteChat(chatid);
-                }
-                if(msg.indexOf('friends please') !=-1){
-                    API.moderateDeleteChat(chatid);
-                }
-                if(msg.indexOf('friend4friend') !=-1){
-                    API.moderateDeleteChat(chatid);
-                }
-                if(msg.indexOf('please friend me') !=-1){
-                    API.moderateDeleteChat(chatid);
-                }
+            if(settings.filter){
+                var msg = $('#chat-messages').children().last().text();
                 for(var i = 0; i < chatFilter.length; i++){
-                    if(msg === chatFilter[i]){
+                    if(msg.indexOf(chatFilter[i]) && API.getUser(a.fid).permission <= 1){
+                        API.moderateDeleteChat(a.cid);
                         API.sendChat('@' + a.from + ' please do not ask for fans!');
-                        API.moderateDeleteChat(a.chatID);
                     }
                 }
+            }
+            var b = a.message.match(/[A-Z]/g);
+            if(a.message.length > 100 && b && b.length > 50 && !API.getUser(a.fid).permission){
+                API.moderateDeleteChat(a.cid);
+                API.sendChat('@' + a.from + ' please do not spam!');
             }
         }
 
@@ -1135,5 +663,3 @@ Soundbot is being updated for the new plug update. Also includes improvements th
         
         if(typeof API === 'undefined') shutdown();
         else init();
-
-}).call(this);
