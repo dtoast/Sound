@@ -1,12 +1,6 @@
 Soundbot | plug.dj
 ======
 
-####Build Status
-#####(Probably doesn't work a lot, but trust me, it does.)
-
-![alt text](https://travis-ci.org/Pr0Code/Sound.svg?branch=master)
-***
-
 > **Soundbot is a plug.dj script that helps staff and users**
 > **It can do many amazing things, but I want to add more in the future.**
 > **Look below for commands, licensing, and more.**
