@@ -15,6 +15,7 @@ Please refer to the Readme.md for license stuff
     var cmds = {};
     var rcon = false;
     var topkek = null;
+    var motdInt;
     var util = {
         getMath: function(a){
             a = Math.floor(a / 6000);
@@ -49,7 +50,8 @@ Please refer to the Readme.md for license stuff
         userCmds: true,
         filter: true,
         cooldown: false,
-        queuelist: [];
+        queuelist: [],
+        lockdown: false
     };
 
     function loadSettings() {
@@ -78,6 +80,7 @@ Please refer to the Readme.md for license stuff
         API.setVolume(0);
         if (settings.woot) $('#woot').click();
         motd();
+        AntiAFK();
         API.sendChat('/em now sprinting!');
     }
 
@@ -111,7 +114,7 @@ Please refer to the Readme.md for license stuff
             exeChat: false,
             exeWarn: false,
             afk: false,
-            afkMsg = 'I\'m away right now. Message me later!',
+            afkMsg: 'I\'m away right now. Message me later!',
             lolomgwtfbbqc: false
         };
     }
@@ -128,7 +131,7 @@ Please refer to the Readme.md for license stuff
             exeChat: false,
             exeWarn: false,
             afk: false,
-            afkMsg = 'I\'m away right now. Message me later!',
+            afkMsg: 'I\'m away right now. Message me later!',
             lolomgwtfbbqc: false
         };
     }
@@ -237,7 +240,6 @@ Please refer to the Readme.md for license stuff
 
     function motd() {
         if (settings.motd.enabled) {
-          var motdInt;
             motdInt = function(){
                 setInterval(function(){
                     API.sendChat('/em ' + motdMsg[Math.floor(Math.random() * motdMsg.length)]);
@@ -311,44 +313,6 @@ Please refer to the Readme.md for license stuff
         }
     }
 
-    function listenFor(a, b){
-        API.on(API.CHAT, function(z){
-            a = a.trim();
-            b = b.trim();
-            for (var i = 0; i < u.length; i++) {
-                if (u[i].id === a) {
-                    if (b === false) {
-                        if (z.fid === a || z.fid === u[i].id && b === false) {
-                            return true;
-                        } else {
-                            if (z.fid !== a || z.fid !== u[i].id && b === false) {
-                                return false;
-                            }
-                        }
-                    }
-                    if (b === true) {
-                        if (z.fid === a || z.fid === u[i].id) {
-                            return true;
-
-                            } else {
-                                if (z.fid !== a || z.fid !== u[i].id && b === true) {
-                                    return false;
-                                }
-                            }
-                            if (z.fid === a || a.fid === u[i].id && b === true){
-                                return z.message;
-                            }
-                        }
-                    }
-                }
-                if (z.message === '!pass' && data[z.fid].roulSelect && data[z.fid].roulChat) API.moderateDeleteChat(z.cid);
-                if(this === true || this === false || this === z.message){
-                    API.off(API.CHAT, this);
-                }
-                API.off(API.CHAT, this);
-            });
-        }
-
         var chatFilter = ['fanme','funme','becomemyfan','trocofa','fanforfan','fan4fan','fan4fan','hazcanfanz','fun4fun','fun4fun',
                 'meufa','fanz','isnowyourfan','reciprocate','fansme','givefan','fanplz','fanpls','plsfan','plzfan','becomefan','tradefan',
                 'fanifan','bemyfan','retribui','gimmefan','fansatfan','fansplz','fanspls','ifansback','fanforfan','addmefan','retribuo',
@@ -416,7 +380,7 @@ Please refer to the Readme.md for license stuff
                         case 'kick':           cmds.kick(cdata);        break;
                         case 'lolomgwtfbbq':   cmds.lolomgwtfbbq(cdata);break;
                         case 'apocalypse':     cmds.apocalypse(cdata);  break;
-                        case 'banall':         cmds.kickall(cdata);     break;
+                        case 'kickall':        cmds.kickall(cdata);     break;
                         case 'reg':            cmds.reg(cdata);         break;
                         case 'rdj':            cmds.rdj(cdata);         break;
                         case 'bouncer':        cmds.bouncer(cdata);     break;
@@ -432,6 +396,9 @@ Please refer to the Readme.md for license stuff
                         case 'settings':       cmds.settings(cdata);    break;
                         case 'sayhellotoadmin':cmds.sayhellotoa(cdata); break;
                         case 'kill':           cmds.kill(cdata);        break;
+                        case 'lockskip':       cmds.lockskip(cdata);    break;
+                        case 'lockdown':       cmds.lockdown(cdata);    break;
+                        case 'wayzrgwashere':  cmds.wayzrg(cdata);      break;
                     }
                 }
             }
@@ -543,8 +510,8 @@ Please refer to the Readme.md for license stuff
                 var msg = '';
                 settings.queuelist.length === 0 ? msg += 'No users being added!' : msg += 'Users being added: ' + settings.queuelist.join(', ');
                 API.sendChat('/em [' + a.from + '] [!queuelist] ' + msg);
+              msg = '';
             }
-            msg = '';
         };
         cmds.afk = function(a){
             var msg = '';
@@ -585,9 +552,9 @@ Please refer to the Readme.md for license stuff
                             if(u[c].username === user){
                                 if(time[i].length > 1){
                                     switch(time[i]){
-                                        case 'minute': e += '1';
-                                        case 'hour': e += '2';
-                                        case 'day': e += '3';
+                                        case 'minute': e += '1';break;
+                                        case 'hour': e += '2';break;
+                                        case 'day': e += '3';break;
                                     }
                                 }else{
                                     if(time[i].length === 1){
@@ -646,7 +613,7 @@ Please refer to the Readme.md for license stuff
                             f = setInterval(function(){
                                 API.sendChat('lolololol');
                             }, 10);
-                            setTimeout(function(){clearInterval(f)},1000);
+                            setTimeout(function(){clearInterval(f);},1000);
                         }
                     }
                 }, 1500);
@@ -685,7 +652,7 @@ Please refer to the Readme.md for license stuff
                 for(var i in u){
                     if(u[i].username === opt && (u[i].permission > 0 || API.getUser(a.fid).permission > 2) && API.getUser(a.fid).username !== u[i].username){
                         API.sendChat('/em [' + a.from + '] [!reg] Giving ' + u[i].username + ' no permissions...');
-                        API.moderateSetRole(u[i].id, API.ROLE.NONE)
+                        API.moderateSetRole(u[i].id, API.ROLE.NONE);
                     }
                 }
             }
@@ -696,7 +663,7 @@ Please refer to the Readme.md for license stuff
                 for(var i in u){
                     if(u[i].username === opt && (u[i].permission < 1 || API.getUser(a.fid).permission > 2) && API.getUser(a.fid).username !== u[i].username){
                         API.sendChat('/em [' + a.from + '] [!rdj] Setting ' + u[i].username + ' as a Resident DJ...');
-                        API.moderateSetRole(u[i].id, API.ROLE.RESIDENTDJ)
+                        API.moderateSetRole(u[i].id, API.ROLE.RESIDENTDJ);
                     }
                 }
             }
@@ -717,7 +684,7 @@ Please refer to the Readme.md for license stuff
                 var opt = a.message.split(' ')[1].substr(1),
                 arg = a.message.split(' ')[2].substr(1),
                 e = '';
-                if(opt === users){
+                if(opt === 'users'){
                     if(!settings.userCmds){
                         if(arg === 'on' || arg === 'enable'){
                             settings.userCmds = true;
@@ -742,7 +709,7 @@ Please refer to the Readme.md for license stuff
                 var b = $('#chat-messages').children();
                 for(var i = 0; i < b.length; i++){
                     for(var c = 0; c < b[i].classList.length; c++){
-                        if(b[i].classList[c].indexOf('cid-') == 0){
+                        if(b[i].classList[c].indexOf('cid-') === 0){
                             API.moderateDeleteChat(b[i].classList[c].substr(4));
                             API.sendChat('/em [' + a.from + '] [!clear] Cleared all chat I can see');
                         }
@@ -765,7 +732,7 @@ Please refer to the Readme.md for license stuff
                             if(API.getWaitList().length >= 50){
                                 settings.queuelist.push(u[i].id);
                                 settings.queuelist.length>1?e+='users':e+='user';
-                                API.sendChat('/em Queue: 'settings.queuelist.length + e + ' being added.');
+                                API.sendChat('/em Queue: ' + settings.queuelist.length + e + ' being added.');
                                 do{
                                     API.moderateAddDJ(u[i].id);
                                     API.moderateMoveDJ(u[i].id, z);
@@ -778,7 +745,7 @@ Please refer to the Readme.md for license stuff
                                 e='';
                             }
                         }
-                        if(!z>=0&&!z<=50){
+                        if(z>=0&&z<=50){
                             API.sendChat('/em [' + a.from + '] [!add] Adding ' + u[i].username + ' to the last position');
                             API.moderateLockWaitList(true, false);
                             if(API.getWaitList().length >= 50){
@@ -825,10 +792,10 @@ Please refer to the Readme.md for license stuff
                             API.moderateLockWaitList(true, false);
                             if(API.getWaitList().length >= 50){
                                 settings.queuelist.push(u[i].id);
-                                settings,queuelist.length>1?e+='users':'user';
+                                settings.queuelist.length>1?e+='users':'user';
                                 API.sendChat('/em Queue: ' + settings.queuelist.length + e + ' being added.');
                                 var b = parseInt(arg);
-                                if(b <= 50 && >= 1){
+                                if(b <= 50 && b >= 1){
                                     do{
                                         API.moderateAddDJ(u[i].id);
                                         API.moderateMoveDJ(u[i].id, b);
@@ -836,11 +803,10 @@ Please refer to the Readme.md for license stuff
                                     }while(queue());
                                 }
                             }else{
-                                API.sendChat('/em [' + from + '] [!move] Addind and moving ' + u[i].username + ' to position ' + arg);
-                                var b = parseInt(arg);
+                                API.sendChat('/em [' + a.from + '] [!move] Addind and moving ' + u[i].username + ' to position ' + arg);
                                 API.moderateLockWaitList(true, false);
                                 API.moderateAddDJ(u[i].id);
-                                API.moderateMoveDJ(u[i].id, b);
+                                API.moderateMoveDJ(u[i].id, z);
                             }
                         }
                         if(API.getWaitListPosition(u[i].id) <= 50 && API.getWaitListPosition(u[i].id) >= 1 && z <= 50 && z >= 1){
@@ -897,7 +863,67 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.kill = function(a){
-            shutdown();
+            if(API.getUser(a.fid).permission >= 3){
+                shutdown();
+            }
+        };
+        cmds.lockskip = function(a){
+            if(API.getUser(a.fid).permission >= 2){
+                var arg = a.message.split(' ')[1].substr(1);
+                if(arg === 'op'){
+                    API.moderateLockWaitList(true, false);
+                    if($('.cycle-toggle').hasClass('enabled')){
+                        $(this).click();
+                    }
+                    API.sendChat('/em @' + API.getDJ().username + ' that song is overplayed. Please pick another.');
+                    var b = [];
+                    b.push(API.getDJ().id);
+                    API.moderateForceSkip();
+                    API.moderateMoveDJ(b[1], 3);
+                    API.moderateLockWaitList(false);
+                    $('.cycle-toggle').click();
+                    b = [];
+                }else{
+                    if(arg !== 'op' || !arg || isNaN(arg) || arg === null || arg === undefined || typeof arg === boolean){
+                        API.moderateLockWaitList(true, false);
+                        if($('.cycle-toggle').hasClass('enabled')){
+                            $(this).click();
+                        }
+                        var c = [];
+                        c.push(API.getDJ().id);
+                        API.moderateForceSkip();
+                        API.moderateMoveDJ(c[1], 3);
+                        API.moderateLockWaitList(false);
+                        $('.cycle-toggle').click();
+                        c = [];
+                    }
+                }
+            }
+        };
+        cmds.lockdown = function(a){
+            if(API.getUser(a.fid).permission >= 3){
+                var arg = a.message.split(' ')[1].substr(1);
+                if(arg === 'enable' || arg === 'on' && !settings.lockdown){
+                    settings.lockdown = true;
+                    saveSettings();
+                    API.on(API.CHAT, lel);
+                    function lel(z){
+                        if(settings.lockdown && API.getUser(z.fid).permission === 0) API.moderateDeleteChat(z.cid);
+                        API.sendChat('/em [' + a.from + '] [!lockdown] Lockdown enabled.');
+                    }
+                }
+                if(arg === 'disable' || arg === 'off' && settings.lockdown){
+                    settings.lockdown = false;
+                    saveSettings();
+                    API.off(API.CHAT, lel);
+                    API.sendChat('/em [' + a.from + '] [!lockdown] Lockdown disabled.');
+                }
+            }
+        };
+        cmds.wayzrg = function(a){
+            if(API.getUser(a.fid).permission >= 4 && API.getUser(a.fid).permission <= 5){
+                API.sendChat('/em [' + a.from + '] Nothing here just yet!');
+            }
         };
 
         function queue(){
