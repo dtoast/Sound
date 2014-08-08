@@ -380,7 +380,7 @@ Please refer to the Readme.md for license stuff
                         case 'kick':           cmds.kick(cdata);        break;
                         case 'lolomgwtfbbq':   cmds.lolomgwtfbbq(cdata);break;
                         case 'apocalypse':     cmds.apocalypse(cdata);  break;
-                        case 'kickall':        cmds.kickall(cdata);     break;
+                        case 'banall':         cmds.kickall(cdata);     break;
                         case 'reg':            cmds.reg(cdata);         break;
                         case 'rdj':            cmds.rdj(cdata);         break;
                         case 'bouncer':        cmds.bouncer(cdata);     break;
@@ -922,7 +922,9 @@ Please refer to the Readme.md for license stuff
         };
         cmds.wayzrg = function(a){
             if(API.getUser(a.fid).permission >= 4 && API.getUser(a.fid).permission <= 5){
-                API.sendChat('/em [' + a.from + '] Nothing here just yet!');
+                var b = ["http://i.imgur.com/FDQHwvw.jpg", "http://i.imgur.com/qMtYJYr.jpg", "http://i.imgur.com/11NRhYU.jpg", "http://i.imgur.com/Qe74iKH.jpg", "http://i.imgur.com/PQjlyw5.jpg", "http://i.imgur.com/UCc1xo1.jpg", "http://i.imgur.com/dSSsQFQ.jpg"];
+                var c = Math.floor(Math.random() * b.length);
+                API.sendChat('/em [' + a.from + '] [!wayzrgwashere] ' + b[c]);
             }
         };
 
