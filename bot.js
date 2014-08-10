@@ -358,7 +358,7 @@ Please refer to the Readme.md for license stuff
         function eventCommandChat(a){
             if(a.message.substr(0,1)=='!'&&a.message.substr(2)!==' '||a.message.substr(2)!=='!'){
                 if(API.getUser(a.fid).permission === 0 && settings.userCmds){
-                    try{
+                    //try{
                         API.moderateDeleteChat(a.cid);
                         var b = a.message.split(' ');
                         var c = b[1].substr(1);
