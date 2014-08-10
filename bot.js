@@ -399,6 +399,8 @@ Please refer to the Readme.md for license stuff
                         case 'lockskip':       cmds.lockskip(cdata);    break;
                         case 'lockdown':       cmds.lockdown(cdata);    break;
                         case 'wayzrgwashere':  cmds.wayzrg(cdata);      break;
+                        default:
+                            API.sendChat('/em [' + cdata.from + '][' + cdata.message.split(' ')[0].toLowerCase() + '] Uknown command.');
                     }
                 }
             }
