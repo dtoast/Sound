@@ -364,7 +364,6 @@ Please refer to the Readme.md for license stuff
                         var c = b[1].substr(1);
                         var str = c.toLowerCase();
                         var cdata = {message:a.message,fid:a.fid,from:a.from,cid:a.cid};
-                        var z = Object.keys(cmds);
                         /*switch(str){
                             case 'help':           cmds.help(cdata);        break;
                             case 'cmdlist':        cmds.cmdlist(cdata);     break;
@@ -406,13 +405,24 @@ Please refer to the Readme.md for license stuff
                             case 'wayzrgwashere':  cmds.wayzrg(cdata);      break;
                             default:
                                 API.sendChat('/em [' + cdata.from + '][' + cdata.message.split(' ')[0].toLowerCase() + '] Uknown command.');
-                        }
+                        }*/
+                        if(str === 'help') cmds.help(cdata);
+                        if(str === 'cmdlist') cmds.cmdlist(cdata);
+                        if(str === 'theme') cmds.theme(cdata);
+                        if(str === 'link') cmds.link(cdata);
+                        if(str === 'staff') cmds.staff(cdata);
+                        if(str === 'ad') cmds.ad(cdata);
+                        if(str === 'emoji') cmds.emoji(cdata);
+                        if(str === 'ba') cmds.ba(cdata);
+                        if(str === 'eta') cmds.eta(cdata);
+                        if(str === 'ping') cmds.ping(cdata);
+                        if(str === 'status') cmds.status(cdata);
+                        if(str === 'ban') cmds.ban(cdata);
+                        if(str === 'pong') cmds.pong(cdata);
+                        if(str === 'queue') cmds.queue(cdata);
                     }catch(e){
                         API.sendChat('/em [' + cdata.from + '][' + cdata.message.split(' ')[0] + '] Internal command error! (' + e + ')');
                         shutdown();
-                    }*/
-                    for(var i = 0; i < z.length; i++){
-                        if(str === z[i]) cmds.z[i](cdata);
                     }
                 }
             }
