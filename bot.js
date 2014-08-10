@@ -290,7 +290,7 @@ Please refer to the Readme.md for license stuff
       if(rcon){settings.stats=true;}
         if(settings.stats){
             var z = obj.lastPlay;
-            if(typeof z === 'undefined') return void (0);
+            if(typeof z === 'undefined') return;
             var y = z.score.positive;
             var x = z.score.curates;
             var w = z.score.negative;
@@ -360,7 +360,13 @@ Please refer to the Readme.md for license stuff
                 if(API.getUser(a.fid).permission === 0 && settings.userCmds || API.getUser(a.fid).permission >= 1){
                     try{
                         API.moderateDeleteChat(a.cid);
-                        var str = a.message.substr(1).split(' ')[0].toLowerCase(),cdata = {message:a.message,fid:a.fid,from:a.from,cid:a.cid};
+                        var str = a.message.split(' ')[0].substr(1).toLowerCase();
+                        var cdata = {
+                            message:a.message,
+                            fid:a.fid,
+                            from:a.from,
+                            cid:a.cid
+                        };
                         switch(str){
                             case 'help':           cmds.help(cdata);        break;
                             case 'cmdlist':        cmds.cmdlist(cdata);     break;
