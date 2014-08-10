@@ -360,7 +360,10 @@ Please refer to the Readme.md for license stuff
                 if(API.getUser(a.fid).permission === 0 && settings.userCmds){
                     try{
                         API.moderateDeleteChat(a.cid);
-                        var str = a.message.substr(1).split(' ')[0].toLowerCase(),cdata = {message:a.message,fid:a.fid,from:a.from,cid:a.cid};
+                        var b = a.message.split(' ');
+                        var c = b[1].substr(1);
+                        var str = c.toLowerCase();
+                        var cdata = {message:a.message,fid:a.fid,from:a.from,cid:a.cid};
                         switch(str){
                             case 'help':           cmds.help(cdata);        break;
                             case 'cmdlist':        cmds.cmdlist(cdata);     break;
