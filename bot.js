@@ -364,7 +364,8 @@ Please refer to the Readme.md for license stuff
                         var c = b[1].substr(1);
                         var str = c.toLowerCase();
                         var cdata = {message:a.message,fid:a.fid,from:a.from,cid:a.cid};
-                        switch(str){
+                        var z = Object.keys(cmds);
+                        /*switch(str){
                             case 'help':           cmds.help(cdata);        break;
                             case 'cmdlist':        cmds.cmdlist(cdata);     break;
                             case 'theme':          cmds.theme(cdata);       break;
@@ -409,6 +410,9 @@ Please refer to the Readme.md for license stuff
                     }catch(e){
                         API.sendChat('/em [' + cdata.from + '][' + cdata.message.split(' ')[0] + '] Internal command error! (' + e + ')');
                         shutdown();
+                    }*/
+                    for(var i = 0; i < z.length; i++){
+                        if(str === z[i]) cmds.z[i](cdata);
                     }
                 }
             }
