@@ -357,69 +357,14 @@ Please refer to the Readme.md for license stuff
             
         function eventCommandChat(a){
             if(a.message.substr(0,1)=='!'&&a.message.substr(2)!==' '||a.message.substr(2)!=='!'){
-                if(API.getUser(a.fid).permission === 0 && settings.userCmds){
+                if(API.getUser(a.fid).permission === 0 && settings.userCmds || API.getUser(a.fid).permission >= 1){
                     try{
                         API.moderateDeleteChat(a.cid);
-                        var b = a.message.split(' ');
-                        var c = b[1].substr(1);
-                        var str = c.toLowerCase();
+                        var b = Object.keys(cmds);
+                        for(var i = 0; i < b.length; i++){
+                            cmds[b[i]](cdata);
+                        }
                         var cdata = {message:a.message,fid:a.fid,from:a.from,cid:a.cid};
-                        /*switch(str){
-                            case 'help':           cmds.help(cdata);        break;
-                            case 'cmdlist':        cmds.cmdlist(cdata);     break;
-                            case 'theme':          cmds.theme(cdata);       break;
-                            case 'link':           cmds.link(cdata);        break;
-                            case 'staff':          cmds.staff(cdata);       break;
-                            case 'ad':             cmds.ad(cdata);          break;
-                            case 'emoji':          cmds.emoji(cdata);       break;
-                            case 'ba':             cmds.ba(cdata);          break;
-                            case 'eta':            cmds.eta(cdata);         break;
-                            case 'ping':           cmds.ping(cdata);        break;
-                            case 'status':         cmds.status(cdata);      break;
-                            case 'ban':            cmds.ban(cdata);         break;
-                            case 'pong':           cmds.pong(cdata);        break;
-                            case 'queue':          cmds.queue(cdata);       break;
-                            case 'afk':            cmds.afk(cdata);         break;
-                            case 'afkdisable':     cmds.afkdisable(cdata);  break;
-                            case 'kick':           cmds.kick(cdata);        break;
-                            case 'lolomgwtfbbq':   cmds.lolomgwtfbbq(cdata);break;
-                            case 'apocalypse':     cmds.apocalypse(cdata);  break;
-                            case 'banall':         cmds.kickall(cdata);     break;
-                            case 'reg':            cmds.reg(cdata);         break;
-                            case 'rdj':            cmds.rdj(cdata);         break;
-                            case 'bouncer':        cmds.bouncer(cdata);     break;
-                            case 'cmdsettings':    cmds.cmdsettings(cdata); break;
-                            case 'clear':          cmds.clear(cdata);       break;
-                            case 'add':            cmds.add(cdata);         break;
-                            case 'remove':         cmds.remove(cdata);      break;
-                            case 'move':           cmds.move(cdata);        break;
-                            case 'mute':           cmds.mute(cdata);        break;
-                            case 'unmute':         cmds.unmute(cdata);      break;
-                            case 'say':            cmds.say(cdata);         break;
-                            case 'skip':           cmds.skip(cdata);        break;
-                            case 'settings':       cmds.settings(cdata);    break;
-                            case 'sayhellotoadmin':cmds.sayhellotoa(cdata); break;
-                            case 'kill':           cmds.kill(cdata);        break;
-                            case 'lockskip':       cmds.lockskip(cdata);    break;
-                            case 'lockdown':       cmds.lockdown(cdata);    break;
-                            case 'wayzrgwashere':  cmds.wayzrg(cdata);      break;
-                            default:
-                                API.sendChat('/em [' + cdata.from + '][' + cdata.message.split(' ')[0].toLowerCase() + '] Uknown command.');
-                        }*/
-                        if(str === 'help') cmds.help(cdata);
-                        if(str === 'cmdlist') cmds.cmdlist(cdata);
-                        if(str === 'theme') cmds.theme(cdata);
-                        if(str === 'link') cmds.link(cdata);
-                        if(str === 'staff') cmds.staff(cdata);
-                        if(str === 'ad') cmds.ad(cdata);
-                        if(str === 'emoji') cmds.emoji(cdata);
-                        if(str === 'ba') cmds.ba(cdata);
-                        if(str === 'eta') cmds.eta(cdata);
-                        if(str === 'ping') cmds.ping(cdata);
-                        if(str === 'status') cmds.status(cdata);
-                        if(str === 'ban') cmds.ban(cdata);
-                        if(str === 'pong') cmds.pong(cdata);
-                        if(str === 'queue') cmds.queue(cdata);
                     }catch(e){
                         API.sendChat('/em [' + cdata.from + '][' + cdata.message.split(' ')[0] + '] Internal command error! (' + e + ')');
                         shutdown();
