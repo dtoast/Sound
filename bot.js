@@ -404,7 +404,7 @@ Please refer to the Readme.md for license stuff
                                 API.sendChat('/em [' + cdata.from + '][' + cdata.message.split(' ')[0].toLowerCase() + '] Uknown command.');
                         }
                     }catch(e){
-                        API.sendChat('/em [' + cdata.from + '][' + cdata.message.split(' ')[0] + '] Internal command error! (' + e + ')');
+                        API.sendChat('/em [' + a.from + '] Aww! Such Fail :frowning: (Internal Command Error).');
                         shutdown();
                     }
                 }
