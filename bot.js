@@ -54,15 +54,21 @@ Please refer to the Readme.md for license stuff
         lockdown: false
     };
 
-    function loadSettings() {
+    function loadSettings(){
         var a = JSON.parse(localStorage.getItem('SoundbotSave'));
-        if (a){
-            var b = Object.keys(settings);
-          for(var i = 0; i < b.length; i++){
-            settings[b[i]] = a[b[i]];
-          }
+        if(typeof a === 'undefined') return;
+        if(isNaN(a)) return;
+        var b = Object.keys(settings);
+        if(a){
+            for(var i = 0; i < b.length; i++){
+                var c = Object.keys(settings[b[i]]);
+                for(var x = 0; x < c.length; x++){
+                    settings[b[i]][c[x]] = a[b[i]][c[x]];
+                }
+            }
+        }else{
+            saveSettings();
         }
-        else if (typeof a === undefined) saveSettings();
     }
 
     //Init() and shutdown()
