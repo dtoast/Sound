@@ -9,6 +9,7 @@ Copyright (c) 2014 FourBit (Pr0Code)
 Please refer to the Readme.md for license stuff
 
 */
+(function(){
     var motdMsg = ["Welcome to the FourBit plug.dj room!"];
     var joinTime = Date.now();
     var blacklist = ['#SELFIE (Official Music Video)', 'Troll Song'];
@@ -18,8 +19,8 @@ Please refer to the Readme.md for license stuff
     var motdInt;
     var util = {
         getMath: function(a){
-            a = Math.floor(a / 6000);
-            var b = (a - Math.floor(a / 60) * 60);
+            a = ~~(a / 6000);
+            var b = (a - ~~(a / 60) * 60);
             var c = (a - b) / 60;
             var e = '';
             e += c + 'h';
@@ -57,7 +58,6 @@ Please refer to the Readme.md for license stuff
     function loadSettings(){
         var a = JSON.parse(localStorage.getItem('SoundbotSave'));
         if(typeof a === 'undefined') return;
-        if(isNaN(a)) return;
         var b = Object.keys(settings);
         if(a){
             for(var i = 0; i < b.length; i++){
@@ -876,9 +876,16 @@ Please refer to the Readme.md for license stuff
         };
         cmds.sayhellotoa = function(a){
             var arg = a.message.split(' ')[1].substr(1);
+            var b = arg.lastIndexOf('.')+2;
+            var test;
+            if(a.message.substr(b)==undefined||null){
+                b=arg.lastIndexOf('.')-1;
+                if(a.message.substr(b,1).match(/[A-Z]/g))test+='.';else test+='';
+            }else test+='';
+            arg==undefined||null?arg='':arg+=test;
             var admins = API.getAdmins();
             for(var i = 0; i < admins.length; i++){
-                API.sendChat('/em [' + a.from + '] [!sayhellottoadmin] Hi @' + admins[i].username + '! ' + arg);
+                API.sendChat('/em [' + a.from + '] [!sayhellottoadmin] Hi @'+admins[i].username+'! '+arg+test);
             }
         };
         cmds.kill = function(a){
@@ -988,3 +995,5 @@ Please refer to the Readme.md for license stuff
         
         if(typeof API === 'undefined') shutdown();
         else init();
+    }
+})();
