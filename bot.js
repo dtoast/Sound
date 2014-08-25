@@ -4,7 +4,7 @@ Soundbot Revamp
 
 This might not work with the new plug update but w/e
 
-Copyright (c) 2014 FourBit (Pr0Code)
+Copyright (c) 2014 FourBit
 
 Please refer to the Readme.md for license stuff
 
