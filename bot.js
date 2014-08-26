@@ -996,4 +996,4 @@ Please refer to the Readme.md for license stuff
         if(typeof API === 'undefined') shutdown();
         else init();
     }
-})();
+}());
