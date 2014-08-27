@@ -63,13 +63,12 @@ Please refer to the Readme.md for license stuff
             for(var i = 0; i < b.length; i++){
                 if(a[b[i]]!==null&&settings[b[i]]!==null){
                     settings[b[i]] = a[b[i]];
-                }else{
-                    if(typeof settings[b[i]] === 'object'&&a[b[i]]!==null){
-                        var c = Object.keys(settings[b[i]]);
-                        for(var x = 0; x < c.length; x++){
-                            if(a[b[i]][c[x]]!==null&&settings[b[i]][c[x]]!==null){
-                                a[b[i]][c[x]] = settings[b[i]][c[x]];
-                            }
+                }
+                if(typeof settings[b[i]] === 'object'&&a[b[i]]!==null){
+                    var c = Object.keys(settings[b[i]]);
+                    for(var x = 0; x < c.length; x++){
+                        if(a[b[i]][c[x]]!==null&&settings[b[i]][c[x]]!==null){
+                           a[b[i]][c[x]] = settings[b[i]][c[x]];
                         }
                     }
                 }
