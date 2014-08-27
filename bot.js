@@ -9,15 +9,15 @@ Copyright (c) 2014 FourBit
 Please refer to the Readme.md for license stuff
 
 */
-(function(){
-    var motdMsg = ["Welcome to the FourBit plug.dj room!"];
-    var joinTime = Date.now();
-    var blacklist = ['#SELFIE (Official Music Video)', 'Troll Song'];
-    var cmds = {};
-    var rcon = false;
-    var topkek = null;
-    var motdInt;
-    var util = {
+//(function(){
+    var motdMsg = ["Welcome to the FourBit plug.dj room!"],
+    joinTime = Date.now(),
+    blacklist = ['#SELFIE (Official Music Video)', 'Troll Song'],
+    cmds = {},
+    rcon = false,
+    topkek = null,
+    motdInt,
+    util = {
         getMath: function(a){
             a = ~~(a / 6000);
             var b = (a - ~~(a / 60) * 60);
@@ -28,7 +28,7 @@ Please refer to the Readme.md for license stuff
             e += b;
             return e;
         }
-    };
+    },
     var settings = {
         woot: true,
         motd: {
@@ -61,9 +61,17 @@ Please refer to the Readme.md for license stuff
         var b = Object.keys(settings);
         if(a){
             for(var i = 0; i < b.length; i++){
-                var c = Object.keys(settings[b[i]]);
-                for(var x = 0; x < c.length; x++){
-                    settings[b[i]][c[x]] = a[b[i]][c[x]];
+                if(a[b[i]]!==null&&settings[b[i]]!==null){
+                    settings[b[i]] = a[b[i]];
+                }else{
+                    if(typeof settings[b[i]] === 'object'&&a[b[i]]!==null){
+                        var c = Object.keys(settings[b[i]]);
+                        for(var x = 0; x < c.length; x++){
+                            if(a[b[i]][c[x]]!==null&&settings[b[i]][c[x]]!==null){
+                                a[b[i]][c[x]] = settings[b[i]][c[x]];
+                            }
+                        }
+                    }
                 }
             }
         }else{
@@ -996,4 +1004,4 @@ Please refer to the Readme.md for license stuff
         if(typeof API === 'undefined') shutdown();
         else init();
     }
-}());
+//}());
