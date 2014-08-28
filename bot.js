@@ -1000,7 +1000,6 @@ Please refer to the Readme.md for license stuff
                         topkek = null;
                     }, 100);
                 }
-                API.ofF(API.WAIT_LIST_UPDATE,this);
             }
         }
         
