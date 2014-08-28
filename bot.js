@@ -9,7 +9,7 @@ Copyright (c) 2014 FourBit
 Please refer to the Readme.md for license stuff
 
 */
-//(function(){
+(function(){
     var motdMsg = ["Welcome to the FourBit plug.dj room!"],
     joinTime = Date.now(),
     blacklist = ['#SELFIE (Official Music Video)', 'Troll Song'],
@@ -17,19 +17,22 @@ Please refer to the Readme.md for license stuff
     rcon = false,
     topkek = null,
     motdInt,
+    _noUpdate = false,
+    afkChk,
+    socket,
     util = {
         getMath: function(a){
-            a = ~~(a / 6000);
-            var b = (a - ~~(a / 60) * 60);
-            var c = (a - b) / 60;
-            var e = '';
-            e += c + 'h';
-            e += b < 10 ? '0' : '';
-            e += b;
+            a=~~(a/6000);
+            var b=(a-~~(a/60)*60),
+            c=(a-b)/60,
+            e='';
+            e+=c+'h';
+            e+=b<10?'0':'';
+            e+=b;
             return e;
         }
     },
-    var settings = {
+    settings = {
         woot: true,
         motd: {
             enabled: false,
@@ -52,10 +55,43 @@ Please refer to the Readme.md for license stuff
         filter: true,
         cooldown: false,
         queuelist: [],
-        lockdown: false
+        lockdown: false,
+        checkUpdates: true,
+        hasPendingUpdate: false,
+        version: '1.1'
     };
 
+    function checkUpdate(){
+        $.ajax({
+            url: 'http://astroshock.bl.ee/_/update.json?callback=_msg',
+            success: function(data){
+                var text = '';
+                for(var i = 0; i < data.length; i++){
+                    var _return = data[i];
+                    text+=_return.version;
+                    if(parseInt(text)>parseInt(settings.version)){
+                        if(!_noUpdate){
+                            shutdown();
+                            API.sendChat('/em Updating...');
+                            setTimeout(function(){
+                                $.getScript('https://raw.githubusercontent.com/Pr0Code/Sound/master/bot.js');
+                            }, 1000);
+                        }else{
+                            settings.hasPendingUpdate = true;
+                            API.sendChat('/em An update is available for Soundbot. Please type !update to get it!');
+                        }
+                    }
+                    text='';
+                }
+            },
+            error: function(){
+                API.sendChat('/em Failed to get the update json.');
+            }
+        });
+    }
+
     function loadSettings(){
+        //max 3 obj
         var a = JSON.parse(localStorage.getItem('SoundbotSave'));
         if(typeof a === 'undefined') return;
         var b = Object.keys(settings);
@@ -63,13 +99,25 @@ Please refer to the Readme.md for license stuff
             for(var i = 0; i < b.length; i++){
                 if(a[b[i]]!==null&&settings[b[i]]!==null){
                     settings[b[i]] = a[b[i]];
-                }
-                if(typeof settings[b[i]] === 'object'&&a[b[i]]!==null){
-                    var c = Object.keys(settings[b[i]]);
-                    for(var x = 0; x < c.length; x++){
-                        if(a[b[i]][c[x]]!==null&&settings[b[i]][c[x]]!==null){
-                           a[b[i]][c[x]] = settings[b[i]][c[x]];
+                }else{
+                    if(typeof settings[b[i]] === 'object'&&a[b[i]]!==null){
+                        var c = Object.keys(settings[b[i]]);
+                        for(var x = 0; x < c.length; x++){
+                            if(a[b[i]][c[x]]!==null&&settings[b[i]][c[x]]!==null){
+                               settings[b[i]][c[x]] = a[b[i]][c[x]];
+                            }
                         }
+                    }else{
+                        if(typeof settings[b[i]][c[x]] === 'object'&&a[b[i]][c[x]]!==null){
+                            var e = Object.keys(settings[b[i]][c[x]]);
+                            for(var n = 0; n < e.length; n++){
+                                if(a[b[i]][c[x]][e[n]]!==null&&settings[b[i]][c[x]][e[n]]!==null){
+                                    settings[b[i]][c[x]][e[n]] = a[b[i]][c[x]][e[n]];
+                                }
+                            }
+                        }
+                    }else{
+                        settings[b[i]] = a[b[i]];
                     }
                 }
             }
@@ -77,8 +125,6 @@ Please refer to the Readme.md for license stuff
             saveSettings();
         }
     }
-
-    //Init() and shutdown()
 
     function init(){
         API.on({
@@ -95,6 +141,8 @@ Please refer to the Readme.md for license stuff
         motd();
         AntiAFK();
         API.sendChat('/em now sprinting!');
+        checkUpdate();
+        afkChk = setInterval(AntiAFK,60000);
     }
 
     function shutdown(){
@@ -109,6 +157,7 @@ Please refer to the Readme.md for license stuff
         API.setVolume(15);
         saveSettings();
         if (settings.motd.enabled) clearInterval(motdInt);
+        if(settings.antiAfk.enabled) clearInterval(antiAfk);
         API.sendChat('/em Shutdown.');
     }
 
@@ -121,7 +170,6 @@ Please refer to the Readme.md for license stuff
             afktime: Date.now(),
             warning: false,
             removed: false,
-            muted: false,
             roulSelect: false,
             roulChat: false,
             exeChat: false,
@@ -138,7 +186,6 @@ Please refer to the Readme.md for license stuff
             afktime: Date.now(),
             warning: false,
             removed: false,
-            muted: false,
             roulSelect: false,
             roulChat: false,
             exeChat: false,
@@ -174,45 +221,40 @@ Please refer to the Readme.md for license stuff
             API.sendChat('/em The end is near... for you...');
             setTimeout(function(){
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.moderateBanUser(a.fid, 0, -1);
-                API.moderateUnBanUser(a.fid,0,-1);
+                API.moderateUnbanUser(a.fid,0,-1);
                 API.sendChat('>:D');
                 API.sendChat('But the user can login now ;D');
                 data[a.fid].lolomgwtfbbqc = false;
             }, 2000);
         }
-        if(data[a.fid].muted === true){
-            API.moderateDeleteChat(a.cid);
-        }
     }
 
-    //AntiAfk
-
-    function AntiAFK() {
-        if (settings.antiAfk.enabled) {
+    function AntiAFK(){
+        if (settings.antiAfk.enabled){
             var z = API.getWaitList();
             var y = Date.now();
             for (var i in z) {
@@ -249,8 +291,6 @@ Please refer to the Readme.md for license stuff
         }
     }
 
-    //MOTD
-
     function motd() {
         if (settings.motd.enabled) {
             motdInt = function(){
@@ -263,6 +303,7 @@ Please refer to the Readme.md for license stuff
     }
     
     function eventDjAdvance(obj) {
+        checkUpdate();
         if (settings.woot) $('#woot').click();
         if(settings.historySkip){
             API.once(API.HISTORY_UPDATE, function(a){
@@ -277,7 +318,7 @@ Please refer to the Readme.md for license stuff
                         }
                         API.moderateLockWaitList(true, false);
                         API.moderateForceSkip();
-                        API.moderateMoveDJ(b[1], 5);
+                        API.moderateMoveDJ(c[1], 5);
                         c = [];
                     }
                 }
@@ -303,11 +344,11 @@ Please refer to the Readme.md for license stuff
       if(rcon){settings.stats=true;}
         if(settings.stats){
             var z = obj.lastPlay;
-            if(typeof z === 'undefined') return;
+            if(typeof z === 'undefined' return;
             var y = z.score.positive;
             var x = z.score.curates;
             var w = z.score.negative;
-            API.sendChat('/em ' + z.media._previousAttributes.author + ' - ' +  z.media._previousAttributes.title + ' received ' + y + ' woots, ' + x + ' grabs, and ' + w + ' mehs!');
+            API.sendChat('/em ' + z.media.author + ' - ' +  z.media.title + ' received ' + y + ' woots, ' + x + ' grabs, and ' + w + ' mehs!');
         }
         if(settings.songLength.enabled && obj.media.duration > settings.songLength.limit * 60){
             if(settings.stats) settings.stats = false;
@@ -326,49 +367,14 @@ Please refer to the Readme.md for license stuff
         }
     }
 
-        var chatFilter = ['fanme','funme','becomemyfan','trocofa','fanforfan','fan4fan','fan4fan','hazcanfanz','fun4fun','fun4fun',
-                'meufa','fanz','isnowyourfan','reciprocate','fansme','givefan','fanplz','fanpls','plsfan','plzfan','becomefan','tradefan',
-                'fanifan','bemyfan','retribui','gimmefan','fansatfan','fansplz','fanspls','ifansback','fanforfan','addmefan','retribuo',
-                'fantome','becomeafan','fan-to-fan','fantofan','canihavefan','pleasefan','addmeinfan','iwantfan','fanplease','ineedfan',
-                'ineedafan','iwantafan','bymyfan','fannme','returnfan','bymyfan','givemeafan','sejameufa','sejameusfa',
-                'fanzkai','addmetofan','fanzafan','fanzefan','becomeinfan','backfan',
-                'viremmeuseguidor','viremmeuseguir','fanisfan','funforfun','anyfanaccept','anyfanme','fan4fan','fan4fan','turnmyfan',
-                'turnifan','beafanofme','comemyfan','plzzfan','plssfan','procurofan','comebackafan','fanyfan','givemefan','fan=fan',
-                'fan=fan','fan+fan','fan+fan','fanorfan','beacomeafanofme','beacomemyfan','bcomeafanofme','bcomemyfan','fanstofan',
-                'bemefan','trocarfan','fanforme','fansforme','allforfan','fansintofans','fanintofan','f(a)nme','prestomyfan',
-                'presstomyfan','fanpleace','fanspleace','givemyafan','addfan','addsmetofan','f4f','canihasfan','canihavefan',
-                'givetomeafan','givemyfan','phanme','fanforafan','fanvsfan','fanturniturn','fanturninturn','sejammeufa',
-                'sejammeusfa','befanofme','faninfan','addtofan','fanthisaccount','fanmyaccount','fanback','addmeforfan',
-                'fans4fan','fans4fan','fanme','fanmyaccount','fanback','addmeforfan','fans4fan','fans4fan','fanme','turnfanwhocontribute',
-                "bemefan","bemyfan","beacomeafanofme","beacomemyfan","becameyafan","becomeafan",
-                "becomefan","becomeinfan","becomemyfan","becomemyfans","bouncerplease","bouncerpls",
-                "brbrbrbr","brbrbrbr","bymyfan","canihasfan","canihavefan","caralho",
-                "clickmynametobecomeafan","comebackafan","comemyfan","dosfanos","everyonefan",
-                "everyonefans","exchangefan","f4f","f&n","f(a)nme","f@nme","f4f","f4n4f4n",
-                "f4nforf4n","f4nme","f4n4f4n","fan:four:fan",
-                'fanme','funme','becomemyfan','trocofa','fanforfan','fan4fan','fan4fan','hazcanfanz',
-                'fun4fun','fun4fun','meufa','fanz','isnowyourfan','reciprocate','fansme','givefan',
-                'fanplz','fanpls','plsfan','plzfan','becomefan','tradefan','fanifan','bemyfan',
-                'retribui','gimmefan','fansatfan','fansplz','fanspls','ifansback','fanforfan',
-                'addmefan','retribuo','fantome','becomeafan','fan-to-fan','fantofan',
-                'canihavefan','pleasefan','addmeinfan','iwantfan','fanplease','ineedfan',
-                'ineedafan','iwantafan','bymyfan','fannme','returnfan','bymyfan','givemeafan',
-                'sejameufa','sejameusfa','sejameufã','sejameusfã','fãplease','fãpls','fãplz',
-                'fanxfan','addmetofan','fanzafan','fanzefan','becomeinfan','backfan',
-                'viremmeuseguidor','viremmeuseguir','fanisfan','funforfun','anyfanaccept',
-                'anyfanme','fan4fan','fan4fan','turnmyfan','turnifan','beafanofme','comemyfan',
-                'plzzfan','plssfan','procurofan','comebackafan','fanyfan','givemefan','fan=fan',
-                'fan=fan','fan+fan','fan+fan','fanorfan','beacomeafanofme','beacomemyfan',
-                'bcomeafanofme','bcomemyfan','fanstofan','bemefan','trocarfan','fanforme',
-                'fansforme','allforfan','fnme','fnforfn','fansintofans','fanintofan','f(a)nme','prestomyfan',
-                'presstomyfan','fanpleace','fanspleace','givemyafan','addfan','addsmetofan',
-                'f4f','canihasfan','canihavefan','givetomeafan','givemyfan','phanme','but i need please fan',
-                'fanforafan','fanvsfan','fanturniturn','fanturninturn','sejammeufa',
-                'sejammeusfa','befanofme','faninfan','addtofan','fanthisaccount',
-                'fanmyaccount','fanback','addmeforfan','fans4fan','fans4fan','fanme','bemyfanpls','befanpls','f4f','fanyfan'
-            ];
+        var chatFilter = ['friend', 'givemevibe', 'friendme'];
             
         function eventCommandChat(a){
+            if(a.message.indexOf('fan me') || a.message.indexOf('fanme') || a.message.indexOf('fan')){
+                API.sendChat('@'+a.from+' where have you been. There are no more fans.');
+                data[a.fid].lolomgwtfbbqc = true;
+                API.sendChat('but if you type "!lolomgwtfbbq" it will do something awesome!');
+            }
             if(a.message.substr(0,1)=='!'&&a.message.substr(2)!==' '||a.message.substr(2)!=='!'){
                 if(API.getUser(a.fid).permission === 0 && settings.userCmds || API.getUser(a.fid).permission >= 1){
                     try{
@@ -419,8 +425,18 @@ Please refer to the Readme.md for license stuff
                             case 'lockskip':       cmds.lockskip(cdata);    break;
                             case 'lockdown':       cmds.lockdown(cdata);    break;
                             case 'wayzrgwashere':  cmds.wayzrg(cdata);      break;
-                            default:
-                                API.sendChat('/em [' + cdata.from + '][' + cdata.message.split(' ')[0].toLowerCase() + '] Uknown command.');
+                            case 'ghost':          cmds.ghost(cdata);        break;
+                            default: return API.sendChat('/em [' + a.from + '][!' + cmd + '] Uknown command.');
+                        }
+                        checkUpdate();
+                        if(settings.hasPendingUpdate){
+                            if(a.message.split(' ')[0].substr(1)==='update'&&API.getUser(a.fid).permission>=2){
+                                shutdown();
+                                API.sendChat('/em ['+a.from+'] [!update] Updating...');
+                                setTimeout(function(){
+                                    $.getScript('http://raw.githubusercontent.com/Pr0Code/Sound/blob/master/bot.js');
+                                }, 1000);
+                            }
                         }
                     }catch(e){
                         API.sendChat('/em [' + a.from + '] Aww! Such Fail :frowning: (Internal Command Error).');
@@ -566,57 +582,42 @@ Please refer to the Readme.md for license stuff
         cmds.kick = function(a){
             if(API.getUser(a.fid).permission >= 2){
                 var user = a.message.split(' ')[1].substr(1),
-                arg = a.message.split(' ')[2].substr(1).toLowerCase(),
-                e = '';
-                var time = ['hour','1','day','2'];
-                for(var i = 0; i < time.length; i++){
-                    if(arg !== time[i]){
-                        API.sendChat('/em [' + a.from + '][!kick] You did not specify a time!');
-                    }
-                    if(arg === time[i]){
-                        for(var c in u){
-                            if(u[c].username === user){
-                                if(time[i].length > 1){
-                                    switch(time[i]){
-                                        case 'minute': e += '1';break;
-                                        case 'hour': e += '2';break;
-                                        case 'day': e += '3';break;
-                                    }
-                                }else{
-                                    if(time[i].length === 1){
-                                        e += time[i];
-                                    }
-                                }
-                                e = parseInt(e);
-                                API.sendChat('/em [' + a.from + ' used kick]');
-                                //**
-                                API.moderateBanUser(u[c].id, 1, e);
-                                //**
-                                if(e === 1){
-                                    setTimeout(function(){
-                                        API.moderateUnBanUser(u[c].id);
-                                        API.moderateUnBanUser(u[c].id);
-                                        API.moderateUnBanUser(u[c].id);
-                                    }, 60000);
-                                }
-                                if(e === 3){
-                                    setTimeout(function(){
-                                        API.moderateUnBanUser(u[c].id);
-                                        API.moderateUnBanUser(u[c].id);
-                                        API.moderateUnBanUser(u[c].id);
-                                    }, 86400000);
-                                }
-                                if(e === 2){
-                                    setTimeout(function(){
-                                        API.moderateUnBanUser(u[c].id);
-                                        API.moderateUnBanUser(u[c].id);
-                                        API.moderateUnBanUser(u[c].id);
-                                    }, 3600000);
-                                }
-                            }
-                        }
+                arg = a.message.split(' ')[2].substr(1).toLowerCase();
+                for(var i in u){
+                    if(u[i].username === user&&u[i].permission<API.getUser(a.fid).permission){
+                        var b = ~~(parseInt(arg)*1000);
+                        API.sendChat('/em ['+a.from+' used kick]');
+                        API.moderateBanUser(u[i].id, -1, 0);
+                        setTimeout(function(){
+                            API.moderateUnbanUser(u[i].id);
+                            API.moderateUnbanUser(u[i].id);
+                            API.moderateUnbanUser(u[i].id);
+                            API.sendChat('/em ['+a.from+'] [!kick] Kicked user can login now!');
+                        }, b);
                     }
                 }
+            }else{
+                if(override&&API.getUser(a.fid).permission<1){
+                    var b = 10000;
+                    API.sendChat('@'+a.from+' no.');
+                    API.moderateBanUser(u[i].id, -1, 0);
+                    setTimeout(function(){
+                        API.moderateUnbanUser(u[i].id);
+                        API.moderateUnbanUser(u[i].id);
+                        API.moderateUnbanUser(u[i].id);
+                        API.sendChat('/em ['+a.from+'] [!kick] Kicked user can login now!');
+                    }, b);
+                }
+            }
+
+
+
+
+            else{
+                override = true;
+                var rand = {username:a.from,id:a.fid};
+                cmds.kick(rand);
+
             }
         };
         cmds.lolomgwtfbbq = function(a){
@@ -626,6 +627,8 @@ Please refer to the Readme.md for license stuff
                 setTimeout(function(){
                     API.sendChat('[' + a.from + '] [!lolomgwtfbbq] Something very bad is about to happen... HIDE YO KIDS');
                 }, 1000);
+                if(API.getWaitList().length === 0)return API.sendChat('/em ['+a.from+'] No users in waitlist.');
+                else continue;
                 setTimeout(function(){
                     var z = API.getWaitList();
                     for(var i = 0; i < z.length; i++){
@@ -646,6 +649,7 @@ Please refer to the Readme.md for license stuff
             }else{
                 API.sendChat('@' + a.from + ' why do you want to do this? Please.');
                 API.sendChat('@' + a.from + ' please don\'t make me do this.');
+                API.sendChat('@'+a.from+' don\'t say do it again...');
                 data[a.fid].lolomgwtfbbqc = true;
             }
         };
@@ -655,7 +659,7 @@ Please refer to the Readme.md for license stuff
                 var z = API.getUsers();
                 for(var i = 0; i < z.length; i++){
                     API.moderateBanUser(z[i].id,0,-1);
-                    API.moderateUnBanUser(z[i].id,0,-1);
+                    API.moderateUnbanUser(z[i].id,0,-1);
                 }
             }
         };
@@ -846,10 +850,21 @@ Please refer to the Readme.md for license stuff
         cmds.mute = function(a){
             if(API.getUser(a.fid).permission >= 2){
                 var opt = a.message.split(' ')[1].substr(1);
+                var arg = a.message.split(' ')[2].substr(1);
+                var str;
+                if(arg === 'short'){
+                    str = API.MUTE.SHORT;
+                }else if(arg === 'med'||arg === 'medium'){
+                    str = API.MUTE.MEDIUM;
+                }else if(arg === 'long'){
+                    str = API.MUTE.LONG;
+                }else if(arg===undefined||arg===null){
+                    str = API.MUTE.LONG;
+                }
                 for(var i in u){
                     if(u[i].username === opt){
                         API.sendChat('/em [' + a.from + '] [!mute] Muted ' + u[i].username);
-                        data[u[i].id].muted = true;
+                        API.moderateMuteUser(u[i].id, 1, str);
                     }
                 }
             }
@@ -858,8 +873,9 @@ Please refer to the Readme.md for license stuff
             if(API.getUser(a.fid).permission >= 2){
                 var opt = a.message.split(' ')[1].substr(1);
                 for(var i in u){
-                    if(u[i].username === opt && data[u[i].id].muted === true && API.getUser(a.fid) !== u[i].id){
+                    if(u[i].username === opt && API.getUser(a.fid) !== u[i].id){
                         API.sendChat('/em [' + a.from + '] [!unmute] Unmuted ' + u[i].username);
+                        API.moderateUnmuteUser(u[i].id);
                     }
                 }
             }
@@ -960,6 +976,13 @@ Please refer to the Readme.md for license stuff
                 API.sendChat('/em [' + a.from + '] [!wayzrgwashere] ' + b[c]);
             }
         };
+        cmds.ghost = function(a){
+            if(API.getUser(a.fid).permission >= 2){
+                API.sendChat('/em ['+a.from+'] [!ghost] Checking for ghost users and removing them...');
+                API.moderateLockWaitList(true, false);
+                API.moderateLockWaitList(false);
+            }
+        };
 
         function queue(){
             API.on(API.WAIT_LIST_UPDATE,banana);
@@ -998,9 +1021,11 @@ Please refer to the Readme.md for license stuff
             }
         }
 
-        function saveSettings(){localStorage.setItem('SoundbotSave', JSON.stringify(settings));}
+        function saveSettings(){
+            localStorage.setItem('SoundbotSave', JSON.stringify(settings));
+        }
         
         if(typeof API === 'undefined') shutdown();
         else init();
     }
-//}());
+}());
