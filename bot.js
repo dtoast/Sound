@@ -985,7 +985,7 @@ Please refer to the Readme.md for license stuff
         };
 
         function queue(){
-            API.on(API.WAIT_LIST_UPDATE,banana);
+            API.once(API.WAIT_LIST_UPDATE,banana);
             function banana(){
                 if(API.getWaitList().length < 50){
                     API.ofF(API.WAIT_LIST_UPDATE,this);
