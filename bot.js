@@ -9,7 +9,7 @@ Copyright (c) 2014 FourBit
 Please refer to the Readme.md for license stuff
 
 */
-(function(){
+//(function(){
     var motdMsg = ["Welcome to the FourBit plug.dj room!"],
     joinTime = Date.now(),
     blacklist = ['#SELFIE (Official Music Video)', 'Troll Song'],
@@ -1002,4 +1002,4 @@ Please refer to the Readme.md for license stuff
         if(typeof API === 'undefined') shutdown();
         else init();
     }
-}());
+//}());
