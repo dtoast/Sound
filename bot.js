@@ -342,7 +342,7 @@ Please refer to the Readme.md for license stuff
       if(rcon){settings.stats=true;}
         if(settings.stats){
             var z = obj.lastPlay;
-            if(typeof z === 'undefined' return;
+            if(typeof z === 'undefined') return;
             var y = z.score.positive;
             var x = z.score.curates;
             var w = z.score.negative;
