@@ -604,7 +604,6 @@ Please refer to the Readme.md for license stuff
                     API.sendChat('[' + a.from + '] [!lolomgwtfbbq] Something very bad is about to happen... HIDE YO KIDS');
                 }, 1000);
                 if(API.getWaitList().length === 0)return API.sendChat('/em ['+a.from+'] No users in waitlist.');
-                else continue;
                 setTimeout(function(){
                     var z = API.getWaitList();
                     for(var i = 0; i < z.length; i++){
