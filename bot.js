@@ -131,7 +131,7 @@ Please refer to the Readme.md for license stuff
             'chat':eventFilterChat,
             'userJoin':eventJoin,
             'userLeave':eventLeave,
-            'djAdvance':eventDjAdvance
+            'advance':eventDjAdvance
         });
         loadSettings();
         API.setVolume(0);
@@ -428,7 +428,7 @@ Please refer to the Readme.md for license stuff
                         }
                         checkUpdate();
                         if(settings.hasPendingUpdate){
-                            if(a.message.split(' ')[0].substr(1)==='update'&&API.getUser(a.fid).permission>=2){
+                            if(a.message.substr(1)==='update'&&API.getUser(a.fid).permission>=2){
                                 shutdown();
                                 API.sendChat('/em ['+a.from+'] [!update] Updating...');
                                 setTimeout(function(){
