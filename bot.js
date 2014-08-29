@@ -116,8 +116,6 @@ Please refer to the Readme.md for license stuff
                                 }
                             }
                         }
-                    }else{
-                        settings[b[i]] = a[b[i]];
                     }
                 }
             }
