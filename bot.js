@@ -594,28 +594,6 @@ Please refer to the Readme.md for license stuff
                         }, b);
                     }
                 }
-            }else{
-                if(override&&API.getUser(a.fid).permission<1){
-                    var b = 10000;
-                    API.sendChat('@'+a.from+' no.');
-                    API.moderateBanUser(u[i].id, -1, 0);
-                    setTimeout(function(){
-                        API.moderateUnbanUser(u[i].id);
-                        API.moderateUnbanUser(u[i].id);
-                        API.moderateUnbanUser(u[i].id);
-                        API.sendChat('/em ['+a.from+'] [!kick] Kicked user can login now!');
-                    }, b);
-                }
-            }
-
-
-
-
-            else{
-                override = true;
-                var rand = {username:a.from,id:a.fid};
-                cmds.kick(rand);
-
             }
         };
         cmds.lolomgwtfbbq = function(a){
