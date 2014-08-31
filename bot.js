@@ -125,6 +125,7 @@ Please refer to the Readme.md for license stuff
     }
 
     function init(){
+        if(location.pathname !== '/astroparty')return API.sendChat('/em Soundbot can\'t be started because you can only use it in http://plug.dj/astroparty. Please visit http://github.com/FourBitus/Sound for more info.');
         API.on({
             'chat':eventDataChat,
             'chat':eventCommandChat,
@@ -374,16 +375,16 @@ Please refer to the Readme.md for license stuff
                 API.sendChat('but if you type "!lolomgwtfbbq" it will do something awesome!');
             }
             if(a.message.substr(0,1)=='!'){
-                if(API.getUser(a.fid).permission === 0 && settings.userCmds){
+                if(API.getUser(a.fid).role === 0 && settings.userCmds){
                     try{
-                        var str = a.split(' ')[0].substr(1).toLowerCase();
+                        var str = a.message.split(' ')[0].substr(1).toLowerCase();
                         var cdata = {
                             message:a.message,
                             fid:a.fid,
                             from:a.from,
                             cid:a.cid
                         };
-                        API.moderateDeleteChat(a.cid);
+                        //API.moderateDeleteChat(a.cid);
                         switch(str){
                             case 'help':           cmds.help(cdata);        break;
                             case 'cmdlist':        cmds.cmdlist(cdata);     break;
@@ -400,7 +401,7 @@ Please refer to the Readme.md for license stuff
                         shutdown();
                     }
                 }
-            }else if(API.getUser(a.fid).permission >= 1){
+            }else if(API.getUser(a.fid).role >= 1){
                 var str = a.message.split(' ')[0].substr(1).toLowerCase();
                 var cdata = {
                     message: a.message,
@@ -408,7 +409,7 @@ Please refer to the Readme.md for license stuff
                     from: a.from,
                     cid: a.cid
                 };
-                API.moderateDeleteChat(a.cid);
+                //API.moderateDeleteChat(a.cid);
                 switch(str){
                     case 'help':           cmds.help(cdata);        break;
                     case 'cmdlist':        cmds.cmdlist(cdata);     break;
@@ -453,7 +454,7 @@ Please refer to the Readme.md for license stuff
                 }
                 checkUpdate();
                 if(settings.hasPendingUpdate){
-                    if(a.message.substr(1)==='update'&&API.getUser(a.fid).permission>=2){
+                    if(a.message.substr(1).toLowerCase()==='update'&&API.getUser(a.fid).role>=2){
                         shutdown();
                         API.sendChat('/em ['+a.from+'] [!update] Updating...');
                         setTimeout(function(){
@@ -522,15 +523,15 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.ping = function(a){
-            if(API.getUser(a.fid).permission >= 2) API.sendChat('/em [' + a.from + '] [!ping] Pong!');
+            if(API.getUser(a.fid).role >= 2) API.sendChat('/em [' + a.from + '] [!ping] Pong!');
         };
         cmds.status = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
 
             }
         };
         cmds.ban = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var str = a.message.split(' '), user = str[1].substr(1), time = str[2].substr(1), y;
                 if(user === null) API.sendChat('/em [' + a.from + '] [!ban] User input invalid.');
                 if(time === null) API.sendChat('/em [' + a.from + '] [!ban] Time input invalid.');
@@ -566,7 +567,7 @@ Please refer to the Readme.md for license stuff
             API.sendChat('/em Pomg!');
         };
         cmds.queue = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var msg = '';
                 settings.queuelist.length === 0 ? msg += 'No users being added!' : msg += 'Users being added: ' + settings.queuelist.join(', ');
                 API.sendChat('/em [' + a.from + '] [!queuelist] ' + msg);
@@ -583,7 +584,7 @@ Please refer to the Readme.md for license stuff
             msg = '';
         };
         cmds.afkdisable = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var user = a.message.split(' ')[1].substr(1);
                 for(var i in u){
                     if(u[i].username === user){
@@ -598,11 +599,11 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.kick = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var user = a.message.split(' ')[1].substr(1),
                 arg = a.message.split(' ')[2].substr(1).toLowerCase();
                 for(var i in u){
-                    if(u[i].username === user&&u[i].permission<API.getUser(a.fid).permission){
+                    if(u[i].username === user&&u[i].role<API.getUser(a.fid).role){
                         var b = ~~(parseInt(arg)*1000);
                         API.sendChat('/em ['+a.from+' used kick]');
                         API.moderateBanUser(u[i].id, -1, 0);
@@ -617,7 +618,7 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.lolomgwtfbbq = function(a){
-            if(API.getUser(a.fid).permission >= 3){
+            if(API.getUser(a.fid).role >= 3){
                 API.sendChat('[' + a.from + '] [!lolomgwtfbbq] Oh god. What have you done.');
                 var array =[];
                 setTimeout(function(){
@@ -649,7 +650,7 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.apocalypse = function(a){
-            if(API.getUser(a.fid).permission >= 3){
+            if(API.getUser(a.fid).role >= 3){
                 API.sendChat('/em [' + a.from + '] [!apocalypse] BRING FORTH THE APOCALYPSE!!!');
                 var z = API.getUsers();
                 for(var i = 0; i < z.length; i++){
@@ -659,11 +660,11 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.banall = function(a){
-            if(API.getUser(a.fid).permission >= 5){
+            if(API.getUser(a.fid).role >= 5){
                 API.sendChat('/em [' + a.from + '] [!kickall] Kicking all users...');
                 for(var i = 0; i < u.length; i++){
                     for(var c = 0; c < u.length; c++){
-                        if(u[i].permission < 1 || u[c].permission < 1){
+                        if(u[i].role < 1 || u[c].role < 1){
                             API.moderateBanUser(u[i].id, 0, -1);
                             API.moderateBanUser(u[c].id, 0, -1);
                         }
@@ -672,10 +673,10 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.reg = function(a){
-            if(API.getUser(a.fid).permission >= 3){
+            if(API.getUser(a.fid).role >= 3){
                 var opt = a.message.split(' ')[1].substr(1);
                 for(var i in u){
-                    if(u[i].username === opt && (u[i].permission > 0 || API.getUser(a.fid).permission > 2) && API.getUser(a.fid).username !== u[i].username){
+                    if(u[i].username === opt && (u[i].role > 0 || API.getUser(a.fid).role > 2) && API.getUser(a.fid).username !== u[i].username){
                         API.sendChat('/em [' + a.from + '] [!reg] Giving ' + u[i].username + ' no permissions...');
                         API.moderateSetRole(u[i].id, API.ROLE.NONE);
                     }
@@ -683,10 +684,10 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.rdj = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var opt = a.message.split(' ')[1].substr(1);
                 for(var i in u){
-                    if(u[i].username === opt && (u[i].permission < 1 || API.getUser(a.fid).permission > 2) && API.getUser(a.fid).username !== u[i].username){
+                    if(u[i].username === opt && (u[i].role < 1 || API.getUser(a.fid).role > 2) && API.getUser(a.fid).username !== u[i].username){
                         API.sendChat('/em [' + a.from + '] [!rdj] Setting ' + u[i].username + ' as a Resident DJ...');
                         API.moderateSetRole(u[i].id, API.ROLE.RESIDENTDJ);
                     }
@@ -694,10 +695,10 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.bouncer = function(a){
-            if(API.getUser(a.fid).permission >= 3){
+            if(API.getUser(a.fid).role >= 3){
                 var opt = a.message.split(' ')[1].substr(1);
                 for(var i in u){
-                    if(u[i].username === opt && (u[i].permission < 2 || API.getUser(a.fid).permission > 3) && API.getUser(a.fid).username !== u[i].username){
+                    if(u[i].username === opt && (u[i].role < 2 || API.getUser(a.fid).role > 3) && API.getUser(a.fid).username !== u[i].username){
                         API.sendChat('/em [' + a.from + '] [!bouncer] Setting ' + u[i].username + ' as a bouncer...');
                         API.moderateSetRole(u[i].id, API.ROLE.BOUNCER);
                     }
@@ -705,7 +706,7 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.cmdsettings = function(a){
-            if(API.getUser(a.fid).permission >= 3){
+            if(API.getUser(a.fid).role >= 3){
                 var opt = a.message.split(' ')[1].substr(1),
                 arg = a.message.split(' ')[2].substr(1),
                 e = '';
@@ -730,7 +731,7 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.clear = function(a){
-            if(API.getUser(a.fid).permission >= 3){
+            if(API.getUser(a.fid).role >= 3){
                 var b = $('#chat-messages').children();
                 for(var i = 0; i < b.length; i++){
                     for(var c = 0; c < b[i].classList.length; c++){
@@ -743,7 +744,7 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.add = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var opt = a.message.split(' ')[1].substr(1),
                 arg = a.message.split(' ')[2].substr(1),
                 e = '';
@@ -792,7 +793,7 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.remove = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var opt = a.message.split(' ')[1].substr(1);
                 for(var i in u){
                     if(u[i].username === opt){
@@ -803,7 +804,7 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.move = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var opt = a.message.split(' ')[1].substr(1),
                 arg = a.message.split(' ')[2].substr(1),
                 e = '';
@@ -843,7 +844,7 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.mute = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var opt = a.message.split(' ')[1].substr(1);
                 var arg = a.message.split(' ')[2].substr(1);
                 var str;
@@ -865,7 +866,7 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.unmute = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var opt = a.message.split(' ')[1].substr(1);
                 for(var i in u){
                     if(u[i].username === opt && API.getUser(a.fid) !== u[i].id){
@@ -876,19 +877,19 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.say = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var arg = a.message.split(' ')[1].substr(1);
                 API.sendChat('/em [' + a.from + '] [!say] ' + arg);
             }
         };
         cmds.skip = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 API.sendChat('/em [' + a.from + '] [!skip] Skipping current song...');
                 API.moderateForceSkip();
             }
         };
         cmds.settings = function(a){
-            if(API.getUser(a.fid).permission >= 3){
+            if(API.getUser(a.fid).role >= 3){
                 API.sendChat('/em [' + a.from + '] [!settings] ' + Object.keys(settings).join(', '));
             }
         };
@@ -907,12 +908,12 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.kill = function(a){
-            if(API.getUser(a.fid).permission >= 3){
+            if(API.getUser(a.fid).role >= 3){
                 shutdown();
             }
         };
         cmds.lockskip = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 var arg = a.message.split(' ')[1].substr(1);
                 if(arg === 'op'){
                     API.moderateLockWaitList(true, false);
@@ -945,14 +946,14 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.lockdown = function(a){
-            if(API.getUser(a.fid).permission >= 3){
+            if(API.getUser(a.fid).role >= 3){
                 var arg = a.message.split(' ')[1].substr(1);
                 if(arg === 'enable' || arg === 'on' && !settings.lockdown){
                     settings.lockdown = true;
                     saveSettings();
                     API.on(API.CHAT, lel);
                     function lel(z){
-                        if(settings.lockdown && API.getUser(z.fid).permission === 0) API.moderateDeleteChat(z.cid);
+                        if(settings.lockdown && API.getUser(z.fid).role === 0) API.moderateDeleteChat(z.cid);
                         API.sendChat('/em [' + a.from + '] [!lockdown] Lockdown enabled.');
                     }
                 }
@@ -965,14 +966,14 @@ Please refer to the Readme.md for license stuff
             }
         };
         cmds.wayzrg = function(a){
-            if(API.getUser(a.fid).permission >= 4 && API.getUser(a.fid).permission <= 5){
+            if(API.getUser(a.fid).role >= 4 && API.getUser(a.fid).role <= 5){
                 var b = ["http://i.imgur.com/FDQHwvw.jpg", "http://i.imgur.com/qMtYJYr.jpg", "http://i.imgur.com/11NRhYU.jpg", "http://i.imgur.com/Qe74iKH.jpg", "http://i.imgur.com/PQjlyw5.jpg", "http://i.imgur.com/UCc1xo1.jpg", "http://i.imgur.com/dSSsQFQ.jpg"];
                 var c = Math.floor(Math.random() * b.length);
                 API.sendChat('/em [' + a.from + '] [!wayzrgwashere] ' + b[c]);
             }
         };
         cmds.ghost = function(a){
-            if(API.getUser(a.fid).permission >= 2){
+            if(API.getUser(a.fid).role >= 2){
                 API.sendChat('/em ['+a.from+'] [!ghost] Checking for ghost users and removing them...');
                 API.moderateLockWaitList(true, false);
                 API.moderateLockWaitList(false);
@@ -1002,14 +1003,14 @@ Please refer to the Readme.md for license stuff
             if(settings.filter){
                 var msg = $('#chat-messages').children().last().text();
                 for(var i = 0; i < chatFilter.length; i++){
-                    if(msg.indexOf(chatFilter[i]) && API.getUser(a.fid).permission <= 1){
+                    if(msg.indexOf(chatFilter[i]) && API.getUser(a.fid).role <= 1){
                         API.moderateDeleteChat(a.cid);
                         API.sendChat('@' + a.from + ' please do not ask for fans!');
                     }
                 }
             }
             var b = a.message.match(/[A-Z]/g);
-            if(a.message.length > 100 && b && b.length > 50 && !API.getUser(a.fid).permission){
+            if(a.message.length > 100 && b && b.length > 50 && !API.getUser(a.fid).role){
                 API.moderateDeleteChat(a.cid);
                 API.sendChat('@' + a.from + ' please do not spam!');
             }
