@@ -126,6 +126,7 @@ Please refer to the Readme.md for license stuff
 
     function init(){
         if(location.pathname !== '/astroparty')return API.sendChat('/em Soundbot can\'t be started because you can only use it in http://plug.dj/astroparty. Please visit http://github.com/FourBitus/Sound for more info.');
+        if(API.getUser().role < 4)return API.sendChat('/em Soundbot needs Co-host permissions to start!');
         API.on({
             'chat':eventDataChat,
             'chat':eventCommandChat,
