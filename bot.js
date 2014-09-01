@@ -19,6 +19,7 @@ Please refer to the Readme.md for license stuff
     motdInt,
     _noUpdate = false,
     afkChk,
+    socket,
     util = {
         getMath: function(a){
             a=~~(a/6000);
