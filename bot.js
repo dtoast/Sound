@@ -402,7 +402,7 @@ Please refer to the Readme.md for license stuff
                     }
                 }
             }else if(API.getUser(a.fid).role >= 1){
-                var str = a.message.split(' ')[0].substr(1).toLowerCase();
+                var str = a.trim().substr(1).split(' ')[0].toLowerCase();
                 var cdata = {
                     message: a.message,
                     fid: a.fid,
