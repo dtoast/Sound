@@ -712,8 +712,10 @@
 			API.moderateLockWaitList(true, false);
 			if($('.cycle-toggle').hasClass('disabled'))$('.cycle-toggle').click();
 			API.moderateForceSkip();
-			if($('.cycle-toggle').hasClass('enabled'))$('.cycle-toggle').click();
-			API.moderateLockWaitList(false);
+			setTimeout(function(){
+				if($('.cycle-toggle').hasClass('enabled'))$('.cycle-toggle').click();
+				API.moderateLockWaitList(false);
+			}, 100);
 			return true;
 		}
 		var arg = a.message.split(' ')[1].substr(1),
@@ -727,11 +729,13 @@
 				if($('.cycle-toggle').hasClass('disabled'))$('.cycle-toggle').click();
 				var t = [];
 				t.push(API.getDJ().id);
-				API.moderateForceSkip();
-				API.moderateMoveDJ(t[1], pos);
-				t = [];
-				if($('.cycle-toggle').hasClass('enabled'))$('.cycle-toggle').click();
-				API.moderateLockWaitList(false);
+				setTimeout(function(){
+					if($('.cycle-toggle').hasClass('enabled'))$('.cycle-toggle').click();
+					API.moderateForceSkip();
+					API.moderateMoveDJ(t[1], pos);
+					t = [];
+					API.moderateLockWaitList(false);
+				}, 100);
 			}
 		}
 	};
