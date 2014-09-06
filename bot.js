@@ -43,12 +43,12 @@
 	var data = {},
 	services = {},
 	songLim = 10,
+	_services_afk,
 	blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
 	oplist = ['Pegboard Nerds - Here It Comes', 'Astronaut - Champions'],
 	cookies = ['sugar', 'lemon', 'peanut butter', 'chocolate', 'chocolate chip', 'vanilla', 'rose', 'cookie with frosting', 'frog cookie'],
 	outcome = ['You eat it. Man that was good!', 'Tasty!', 'They take it back D:', 'They smack it out of your hand </3', 'Touching it duplicates it into more. Weird, but AWESOME! :D', 'I never give it to you, but I can\'t eat it. D:', 'Wow what a taste!', 'It becoms your favorite :3'],
 	questions = ['If you could throw any kind of party, what would it be like and what would it be for?', 'If you could paint a picture of any scenery you’ve seen before, what would you paint?', 'If you could change one thing about the world, regardless of guilt or politics, what would you do?', 'What is the key to finding happiness?', 'What do you think about tis song? http://goo.gl/koaB8R', 'ou’ve been hired to write a teen dictionary.  What would be the first 10 words all teens should know about?', 'When someone has bad breath do you tell them or try and ignore it?', 'I will never forgive ________ for ________ .', 'If the entire world is in debt, where did all the money go?', 'RANDOM GIFS! GOGOGOGO', 'What’s something valuable that you accidentally dropped and broke?', 'What’s something you should throw away, but can’t?', 'f there was a public execution on TV would you watch it?', 'hi. wassap?'];
-	services.interval = {};
 
 	function checkUpdate(){
 		$.ajax({
@@ -89,6 +89,7 @@
 				$('#chat-button').click();
 			}, 100);
 			if(settings.autowoot)$('#woot').click();
+			if(settings.antiAfk)_services_afk = setInterval(function(){services.antiAfk()},60000);
 			API.sendChat('/em Now running!');
 		}
 	}
@@ -166,7 +167,6 @@
 			}
 		}
 	};
-	services.interval.antiafk = setInterval(function(){services.antiAfk()},60000);
 	function goWhenSpot(){
 		API.once(API.WAIT_LIST_UPDATE, function(){
 			return true;
@@ -1023,7 +1023,7 @@
 		if(arg === 'on'){
 			if(!settings.antiAfk){
 				settings.antiAfk = true;
-				services.interval.antiafk();
+				_services_afk();
 				API.sendChat('/em ['+a.un+' enabled AntiAFK]');
 			}else{
 				API.sendChat('/em ['+a.un+'] [!antiafk] AntiAFK is already enabled!');
@@ -1032,7 +1032,7 @@
 		if(arg === 'off'){
 			if(settings.antiAfk){
 				settings.antiAfk = false;
-				clearInterval(services.interval.antiafk);
+				clearInterval(_services_afk);
 				API.sendChat('/em ['+a.un+' disabled AntiAFK]');
 			}else{
 				API.sendChat('/em ['+a.un+'] [!antiafk] AntiAFK is already disabled!');
