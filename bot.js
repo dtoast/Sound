@@ -1145,6 +1145,12 @@
 		API.sendChat('/em ['+a.un+'] [!settings] '+b+'...');
 		API.sendChat('/em ['+a.un+'] [!settings] ...'+c);
 	};
+	cmds.manager.rule = function(a){
+		rule = !rule;
+		var str = rule?'enabled':'disabled';
+		API.sendChat('/em ['+a.un+' '+str+' "the" rule]');
+		return true;
+	}
 	cmds.host.party = function(a){
 		if(!settings.activeP){
 			API.sendChat('/em ['+a.un+'] Let the party begin!');
