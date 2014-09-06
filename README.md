@@ -95,6 +95,7 @@ Command List
 * !antiafk
     [Alone]: Displays info
     ■ on/off: enables / disables
+    ■ int [seconds]: changes the limit to what you specified
 
 * !cmdsettings
     [Alone]: Displays info
