@@ -811,6 +811,47 @@
 			}
 		}
 	};
+	cmds.staff.ban = function(a){
+		var dur;
+		if(a.message.split(' ')[1] === undefined){
+			return API.sendChat('/em ['+a.un+'] [!ban] Please specify a user!');
+		}
+		if(a.message.split(' ')[2] === undefined){
+			var arg = a.message.split(' ')[1].substr(1);
+			dur = 1;
+			for(var i in u){
+				if(u[i].username === arg && u[i].role < 1){
+					API.sendChat('/em ['+a.un+' used ban]');
+					switch(dur){
+						case 1:dur=API.BAN.HOUR;break;
+					}
+					API.moderateBanUser(u[i].id, 1, dur);
+				}
+			}
+			return true;
+		}
+		var arg = a.message.split(' ')[1].substr(1);
+		var opt = a.message.split(' ')[2];
+		for(var i in u){
+			if(u[i].username === arg && u[i].role < 1){
+				API.sendChat('/em ['+a.un+' used ban]');
+				if(typeof parseInt(opt) !== 'number'){
+					switch(opt.toLowerCase()){
+						case 'hour':dur=1;break;
+						case 'day':dur=2;break;
+						case 'perma':dur=3;break;
+						case 'perm':dur=3;break;
+					}
+				}else dur = parseInt(opt);
+				switch(dur){
+					case 1:dur=API.BAN.HOUR;break;
+					case 2:dur=API.BAN.DAY;break;
+					case 3:dur=API.BAN.PERMA;break;
+				}
+				API.moderateBanUser(u[i].id, 1, dur);
+			}
+		}
+	};
 	cmds.staff.kick = function(a){
 		var dur;
 		if(a.message.split(' ')[1] === undefined){
@@ -1029,7 +1070,7 @@
 		}
 		if(arg === 'users'){
 			if(a.message.split(' ')[2] === undefined){
-				return API.sendChat('/em ['+a.un+'] Argumnets (users): on, off');
+				return API.sendChat('/em ['+a.un+'] Arguments (users): on, off');
 			}
 			var opt = a.message.split(' ')[2].toLowerCase();
 			if(opt === 'on'){
@@ -1051,6 +1092,9 @@
 		}
 	};
 	cmds.manager.lolomgwtfbbq = function(a){
+		if(API.getWaitList().length < 1){
+			return API.sendChat('/em ['+a.un+'] [!lolomgwtfbbq] Looks like you\'re safe! There\'s no users in the waitlist.');
+		}
 		API.sendChat('/em ['+a.un+'] [!lolomgwtfbbq] What have you done...');
 		setTimeout(function(){
 			var b = API.getWaitList();
