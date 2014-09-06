@@ -1019,9 +1019,11 @@
 					API.sendChat('/em ['+a.un+'] [!cmdsettings] cooldown is already disabled!');
 				}
 			}
-			if(typeof parseInt(opt) === 'number'){
-				settings.cdTime = Math.floor(parseInt(opt)*1000);
-				API.sendChat('/em ['+a.un+' set cooldown time to '+parseInt(opt)+' seconds]');
+			if(opt === 'int'){
+				if(typeof parseInt(opt) === 'number'){
+					settings.cdTime = Math.floor(parseInt(opt)*1000);
+					API.sendChat('/em ['+a.un+' set cooldown time to '+parseInt(opt)+' seconds]');
+				}
 			}
 		}
 		if(arg === 'users'){
