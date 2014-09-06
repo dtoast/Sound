@@ -1036,6 +1036,16 @@
 				API.sendChat('/em ['+a.un+'] [!antiafk] AntiAFK is already disabled!');
 			}
 		}
+		if(arg === 'int'){
+			if(a.message.split(' ')[3] === undefined){
+				return API.sendChat('/em ['+a.un+'] [!antiafk] Please specify an integer in seconds!');
+			}
+			var t = a.message.split(' ')[3];
+			if(typeof parseInt(t) === 'number'){
+				settings.aaI = Math.floor(parseInt(t)*1000);
+				API.sendChat('/em ['+a.un+' set AntiAFK interval to '+t+' seconds]');
+			}
+		}
 	};
 	cmds.manager.cmdsettings = function(a){
 		if(a.message.split(' ')[1] === undefined){
