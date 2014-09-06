@@ -1,63 +1,111 @@
-Soundbot | plug.dj
+Soundbot <> plug.dj
 ======
 
-> **Soundbot is a plug.dj script that helps staff and users**
-> **It can do many amazing things, but I want to add more in the future.**
-> **Look below for commands, licensing, and more.**
+### Soundbot has been updated!
+#### Version 1.0 is here and includes the following:
+1. Complete recode
+2. New commands (see below)
+3. Command imporvments
+4. Tons of new features
+5. Check update (see below)
+6. and much more!
 
-This is meant to help administer the room, and let all users and staff have commands. If you want to use this, fork it and credit me and put the license in somewhere. The license file can be found [here](https://github.com/Pr0Code/Sound/blob/master/LICENSE)
-http://plug.dj/astroparty
-##Commands
-A full list can be found [there](http://astroshock.bl.ee/soundbot)
-#####Move Command Syntax
-***
-1. I just added the ```!move``` command.
-2. Some people might be confused on how to use it.
-3. Here's the syntax
+#### A full commands list is below so you can refer to it while I update the **[regular page](http://astroshock.bl.ee/soundbot)**
 
-``` !move @user 1-50 ```
+###### Also here's a link to [plug.dj's API](http://support.plug.dj/hc/en-us/sections/200353347-Front-End-API)
 
-> **Just so everyone knows, I will be updating the commands list on my website soon.**
+> See you in plug.dj!
+  FourBit
 
-Other Stuff
------
-If there is an error within the command, the bot will recognize, and say in chat: what time it ocurred, and the error. Really only useful for me and admins.
+Command List
+======
 
-Also, the loader gets the current room your in.
+##### Users
+```
+!help - links the commands page
+!dc - DCLookup (puts you abck in your spot if you disconnected)
+!theme - Sends the room's theme
+!emoji - Sends a link to the emoji page
+!adblock - Sends a link to AdBlock
+!support - Links to the plug.dj support
+!tech - Links to the plug.dj tech page
+!blog - Links to the plug.dj blog
+!song - Gives the full song title
+!pic - Sends the thumbnail or album (artwork) cover
+!link - Sends the song link
+!cookie [@user] - Sends a cookie to the user
+!acronym [amount: 1-10] - Sends letters that you can make words with
+!rdj - Sends info on how to get resident dj
+!community - Sends info on how to create a community
+!web - Links my website
+!pastebin - Links my pastebin
+!afk [optional (message)] - Sets an AFK message for you
+!ask - Makes the bot send a random question
+```
 
-Cheers,
-AstroShock
+##### Staff
+```
+!unlock - Unlocks the waitlist
+!lock - Locks the waitlist
+!lockskip [optional (position] - Lockskips the current song
+!skip - Skips the current song
+!queue - Lists all the users in the queue
+!status - Displays some info
+!lockdown - Deletes all chat that is from users - only staff can chat
+!stats - *See below
+!add @user [optional (pos)] - Adds the user to the waitlist or specified pos.
+!ban @user [optional (dur)] - Bans the user for the duration
+!kick @user dur - Kicks the user for the duration
+!remove @user - Removes the user from the waitlsit
+!ping - Pong!
+!move @user pos - Moves the user to the specified pos.
+```
 
-License
------
+##### Manager
+```
+!save - Saves all settings
+!cycle - Toggles the dj cycle
+!reload - Reloads Soundbot
+!kill - Shutdown Soundbot
+!motd - *See below
+!roulette - *See below
+!commands - *See below
+!antiafk - *See below
+!cmdsettings - *See below
+!lolomgwtfbbq - ?
+```
+--------
 
-Copyright (c) 2014, Pr0Code (FourBit)
-All rights reserved.
+```
+* !stats 
+    [Alone]: Shows if it's enabled
+    ■ on/off: enables / disables
+    
+* !motd
+    [Alone]: Displays info on the Motd
+    ■ on/off: enables / disables
+    ■ int [seconds]: Sets the interval to how many seconds you specified
 
-Redistribution and use in source and binary forms, with or without
-modification, are NOT permitted. If I (Pr0Code) give permission, you may modify this code provided that the following conditions are met:
+* !commands
+    [Alone]: Shows all user commands
+    ■ staff: shows staff commands
+    ■ manager: shows manager commands
+    ■ host: shows host commands
 
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
+* !antiafk
+    [Alone]: Displays info
+    ■ on/off: enables / disables
 
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-* Neither the name of the AstroParty nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+* !cmdsettings
+    [Alone]: Displays info
+    ■ cd 
+      [Alone]: Displays info
+      • on/off: enables/disables
+      • int [seconds]: sets the cooldown to how many seconds you specified
+    ■ users
+      [Alone]: Shows arguments
+      • on/off: enables/disables
+```
 
 ======
 
@@ -66,7 +114,3 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ======
 
 > Thanks to **[this wiki for providing me some syntax for Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)**
-
-======
-
-:smile:
