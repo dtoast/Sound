@@ -269,6 +269,11 @@
 				data[u[i].id].isAfk = false;
 				data[u[i].id].afkMsg = 'I\'m away right now. Talk to me later!'
 			}
+			if(data[u[i].id].afkWarn && data[u[i].id].afkFinal && data[u[i].id].name === a.un){
+				data[u[i].id].afkWarn = false;
+				data[u[i].id].afkFinal = false;
+				data[u[i].id].afkTime = Date.now();
+			}
 		}
 	}
 	function eventAdvance(a){
@@ -1016,6 +1021,7 @@
 		if(arg === 'on'){
 			if(!settings.antiAfk){
 				settings.antiAfk = true;
+				services.interval.antiafk();
 				API.sendChat('/em ['+a.un+' enabled AntiAFK]');
 			}else{
 				API.sendChat('/em ['+a.un+'] [!antiafk] AntiAFK is already enabled!');
