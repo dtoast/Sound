@@ -746,11 +746,13 @@
 			settings.lockdown = true;
 			API.sendChat('/em ['+a.un+' enabled lockdown]');
 			API.on(API.CHAT, lockdownChat);
+			return true;
 		}
 		if(settings.lockdown){
 			settings.lockdown = false;
 			API.sendChat('/em ['+a.un+' disabled lockdown]');
 			API.off(API.CHAT, lockdownChat);
+			return true;
 		}
 	};
 	cmds.staff.stats = function(a){
