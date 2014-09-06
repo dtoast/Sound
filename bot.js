@@ -416,23 +416,28 @@
 						break;
 					case 'hist':
 						settings.histSkp = !settings.histSkp;
+						settings.histSkip?str+='on':str+='off';
 						API.chatLog('History skip now '+settings.histSkp?'on':'off');
 						break;
 					case 'usercmds':
 						settings.userCmds = !settings.userCmds;
-						API.chatLog('User Commands now '+settings.userCmds?'on':'off');
+						settings.userCmds?str+='on':str+='off';
+						API.chatLog('User Commands now '+str);
 						break;
 					case 'filter':
 						settings.chatFil = !settings.chatFil;
-						API.chatLog('Chat Filter now '+settings.chatFil?'on':'off');
+						settings.chatFil?str+='on':str+='off';
+						API.chatLog('Chat Filter now '+str);
 						break;
 					case 'cd':
 						settings.cd = !settings.cd;
-						API.chatLog('Cooldown now '+settings.cd?'on':'off');
+						settings.cd?str+='on':str+='off';
+						API.chatLog('Cooldown now '+str);
 						break;
 					case 'queue':
 						settings.queue = !settings.queue;
-						API.chatLog('Queue now '+settings.queue?'on':'off');
+						settings.queue?str+='on':str+='off';
+						API.chatLog('Queue now '+str);
 						break;
 					case 'update':
 						if(a.trim().substr(1).split(' ')[2] === undefined)return API.chatLog('Available arguments: toggle, check, use');
@@ -440,7 +445,8 @@
 						switch(opt){
 							case 'toggle':
 								settings.chkUpdate = !settings.chkUpdate;
-								API.chatLog('Update check now '+settings.chkUpdate?'on':'off');
+								settings.chkUpdate?str+='on':str+='off';
+								API.chatLog('Update check now '+str);
 								break;
 							case 'check':
 								$.ajax({
@@ -475,7 +481,8 @@
 						switch(opt){
 							case 'toggle':
 								settings.motd = !settings.motd;
-								API.chatLog('MOTD now '+settings.motd?'on':'off');
+								settings.motd?str+='on':str+='off';
+								API.chatLog('Motd now '+str);
 								break;
 							case 'interval':
 								var extra = a.message.split(' ')[3].toLowerCase();
@@ -491,7 +498,8 @@
 						switch(opt){
 							case 'toggle':
 								settings.antiAfk = !settings.antiAfk;
-								API.chatLog('AntiAFK now '+settings.antiAfk?'on':'off');
+								settings.antiAfk?str+='on':str+='off';
+								API.chatLog('AntiAFK now '+str);
 								break;
 							case 'interval':
 								var xtra = a.message.split(' ')[3].toLowerCase();
@@ -502,7 +510,8 @@
 						break;
 					case 'songchk':
 						settings.songChk = !settings.songChk;
-						API.chatLog('Song Check now '+settings.songChk?'on':'off');
+						settings.songChk?str+='on':str+='off';
+						API.chatLog('Song Check now '+str);
 						break;
 					default:
 						return API.chatLog('Available arguments: woot, stats, blacklist, hist, usercmds, filter, cd, queue, update, motd, afk', true);
