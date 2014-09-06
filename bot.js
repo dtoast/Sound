@@ -1123,6 +1123,12 @@
 			}
 		}, 125);
 	};
+	cmds.manager.settings = function(a){
+		var b = Object.keys(settings).join(', ');
+		var c = b.substr(253).trim();
+		API.sendChat('/em ['+a.un+'] [!settings] '+b+'...');
+		API.sendChat('/em ['+a.un+'] [!settings] ...'+c);
+	};
 	cmds.host.party = function(a){
 		if(!settings.activeP){
 			API.sendChat('/em ['+a.un+'] Let the party begin!');
