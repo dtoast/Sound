@@ -1020,6 +1020,7 @@
 				}
 			}
 			if(opt === 'int'){
+				opt = a.message.split(' ')[3];
 				if(typeof parseInt(opt) === 'number'){
 					settings.cdTime = Math.floor(parseInt(opt)*1000);
 					API.sendChat('/em ['+a.un+' set cooldown time to '+parseInt(opt)+' seconds]');
