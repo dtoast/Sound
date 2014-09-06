@@ -42,6 +42,7 @@
 	cmds.host = {};
 	var data = {},
 	services = {},
+	rule = true,
 	songLim = 10,
 	_services_afk,
 	blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
@@ -713,7 +714,9 @@
 			if($('.cycle-toggle').hasClass('disabled'))$('.cycle-toggle').click();
 			API.moderateForceSkip();
 			setTimeout(function(){
-				if($('.cycle-toggle').hasClass('enabled'))$('.cycle-toggle').click();
+				if($('.cycle-toggle').hasClass('enabled')&&!rule)$('.cycle-toggle').click();
+				if($('.cycle-toggle').hasClass('enabled')&&!rule)$('.cycle-toggle').click();
+				if($('.cycle-toggle').hasClass('enabled')&&!rule)$('.cycle-toggle').click();
 				API.moderateLockWaitList(false);
 			}, 100);
 			return true;
