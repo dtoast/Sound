@@ -1147,7 +1147,7 @@
 			settings.activeP = false;
 		}
 	};
-	function lolwut(){if(window.location.pathname==='/astroparty'||window.location.pathname==='/astroparty/')return true;else return false;}
+	function lolwut(){if(window.location.pathname==='/thelounge'||window.location.pathname==='/thelounge/')return true;else return false;}
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click()}}
 	startup();
