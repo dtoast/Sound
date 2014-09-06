@@ -458,7 +458,7 @@
 									shutdown();
 									API.sendChat('/em [Local] [/use] Updating...');
 									setTimeout(function(){
-										$.getScript('https://raw.github.com/FourBitus/Sound/bot.js');
+										$.getScript('https://raw.githubusercontent.com/FourBitus/Sound/master/bot.js');
 									}, 1000);
 								}
 								break;
@@ -512,7 +512,7 @@
 				shutdown();
 				window.location.reload();
 				setTImeout(function(){
-					$.getScript('https://raw.github.com/FourBitus/Sound/bot.js');
+					$.getScript('https://raw.githubusercontent.com/FourBitus/Sound/master/bot.js');
 				}, 5000);
 				break;
 			case 'commands':
@@ -888,7 +888,7 @@
 		API.sendChat('/em ['+a.un+'] [!reload] Reloading...');
 		shutdown();
 		setTimeout(function(){
-			$.getScript('http://raw.github.com/FourBitus/Sound/bot.js');
+			$.getScript('https://raw.githubusercontent.com/FourBitus/Sound/master/bot.js');
 		}, 1000);
 	};
 	cmds.manager.kill = function(a){
