@@ -1196,11 +1196,11 @@
 		return true;
 	};
 	cmds.manager.addbouncer = function(a){
+		if(a.message.split(' ')[1] === undefined){
+			return API.sendChat('/em ['+a.un+'] [!addbouncer] Please specify a user!');
+		}
+		var arg = a.message.split(' ')[1].substr(1);
 		for(var i = 0; i < bouncerList.users.length; i++){
-			if(a.message.split(' ')[1] === undefined){
-				return API.sendChat('/em ['+a.un+'] [!addbouncer] Please specify a user!');
-			}
-			var arg = a.message.split(' ')[1].substr(1);
 			if(bouncerList.users[i] === arg){
 				return API.sendChat('/em ['+a.un+'] [!addbouncer] User is already on the list!');
 			}else{
@@ -1212,11 +1212,11 @@
 		}
 	};
 	cmds.manager.removebouncer = function(a){
+		if(a.message.split(' ')[1] === undefined){
+			return API.sendChat('/em ['+a.un+'] [!addbouncer] Please specify a user!');
+		}
+		var arg = a.message.split(' ')[1].substr(1);
 		for(var i = 0; i < bouncerList.users.length; i++){
-			if(a.message.split(' ')[1] === undefined){
-				return API.sendChat('/em ['+a.un+'] [!addbouncer] Please specify a user!');
-			}
-			var arg = a.message.split(' ')[1].substr(1);
 			if(bouncerList.users[i] !== arg){
 				return API.sendChat('/em ['+a.un+'] [!addbouncer] User is not on the list!');
 			}else{
