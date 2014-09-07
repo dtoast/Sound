@@ -104,7 +104,9 @@
 				$('#chat-button').click();
 			}, 100);
 			if(settings.autowoot)$('#woot').click();
-			if(settings.antiAfk)_services_afk = setInterval(function(){services.antiAfk()},60000);
+			_services_afk = setInterval(function(){services.antiAfk()},60000);
+			if(!settings.antiAfk)clearInterval(_services_afk);
+			else _services_afk;
 			API.sendChat('/em Now running!');
 		}
 	}
@@ -1083,7 +1085,7 @@
 		if(arg === 'on'){
 			if(!settings.antiAfk){
 				settings.antiAfk = true;
-				_services_afk();
+				_services_afk;
 				API.sendChat('/em ['+a.un+' enabled AntiAFK]');
 			}else{
 				API.sendChat('/em ['+a.un+'] [!antiafk] AntiAFK is already enabled!');
