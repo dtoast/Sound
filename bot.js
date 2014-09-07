@@ -34,7 +34,8 @@
 		removeStaffBecauseTheyWereADickEnabled: true,
 		removeStaffBecauseTheyWereADick: null,
 		allowSafeMode: false,
-		safeMode: false
+		safeMode: false,
+		maxDisc: 7200000
 	},
 	bouncerList = {
 		users: [],
@@ -422,6 +423,13 @@
 	function eventLeave(a){
 		data[a.id].dis = true;
 		data[a.id].lastDC = Date.now();
+		setTimeout(function(){
+			for(var i = 0; i < data.length; i++){
+				if(data[i].dis === true && data[i].id === a.id){
+					delete data[i];
+				}
+			}
+		}, settings.maxDisc);
 	}
 	function eventCmd(a){
 		var cmd = a.trim().substr(1).split(' ')[0].toLowerCase();
