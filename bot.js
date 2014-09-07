@@ -1200,7 +1200,7 @@
 			return API.sendChat('/em ['+a.un+'] [!addbouncer] Please specify a user!');
 		}
 		var arg = a.message.split(' ')[1].substr(1);
-		for(var i = 0; i < bouncerList.users.length; i++){
+		for(var i in bouncerList.users){
 			if(bouncerList.users[i] === arg){
 				return API.sendChat('/em ['+a.un+'] [!addbouncer] User is already on the list!');
 			}else{
@@ -1216,7 +1216,7 @@
 			return API.sendChat('/em ['+a.un+'] [!addbouncer] Please specify a user!');
 		}
 		var arg = a.message.split(' ')[1].substr(1);
-		for(var i = 0; i < bouncerList.users.length; i++){
+		for(var i in bouncerList.users){
 			if(bouncerList.users[i] !== arg){
 				return API.sendChat('/em ['+a.un+'] [!addbouncer] User is not on the list!');
 			}else{
