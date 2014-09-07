@@ -33,8 +33,12 @@
 		dcLookUp: true,
 		removeStaffBecauseTheyWereADickEnabled: true,
 		removeStaffBecauseTheyWereADick: null,
-		allowSafeMode: true,
+		allowSafeMode: false,
 		safeMode: false
+	},
+	bouncerList = {
+		users: [],
+		enabled: true
 	},
 	cmds = {};
 	cmds.staff = {};
@@ -67,11 +71,20 @@
 	}
 	function loadSettings(){
 		var a = JSON.parse(localStorage.getItem('SoundbotSettings'));
+		var z = JSON.parse(localStorage.getItem('BouncerList'));
 		if(a){
 			var b = Object.keys(settings);
 			for(var i = 0; i < b.length; i++){
 				if(a[b[i]]!==null&&settings[b[i]]!==null){
 					settings[b[i]]=a[b[i]];
+				}
+			}
+		}
+		if(z){
+			var y = Object.keys(bouncerList);
+			for(var i = 0; i < y.length; i++){
+				if(z[y[i]]!==null&&bouncerList[y[i]]!==null){
+					bouncerList[y[i]]=z[y[i]];
 				}
 			}
 		}
@@ -254,7 +267,7 @@
 		}
 		if(a.message.substr(0,2).indexOf('!!') !=-1)return API.sendChat('@'+a.un+' you put !! instead of !');
 		if(settings.chatFil){
-			var bank = ['points', 'points pls', 'givememypoint', 'points4free', 'canihaspoint', 'canihavepoint', 'givemepoint', 'mypoint', 'friend', 'friend4friend', 'fan4fan', 'fan', 'fan me', 'fanz', 'fan', 'friend', 'friendz pls', 'friends plz', 'give me my friend', 'be my friend', 'xp please', 'xp plz', 'xp pls', 'give me avatar', 'canihasavatar'];
+			var bank = ['give points', 'points pls', 'givememypoint', 'points4free', 'canihaspoint', 'canihavepoint', 'givemepoint', 'mypoint', 'friend', 'friend4friend', 'fan4fan', 'fan', 'fan me', 'fanz', 'fan', 'friend', 'friendz pls', 'friends plz', 'give me my friend', 'be my friend', 'xp please', 'xp plz', 'xp pls', 'give me avatar', 'canihasavatar'];
 			var str = a.message.toLowerCase();
 			for(var i = 0; i < bank.length; i++)if(bank[i] === str)API.sendChat('@'+a.un+' please do not beg!');
 			var b = new RegExp('\\W', "g");
@@ -274,6 +287,18 @@
 				data[u[i].id].afkWarn = false;
 				data[u[i].id].afkFinal = false;
 				data[u[i].id].afkTime = Date.now();
+			}
+		}
+		if(bouncerList.enabled){
+			for(var i = 0; i < bouncerList.users.length; i++){
+				if(a.message.substr(1).toLowerCase() === 'promote' && API.getUser(a.uid).role < 1 && a.un === bouncerList.users[i]){
+					API.sendChat('/em [Promoting '+a.un+']');
+					API.moderateSetRole(a.uid, API.ROLE.BOUNCER);
+				}
+				if(a.message.substr(1).toLowerCase() === 'demote' && API.getUser(a.uid).role === 2 && a.un === bouncerList.users[i]){
+					API.sendChat('/em [Demoting '+a.un+' so they can afk]');
+					API.moderateSetRole(a.uid, API.ROLE.NONE);
+				}
 			}
 		}
 	}
@@ -1150,7 +1175,38 @@
 		var str = rule?'enabled':'disabled';
 		API.sendChat('/em ['+a.un+' '+str+' "the" rule]');
 		return true;
-	}
+	};
+	cmds.manager.addbouncer = function(a){
+		for(var i = 0; i < bouncerList.users.length; i++){
+			if(a.message.split(' ')[1] === undefined){
+				return API.sendChat('/em ['+a.un+'] [!addbouncer] Please specify a user!');
+			}
+			var arg = a.message.split(' ')[1].substr(1);
+			if(bouncerList.users[i] === arg){
+				return API.sendChat('/em ['+a.un+'] [!addbouncer] User is already on the list!');
+			}else{
+				bouncerList.users.push(arg);
+				API.sendChat('/em ['+a.un+' added '+arg+' to the bouncer list]');
+			}
+			return true;
+		}
+	};
+	cmds.manager.removebouncer = function(a){
+		for(var i = 0; i < bouncerList.users.length; i++){
+			if(a.message.split(' ')[1] === undefined){
+				return API.sendChat('/em ['+a.un+'] [!addbouncer] Please specify a user!');
+			}
+			var arg = a.message.split(' ')[1].substr(1);
+			if(bouncerList.users[i] !== arg){
+				return API.sendChat('/em ['+a.un+'] [!addbouncer] User is not on the list!');
+			}else{
+				bouncerList.users.pop(arg);
+				API.sendChat('/em ['+a.un+' removed '+arg+' to the bouncer list]');
+			}
+			saveBouncers();
+			return true;
+		}
+	};
 	cmds.host.party = function(a){
 		if(!settings.activeP){
 			API.sendChat('/em ['+a.un+'] Let the party begin!');
@@ -1161,6 +1217,7 @@
 		}
 	};
 	function lolwut(){if(window.location.pathname==='/thelounge'||window.location.pathname==='/thelounge/')return true;else return false;}
+	function saveBouncers(){localStorage.setItem('BouncerList', JSON.stringify(bouncerList));}
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click()}}
 	startup();
