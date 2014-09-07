@@ -1207,6 +1207,7 @@
 				bouncerList.users.push(arg);
 				API.sendChat('/em ['+a.un+' added '+arg+' to the bouncer list]');
 			}
+			saveBouncers();
 			return true;
 		}
 	};
@@ -1225,6 +1226,9 @@
 			saveBouncers();
 			return true;
 		}
+	};
+	cmds.manager.data = function(a){
+		API.sendChat('/em ['+a.un+'] [!data] '+Object.keys(data).join(', '));
 	};
 	cmds.host.party = function(a){
 		if(!settings.activeP){
