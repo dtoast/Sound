@@ -1230,6 +1230,9 @@
 	cmds.manager.data = function(a){
 		API.sendChat('/em ['+a.un+'] [!data] '+Object.keys(data).join(', '));
 	};
+	cmds.manager.bouncer = function(a){
+		API.sendChat('/em ['+a.un+'] [!bouncer] '+bouncerList.users.join(', '));
+	}
 	cmds.host.party = function(a){
 		if(!settings.activeP){
 			API.sendChat('/em ['+a.un+'] Let the party begin!');
