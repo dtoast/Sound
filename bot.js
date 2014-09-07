@@ -139,6 +139,7 @@
 		for(var i = 0; i < u.length; i++){
 			data[u[i].id] = {
 				name: u[i].username,
+				id: u[i].id,
 				afkTime: Date.now(),
 				afkWarn: false,
 				afkFinal: false,
@@ -146,7 +147,8 @@
 				isAfk: false,
 				afkMsg: 'I\'m away right now. Talk to me later!',
 				lastDC: Date.now(),
-				lastDCpos: 50
+				lastDCpos: 50,
+				dis: false
 			};
 		}
 	}
@@ -397,8 +399,15 @@
 		}
 	}
 	function eventJoin(a){
+		for(var i = 0; i < data.length; i++){
+			if(data[i].id === a.id){
+				data[i].dis = false;
+				return true;
+			}
+		}
 		data[a.id] = {
 			name: a.username,
+			id: a.id,
 			afkTime: Date.now(),
 			afkWarn: false,
 			afkFinal: false,
@@ -406,10 +415,12 @@
 			isAfk: false,
 			afkMsg: 'I\'m away right now. Talk to me later!',
 			lastDC: null,
-			lastDCpos: null
+			lastDCpos: null,
+			dis: false
 		};
 	}
 	function eventLeave(a){
+		data[a.id].dis = true;
 		data[a.id].lastDC = Date.now();
 	}
 	function eventCmd(a){
