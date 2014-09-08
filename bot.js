@@ -1249,4 +1249,10 @@
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click()}}
 	startup();
+	$(window).bind('beforeunload', function(a){
+		saveBouncers();
+		saveSettings();
+		shutdown();
+		return true;
+	})
 })();
