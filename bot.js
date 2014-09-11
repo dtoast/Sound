@@ -1005,6 +1005,42 @@
 		API.sendChat('/em ['+a.un+'] [!kill] Shutdown.');
 		shutdown();
 	};
+	cmds.manager.deleteimgs = function(a){
+		var msg = $('#chat-messages').children('[data-cid="'+a.cid+'"]');
+		var b = msg.find('.text'),
+		c = b.text().split(' ');
+		API.sendChat('/em ['+a.un+' used delete images]');
+		for(var i = 0; i < c.length; i++){
+	    		if(/.(png|jpg)/i.test(c[i])&&/^https?:\/\/(www.)?/.test(c[i])&&API.getUser(a.uid).role<3){
+	    			API.moderateDeleteChat(a.cid);
+	    			break;
+	    		}
+	    	}
+	};
+	cmds.manager.deletegifs = function(a){
+		var msg = $('#chat-messages').children('[data-cid="'+a.cid+'"]');
+		var b = msg.find('.text'),
+		c = b.text().split(' ');
+		API.sendChat('/em ['+a.un+' used delete gifs]');
+		for(var i = 0; i < c.length; i++){
+	    		if(/.(gif)/i.test(c[i])&&/^https?:\/\/(www.)?/.test(c[i])&&API.getUser(a.uid).role<3){
+	    			API.moderateDeleteChat(a.cid);
+	    			break;
+	    		}
+	    	}
+	};
+	cmds.manager.deleteall = function(a){
+		var msg = $('#chat-messages').children('[data-cid="'+a.cid+'"]');
+		var b = msg.find('.text'),
+		c = b.text().split(' ');
+		API.sendChat('/em ['+a.un+' deleted all images]');
+		for(var i = 0; i < c.length; i++){
+	    		if(/.(png|jpg|gif)/i.test(c[i])&&/^https?:\/\/(www.)?/.test(c[i])&&API.getUser(a.uid).role<3){
+	    			API.moderateDeleteChat(a.cid);
+	    			break;
+	    		}
+	    	}
+	}
 	cmds.manager.motd = function(a){
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!motd] Enabled: '+settings.motd+', interval: '+Math.floor(settings.mI/1000));
