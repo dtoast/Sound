@@ -1232,10 +1232,12 @@
 			API.sendChat('/em ['+a.un+'] [!update] Updating...');
 			setTimeout(function(){
 				shutdown();
-				setTimeout(functoin(){
+				setTimeout(function(){
 					$.getScript('https://raw.github.com/FourBitus/Sound/master/bot.js');
 				}, 1000);
 			}, 1000);
+		}else{
+			checkUpdate();
 		}
 	}
 	cmds.manager.rule = function(a){
