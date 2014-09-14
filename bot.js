@@ -59,7 +59,7 @@
 	function checkUpdate(){
 		$.ajax({
 			cache:false,
-			url:'http://astroshock.bl.ee/_/update.json?callback=_msg',
+			url:'http://astroshock.bl.ee/_/static/sb/update.json',
 			dataType:'json',
 			success:function(a){
 				if(version!==a.version){
@@ -1227,6 +1227,17 @@
 		API.sendChat('/em ['+a.un+'] [!settings] '+b+'...');
 		API.sendChat('/em ['+a.un+'] [!settings] ...'+c);
 	};
+	cmds.manager.update = function(a){
+		if(settings.pendingUp){
+			API.sendChat('/em ['+a.un+'] [!update] Updating...');
+			setTimeout(function(){
+				shutdown();
+				setTimeout(functoin(){
+					$.getScript('https://raw.github.com/FourBitus/Sound/master/bot.js');
+				}, 1000);
+			}, 1000);
+		}
+	}
 	cmds.manager.rule = function(a){
 		rule = !rule;
 		var str = rule?'enabled':'disabled';
