@@ -409,7 +409,7 @@
 				return true;
 			}
 		}
-		if(API.getUser().id===a.di)return;
+		if(API.getUser().id===a.id)return;
 		data[a.id] = {
 			name: a.username,
 			id: a.id,
