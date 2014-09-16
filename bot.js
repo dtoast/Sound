@@ -140,6 +140,7 @@
 	}
 	function setupData(){
 		for(var i = 0; i < u.length; i++){
+			if(API.getUser().id===u[i].id)return;
 			data[u[i].id] = {
 				name: u[i].username,
 				id: u[i].id,
@@ -408,6 +409,7 @@
 				return true;
 			}
 		}
+		if(API.getUser().id===a.di)return;
 		data[a.id] = {
 			name: a.username,
 			id: a.id,
@@ -423,6 +425,7 @@
 		};
 	}
 	function eventLeave(a){
+		if(API.getUser().id===a.id)return;
 		data[a.id].dis = true;
 		data[a.id].lastDC = Date.now();
 		setTimeout(function(){
@@ -1279,11 +1282,38 @@
 		}
 	};
 	cmds.manager.data = function(a){
-		API.sendChat('/em ['+a.un+'] [!data] '+Object.keys(data).join(', '));
+		var b = Object.keys(data);
+		var c = [];
+		for(var i in b){
+			c.push(b.username);
+		}
+		API.sendChat('/em ['+a.un+'] [!data] '+c.join(', '));
 	};
 	cmds.manager.bouncer = function(a){
 		API.sendChat('/em ['+a.un+'] [!bouncer] '+bouncerList.users.join(', '));
-	}
+	};
+	cmds.manager.filter = function(a){
+		if(a.message.split(' ')[1] === undefined){
+			return API.sendChat('/em ['+a.un+'] [!filter] Enabled: '+settings.chatFil);
+		}
+		var arg = a.message.split(' ')[1].toLowerCase();
+		if(arg === 'on'){
+			if(!settings.chatFil){
+				settings.chatFil = true;
+				API.sendChat('/em ['+a.un+' enabled ChatFilter]');
+			}else{
+				API.sendChat('/em ['+a.un+'] [!filter] ChatFilter is already enabled!');
+			}
+		}
+		if(arg === 'off'){
+			if(settings.chatFil){
+				settings.chatFil = false;
+				API.sendChat('/em ['+a.un+' disabled ChatFilter]');
+			}else{
+				API.sendChat('/em ['+a.un+'] [!filter] ChatFilter is already disabled!');
+			}
+		}
+	};
 	cmds.host.party = function(a){
 		if(!settings.activeP){
 			API.sendChat('/em ['+a.un+'] Let the party begin!');
