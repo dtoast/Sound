@@ -1309,6 +1309,9 @@
 			}
 		}
 	};
+	cmds.manager.me = function(a){
+		API.sendChat('/em ['+a.un+'] [!me] Hello '+a.un+', you\'re aka '+a.uid+'. Your role is '+a.role+', and this chat type is '+a.type);
+	}
 	cmds.host.party = function(a){
 		if(!settings.activeP){
 			API.sendChat('/em ['+a.un+'] Let the party begin!');
