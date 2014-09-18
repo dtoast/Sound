@@ -1282,12 +1282,7 @@
 		}
 	};
 	cmds.manager.data = function(a){
-		var b = Object.keys(data);
-		var c = [];
-		for(var i in b){
-			c.push(b.username);
-		}
-		API.sendChat('/em ['+a.un+'] [!data] '+c.join(', '));
+		API.sendChat('/em ['+a.un+'] [!data] '+Object.keys(data).join(', '));
 	};
 	cmds.manager.bouncer = function(a){
 		API.sendChat('/em ['+a.un+'] [!bouncer] '+bouncerList.users.join(', '));
