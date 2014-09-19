@@ -1030,6 +1030,7 @@
 			if(!settings.motd){
 				settings.motd = true;
 				API.sendChat('/em ['+a.un+' enabled motd]');
+				saveSettings();
 			}else{
 				API.sendChat('/em ['+a.un+'] [!motd] Motd is already enabled!');
 			}
@@ -1038,6 +1039,7 @@
 			if(settings.motd){
 				settings.motd = false;
 				API.sendChat('/em ['+a.un+' disabled motd]');
+				saveSettings();
 			}else{
 				API.sendChat('/em ['+a.un+'] [!motd] Motd is already disabled!');
 			}
@@ -1053,6 +1055,7 @@
 			time = parseInt(opt);
 			settings.mI = Math.floor(time*1000);
 			API.sendChat('/em ['+a.un+' set the motd interval to '+time+' seconds]');
+			saveSettings();
 		}
 	};
 	cmds.manager.roulette = function(a){
@@ -1064,6 +1067,7 @@
 			if(!settings.activeR){
 				settings.activeR = true;
 				API.sendChat('/em ['+a.un+' enabled roulette]');
+				saveSettings();
 			}else{
 				API.sendChat('/em ['+a.un+'] [!roulette] Roulette is already enabled!');
 			}
@@ -1072,6 +1076,7 @@
 			if(settings.activeR){
 				settings.activeR = false;
 				API.sendChat('/em ['+a.un+' disabled roulette]');
+				saveSettings();
 			}else{
 				API.sendChat('/em ['+a.un+'] [!roulette] Roulette is already disabled!');
 			}
@@ -1103,6 +1108,7 @@
 				settings.antiAfk = true;
 				_services_afk;
 				API.sendChat('/em ['+a.un+' enabled AntiAFK]');
+				saveSettings();
 			}else{
 				API.sendChat('/em ['+a.un+'] [!antiafk] AntiAFK is already enabled!');
 			}
@@ -1112,6 +1118,7 @@
 				settings.antiAfk = false;
 				clearInterval(_services_afk);
 				API.sendChat('/em ['+a.un+' disabled AntiAFK]');
+				saveSettings();
 			}else{
 				API.sendChat('/em ['+a.un+'] [!antiafk] AntiAFK is already disabled!');
 			}
@@ -1124,6 +1131,7 @@
 			if(typeof parseInt(t) === 'number'){
 				settings.aaI = Math.floor(parseInt(t)*1000);
 				API.sendChat('/em ['+a.un+' set AntiAFK interval to '+t+' seconds]');
+				saveSettings();
 			}
 		}
 	};
@@ -1144,6 +1152,7 @@
 				if(!settings.cd){
 					settings.cd = true;
 					API.sendChat('/em ['+a.un+' enabled command cooldown]');
+					saveSettings();
 				}else{
 					API.sendChat('/em ['+a.un+'] [!cmdsettings] cooldown is already set!');
 				}
@@ -1152,6 +1161,7 @@
 				if(settings.cd){
 					settings.cd = false;
 					API.sendChat('/em ['+a.un+' disabled cooldown]');
+					saveSettings();
 				}else{
 					API.sendChat('/em ['+a.un+'] [!cmdsettings] cooldown is already disabled!');
 				}
@@ -1173,6 +1183,7 @@
 				if(!settings.userCmds){
 					settings.userCmds = true;
 					API.sendChat('/em ['+a.un+' enabled user commands]');
+					saveSettings();
 				}else{
 					API.sendChat('/em ['+a.un+'] [!cmdsettings] User commands are already enabled!');
 				}
@@ -1181,6 +1192,7 @@
 				if(settings.userCmds){
 					settings.userCmds = false;
 					API.sendChat('/em ['+a.un+' disabled user commands]');
+					saveSettings();
 				}else{
 					API.sendChat('/em ['+a.un+'] [!cmdsettings] User commands are already disabled!');
 				}
@@ -1267,6 +1279,7 @@
 			if(!settings.chatFil){
 				settings.chatFil = true;
 				API.sendChat('/em ['+a.un+' enabled ChatFilter]');
+				saveSettings();
 			}else{
 				API.sendChat('/em ['+a.un+'] [!filter] ChatFilter is already enabled!');
 			}
@@ -1275,6 +1288,7 @@
 			if(settings.chatFil){
 				settings.chatFil = false;
 				API.sendChat('/em ['+a.un+' disabled ChatFilter]');
+				saveSettings();
 			}else{
 				API.sendChat('/em ['+a.un+'] [!filter] ChatFilter is already disabled!');
 			}
@@ -1292,6 +1306,7 @@
 			if(!settings.bouncerPlus){
 				settings.bouncerPlus = true;
 				API.sendChat('/em ['+a.un+' enabled Bouncer+]');
+				saveSettings();
 			}else{
 				API.sendChat('/em ['+a.un+ '] [!bouncerplus] Bouncer+ is already enabled!');
 			}
@@ -1300,6 +1315,7 @@
 			if(settings.bouncerPlus){
 				settings.bouncerPlus = false;
 				API.sendChat('/em ['+a.un+' disabled Bouncer+]');
+				saveSettings();
 			}else{
 				API.sendChat('/em ['+a.un+'] [!bouncerplus] Bouncer+ is already disabled!');
 			}
