@@ -110,7 +110,7 @@
 			_services_afk = setInterval(function(){services.antiAfk()},60000);
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
-			API.sendChat('/em Now running Soundbot v.Dev.'+version+'!');
+			API.sendChat('/em Now running!');
 		}
 	}
 	function loadEvents(){
@@ -1016,7 +1016,7 @@
 		c = Math.floor(b+10)*1000;
 		setTimeout(function(){
 			cdd=false;
-		},!isNan(c)?c:10000);
+		},c);
 	};
 	cmds.manager.save = function(a){
 		saveSettings();
@@ -1043,7 +1043,7 @@
 		c = b.text().split(' ');
 		API.sendChat('/em ['+a.un+' used delete images]');
 		for(var i = 0; i < c.length; i++){
-	    		if(/.(png|jpg)/i.test(c[i])&&/^https?:\/\/(www.)?/.test(c[i])&&API.getUser(a.uid).role<3){
+	    		if(/.(png|jpg)/i.test(c[i])&&/^https?:\/\//.test(c[i])&&API.getUser(a.uid).role<3){
 	    			API.moderateDeleteChat(a.cid);
 	    			break;
 	    		}
@@ -1055,7 +1055,7 @@
 		c = b.text().split(' ');
 		API.sendChat('/em ['+a.un+' used delete gifs]');
 		for(var i = 0; i < c.length; i++){
-	    		if(/.(gif)/i.test(c[i])&&/^https?:\/\/(www.)?/.test(c[i])&&API.getUser(a.uid).role<3){
+	    		if(/.(gif)/i.test(c[i])&&/^https?:\/\//.test(c[i])&&API.getUser(a.uid).role<3){
 	    			API.moderateDeleteChat(a.cid);
 	    			break;
 	    		}
@@ -1067,7 +1067,7 @@
 		c = b.text().split(' ');
 		API.sendChat('/em ['+a.un+' deleted all images]');
 		for(var i = 0; i < c.length; i++){
-	    		if(/.(png|jpg|gif)/i.test(c[i])&&/^https?:\/\/(www.)?/.test(c[i])&&API.getUser(a.uid).role<3){
+	    		if(/.(png|jpg|gif)/i.test(c[i])&&/^https?:\/\//.test(c[i])&&API.getUser(a.uid).role<3){
 	    			API.moderateDeleteChat(a.cid);
 	    			break;
 	    		}
