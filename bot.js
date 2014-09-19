@@ -35,14 +35,17 @@
 		removeStaffBecauseTheyWereADick: null,
 		allowSafeMode: false,
 		safeMode: false,
-		maxDisc: 7200000
+		maxDisc: 7200000,
+		bouncerPlus: true
 	},
 	bouncerList = {
 		users: [],
 		enabled: true
 	},
 	cmds = {};
+	cmds.users = {};
 	cmds.staff = {};
+	cmds.bplus = {};
 	cmds.manager = {};
 	cmds.host = {};
 	var data = {},
@@ -232,17 +235,23 @@
 			var chatData = {message:a.message,un:a.un,uid:a.uid,type:a.type,cmd:cmd,role:a.role},
 			msg='/em ['+a.un+'] [!'+cmd+'] Unknown command.';
 			if(API.getUser(a.uid).role===2){
-				if(cmds.staff[cmd]){
-					cmds.staff[cmd](chatData);
-				}else{
-					if(cmds[cmd]){
-						cmds[cmd](chatData);
+				if(settings.bouncerPlus){
+					if(cmds.bplus[cmd]){
+						cmds.bplus[cmd](chatData);
+					}else{
+						if(cmds.staff[cmd]){
+							cmds.staff[cmd](chatData);
+						}else{
+							if(cmds.users[cmd]){
+								cmds.users[cmd](chatData);
+							}
+						}
 					}
 				}
 			}
 			if(API.getUser(a.uid).role > 2 && API.getUser(a.uid).role < 5){
-				if(cmds[cmd]){
-					cmds[cmd](chatData);
+				if(cmds.users[cmd]){
+					cmds.users[cmd](chatData);
 				}else if(cmds.staff[cmd]){
 					cmds.staff[cmd](chatData);
 				}else if(cmds.manager[cmd]){
@@ -256,11 +265,11 @@
 					cmds.manager[cmd](chatData);
 				}else if(cmds.staff[cmd]){
 					cmds.staff[cmd](chatData);
-				}else if(cmds[cmd]){
-					cmds[cmd](chatData);
+				}else if(cmds.users[cmd]){
+					cmds.users[cmd](chatData);
 				}
 			}
-			if(settings.userCmds&&!data[a.uid].cd&&API.getUser(a.uid).role<2)cmds[cmd]?cmds[cmd](chatData):API.sendChat(msg);
+			if(settings.userCmds&&!data[a.uid].cd&&API.getUser(a.uid).role<2)cmds.users[cmd]?cmds.users[cmd](chatData):API.sendChat(msg);
 			if(settings.cd){
 				if(API.getUser(a.uid).role<2){
 					data[a.uid].cd = true;
@@ -638,34 +647,34 @@
 
 	//cmds
 
-	cmds.help = function(a){
+	cmds.users.help = function(a){
 		API.sendChat('/em ['+a.un+'] [!help] Commands: http://astroshock.bl.ee/soundbot');
 	};
-	cmds.dc = function(a){
+	cmds.users.dc = function(a){
 		dclookup(a.uid);
 	};
-	cmds.theme = function(a){
+	cmds.users.theme = function(a){
 		API.sendChat('/em ['+a.un+'] [!theme] The theme is Electronic Dance Music (EDM)');
 	};
-	cmds.emoji = function(a){
+	cmds.users.emoji = function(a){
 		API.sendChat('/em ['+a.un+'] [!emoji] http://emoji-cheat-sheet.com');
 	};
-	cmds.adblock = function(a){
+	cmds.users.adblock = function(a){
 		API.sendChat('/em ['+a.un+'] [!adblock] http://getadblock.com');
 	};
-	cmds.support = function(a){
+	cmds.users.support = function(a){
 		API.sendChat('/em ['+a.un+'] [!support] http://support.plug.dj/');
 	};
-	cmds.tech = function(a){
+	cmds.users.tech = function(a){
 		API.sendChat('/em ['+a.un+'] [!tech] http://tech.plug.dj');
 	};
-	cmds.blog = function(a){
+	cmds.users.blog = function(a){
 		API.sendChat('/em ['+a.un+'] [!blog] http://blog.plug.dj');
 	};
-	cmds.song = function(a){
+	cmds.users.song = function(a){
 		API.sendChat('/em ['+a.un+'] [!song] '+API.getMedia().author+' - '+API.getMedia().title);
 	};
-	cmds.pic = function(a){
+	cmds.users.pic = function(a){
 		if(API.getMedia().format === 1){
 			API.sendChat('/em ['+a.un+'] [!pic] http://i.ytimg.com/vi/'+API.getMedia().cid+'/maxresdefault.jpg');
 		}else{
@@ -675,7 +684,7 @@
 			});
 		}
 	};
-	cmds.link = function(a){
+	cmds.users.link = function(a){
 		if(API.getMedia().format === 1){
 			API.sendChat('/em ['+a.un+'] [!link] http://youtube.com/watch?v='+API.getMedia().cid+'#t='+API.getTimeElapsed());
 		}else{
@@ -684,7 +693,7 @@
 			});
 		}
 	};
-	cmds.cookie = function(a){
+	cmds.users.cookie = function(a){
 		if(a.message.split('@')[1].substr(1)){
 			var opt = a.message.split('@')[1].substr(1);
 			for(var i in u){
@@ -697,7 +706,7 @@
 			}
 		}
 	};
-	cmds.acronym = function(a){
+	cmds.users.acronym = function(a){
 		var letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
 		arg = a.message.split(' ')[1].substr(1),
 		b=parseInt(arg);
@@ -713,19 +722,19 @@
     	}
 		API.sendChat('/em ['+a.un+'] [!acronym] Make a word with these letters: '+str.toUpperCase());
 	};
-	cmds.rdj = function(a){
+	cmds.users.rdj = function(a){
 		API.sendChat('/em ['+a.un+'] [!rdj] To get Resident DJ you must be a producer or play music most people like.');
 	};
-	cmds.community = function(a){
+	cmds.users.community = function(a){
 		API.sendChat('/em ['+a.un+'] [!community] To make a community: you must be level 3+. Go to your profile -> "My Communities" -> "Create Community"');
 	};
-	cmds.web = function(a){
+	cmds.users.web = function(a){
 		API.sendChat('/em ['+a.un+'] [!web] http://astroshock.bl.ee');
 	};
-	cmds.pastebin = function(a){
+	cmds.users.pastebin = function(a){
 		API.sendChat('/em ['+a.un+'] [!pastebin] FourBit\'s pastebin: http://pastebin.com/u/AstroShock');
 	};
-	cmds.afk = function(a){
+	cmds.users.afk = function(a){
 		if(a.message.split(' ')[1] === undefined){
 			if(!data[a.uid].isAfk){
 				data[a.uid].isAfk = true;
@@ -745,7 +754,7 @@
 			}
 		}
 	};
-	cmds.ask = function(a){
+	cmds.users.ask = function(a){
 		API.sendChat('/em ['+a.un+'] [!ask] '+questions[Math.floor(Math.random()*questions.length)]);
 	};
 	cmds.staff.unlock = function(a){
@@ -757,40 +766,8 @@
 		API.moderateLockWaitList(true, false);
 	};
 	cmds.staff.lockskip = function(a){
-		if(a.message.split(' ')[1] === undefined){
-			API.sendChat('/em ['+a.un+'] [!lockskip] Lockskipping.');
-			API.moderateLockWaitList(true, false);
-			if($('.cycle-toggle').hasClass('disabled'))$('.cycle-toggle').click();
-			API.moderateForceSkip();
-			setTimeout(function(){
-				if($('.cycle-toggle').hasClass('enabled')&&!rule)$('.cycle-toggle').click();
-				if($('.cycle-toggle').hasClass('enabled')&&!rule)$('.cycle-toggle').click();
-				if($('.cycle-toggle').hasClass('enabled')&&!rule)$('.cycle-toggle').click();
-				API.moderateLockWaitList(false);
-			}, 100);
-			return true;
-		}
-		var arg = a.message.split(' ')[1].substr(1),
-		pos;
-		if(!arg)pos=5;
-		pos = parseInt(arg);
-		for(var i in u){
-			if(u[i].username === arg){
-				API.sendChat('/em ['+a.un+'] [!lockskip] Lockskipping.');
-				API.moderateLockWaitList(true, false);
-				if($('.cycle-toggle').hasClass('disabled'))$('.cycle-toggle').click();
-				var t = [];
-				t.push(API.getDJ().id);
-				setTimeout(function(){
-					if($('.cycle-toggle').hasClass('enabled'))$('.cycle-toggle').click();
-					API.moderateForceSkip();
-					API.moderateMoveDJ(t[1], pos);
-					t = [];
-					API.moderateLockWaitList(false);
-				}, 100);
-			}
-		}
-	};
+		
+	}
 	cmds.staff.skip = function(a){
 		API.sendChat('/em ['+a.un+'] [!skip] Skipping.');
 		API.moderateForceSkip();
@@ -993,7 +970,7 @@
 		saveSettings();
 		API.sendChat('/em ['+a.un+'] [!save] Saved!');
 	}
-	cmds.manager.cycle = function(a){
+	cmds.bplus.cycle = function(a){
 		API.sendChat('/em ['+a.un+' toggle the dj cycle]');
 		$('.cycle-toggle').click();
 	};
@@ -1008,7 +985,7 @@
 		API.sendChat('/em ['+a.un+'] [!kill] Shutdown.');
 		shutdown();
 	};
-	cmds.manager.deleteimgs = function(a){
+	cmds.bplus.deleteimgs = function(a){
 		var msg = $('#chat-messages').children('[data-cid="'+a.cid+'"]');
 		var b = msg.find('.text'),
 		c = b.text().split(' ');
@@ -1020,7 +997,7 @@
 	    		}
 	    	}
 	};
-	cmds.manager.deletegifs = function(a){
+	cmds.bplus.deletegifs = function(a){
 		var msg = $('#chat-messages').children('[data-cid="'+a.cid+'"]');
 		var b = msg.find('.text'),
 		c = b.text().split(' ');
@@ -1032,7 +1009,7 @@
 	    		}
 	    	}
 	};
-	cmds.manager.deleteall = function(a){
+	cmds.bplus.deleteall = function(a){
 		var msg = $('#chat-messages').children('[data-cid="'+a.cid+'"]');
 		var b = msg.find('.text'),
 		c = b.text().split(' ');
@@ -1043,7 +1020,7 @@
 	    			break;
 	    		}
 	    	}
-	}
+	};
 	cmds.manager.motd = function(a){
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!motd] Enabled: '+settings.motd+', interval: '+Math.floor(settings.mI/1000));
@@ -1102,7 +1079,7 @@
 	};
 	cmds.manager.commands = function(a){
 		if(a.message.split(' ')[1] === undefined){
-			API.sendChat('/em ['+a.un+'] [!commands] '+Object.keys(cmds).join(', '));
+			API.sendChat('/em ['+a.un+'] [!commands] '+Object.keys(cmds.users).join(', '));
 		}
 		if(a.message.split(' ')[1].toLowerCase() === 'manager'){
 			API.sendChat('/em ['+a.un+'] [!commands] '+Object.keys(cmds.manager).join(', '));
@@ -1224,12 +1201,6 @@
 			}
 		}, 125);
 	};
-	cmds.manager.settings = function(a){
-		var b = Object.keys(settings).join(', ');
-		var c = b.substr(253).trim();
-		API.sendChat('/em ['+a.un+'] [!settings] '+b+'...');
-		API.sendChat('/em ['+a.un+'] [!settings] ...'+c);
-	};
 	cmds.manager.update = function(a){
 		if(settings.pendingUp){
 			API.sendChat('/em ['+a.un+'] [!update] Updating...');
@@ -1311,7 +1282,29 @@
 	};
 	cmds.manager.me = function(a){
 		API.sendChat('/em ['+a.un+'] [!me] Hello '+a.un+', you\'re aka '+a.uid+'. Your role is '+a.role+', and this chat type is '+a.type);
-	}
+	};
+	cmds.manager.bouncerplus = function(a){
+		if(a.message.split(' ')[1] === undefined){
+			return API.sendChat('/em ['+a.un+'] [!bouncerplus] Enabled: '+settings.bouncerPlus);
+		}
+		var arg = a.message.split(' ')[1].toLowerCase();
+		if(arg === 'on'){
+			if(!settings.bouncerPlus){
+				settings.bouncerPlus = true;
+				API.sendChat('/em ['+a.un+' enabled Bouncer+]');
+			}else{
+				API.sendChat('/em ['+a.un+ '] [!bouncerplus] Bouncer+ is already enabled!');
+			}
+		}
+		if(arg === 'off'){
+			if(settings.bouncerPlus){
+				settings.bouncerPlus = false;
+				API.sendChat('/em ['+a.un+' disabled Bouncer+]');
+			}else{
+				API.sendChat('/em ['+a.un+'] [!bouncerplus] Bouncer+ is already disabled!');
+			}
+		}
+	};
 	cmds.host.party = function(a){
 		if(!settings.activeP){
 			API.sendChat('/em ['+a.un+'] Let the party begin!');
