@@ -766,7 +766,45 @@
 		API.moderateLockWaitList(true, false);
 	};
 	cmds.staff.lockskip = function(a){
-		
+		if(a.message.split(' ')[1] === undefined){
+			API.moderateLockWaitList(true, false);
+			if($('.cycle-toggle').hasClass('disabled')&&!rule){
+				$(this).click();
+			}
+			API.sendChat('/em ['+a.un+' lockskipped the current song]');
+			API.moderateForceSkip();
+			if($('.cycle-toggle').hasClass('enabled')&&!rule){
+				$(this).click();
+			}
+			return true;
+		}
+		var arg = a.message.split(' ')[1].toLowerCase();
+		if(arg === 'op'){
+			API.moderateLockWaitList(true, false);
+			if($('.cycle-toggle').hasClass('disabled')&&!rule){
+				$(this).click();
+			}
+			API.sendChat('/em ['+a.un+' lockskipped the current song]');
+			API.sendChat('@'+API.getDJ().username+' that song is overplayed. Please pick a new one.');
+			API.moderateForceSkip();
+			if($('.cycle-toggle').hasClass('enabled')&&!rule){
+				$(this).click();
+			}
+			return true;
+		}
+		if(arg === 'hist'){
+			API.moderateLockWaitList(true, false);
+			if($('.cycle-toggle').hasClass('disabled')&&!rule){
+				$(this).click();
+			}
+			API.sendChat('/em ['+a.un+' lockskipped the current song]');
+			API.sendChat('@'+API.getDJ().username+' that song is on the history. Please pick a new one.');
+			API.moderateForceSkip();
+			if($('.cycle-toggle').hasClass('enabled')&&!rule){
+				$(this).click();
+			}
+			return true;
+		}
 	}
 	cmds.staff.skip = function(a){
 		API.sendChat('/em ['+a.un+'] [!skip] Skipping.');
