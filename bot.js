@@ -285,10 +285,9 @@
 			var bank = ['give points', 'points pls', 'givememypoint', 'points4free', 'canihaspoint', 'canihavepoint', 'givemepoint', 'mypoint', 'friend', 'friend4friend', 'fan4fan', 'fan', 'fan me', 'fanz', 'fan', 'friend', 'friendz pls', 'friends plz', 'give me my friend', 'be my friend', 'xp please', 'xp plz', 'xp pls', 'give me avatar', 'canihasavatar'];
 			var str = a.message.toLowerCase();
 			for(var i = 0; i < bank.length; i++)if(bank[i] === str)API.sendChat('@'+a.un+' please do not beg!');
-			var b = new RegExp('\\W', "g");
-        	if(str === b){return API.sendChat('@'+a.un+' please do not beg!');}
-        	if(str.match(/[A-Z]/g))return API.sendChat('@'+a.un+' please do not spam!');
-			if(str.match(/(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi))return API.sendChat('@'+a.un+' please do not post plug.dj links!');
+			var c = /[A-Z]/||/(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/||/\\W/;
+			var b = new RegExp(c, "g");
+			if(str.match(b))return API.sendChat('@'+a.un+' please do not send that!');
 		}
 		for(var i in u){
 			if(data[u[i].id].isAfk&&a.message.indexOf('@'+u[i].username)&&a.un!==data[u[i].id].name){
