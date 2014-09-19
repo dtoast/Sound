@@ -36,7 +36,8 @@
 		allowSafeMode: false,
 		safeMode: false,
 		maxDisc: 7200000,
-		bouncerPlus: true
+		bouncerPlus: true,
+		afkResp: true
 	},
 	bouncerList = {
 		users: [],
@@ -110,7 +111,7 @@
 			_services_afk = setInterval(function(){services.antiAfk()},60000);
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
-			API.sendChat('/em Now running!');
+			API.sendChat('/em Now running Soundbot v.Dev.'+version+'!');
 		}
 	}
 	function loadEvents(){
@@ -291,20 +292,21 @@
 			var d = /(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/;
 			var e = new RegExp(d, "g");
 			var f = new RegExp("\\W", "g");
-			if(str.match(b) || str.match(e) || str.match(f))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
+			if(str.indexOf(b) || str.indexOf(e) || str.indexOf(f))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
 		}
-		for(var i in u){
-			if(data[u[i].id].isAfk&&a.message.indexOf('@'+u[i].username)&&a.un!==data[u[i].id].name){
-				API.sendChat('@'+a.un+' '+data[u[i].id].afkMsg);
-			}
-			if(data[u[i].id].isAfk&&a.un===data[u[i].id].name){
-				data[u[i].id].isAfk = false;
-				data[u[i].id].afkMsg = 'I\'m away right now. Talk to me later!'
-			}
-			if(data[u[i].id].afkWarn && data[u[i].id].afkFinal && data[u[i].id].name === a.un){
-				data[u[i].id].afkWarn = false;
-				data[u[i].id].afkFinal = false;
-				data[u[i].id].afkTime = Date.now();
+		if(settings.afkResp){
+			for(var i in u){
+				if(a.message.indexOf('@'+u[i].username)&&a.un!==data[u[i].id].name&&data[u[i].id].isAfk){
+					API.sendChat('[AFK Message] @'+a.un+', '+data[u[i].id].afkMsg);
+				}else if(data[u[i].id].isAfk&&a.un===data[u[i].id].name){
+					data[u[i].id].isAfk = false;
+					data[u[i].id].afkMsg = 'I\'m away right now. Talk to me later!';
+				}
+				if(data[u[i].id].afkWarn && data[u[i].id].afkFinal && data[u[i].id].name === a.un){
+					data[u[i].id].afkWarn = false;
+					data[u[i].id].afkFinal = false;
+					data[u[i].id].afkTime = Date.now();
+				}
 			}
 		}
 		if(bouncerList.enabled){
