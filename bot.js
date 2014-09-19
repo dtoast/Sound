@@ -110,7 +110,7 @@
 			_services_afk = setInterval(function(){services.antiAfk()},60000);
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
-			API.sendChat('/em Now running!');
+			API.sendChat('/em Now running Soundbot v.Dev.'+version+'!');
 		}
 	}
 	function loadEvents(){
@@ -224,6 +224,7 @@
 				API.moderateMoveDJ(b.id, data[a.id].lastDCpos);
 				h = false;
 			}
+			return true;
 		}
 	}
 
@@ -285,9 +286,12 @@
 			var bank = ['give points', 'points pls', 'givememypoint', 'points4free', 'canihaspoint', 'canihavepoint', 'givemepoint', 'mypoint', 'friend', 'friend4friend', 'fan4fan', 'fan', 'fan me', 'fanz', 'fan', 'friend', 'friendz pls', 'friends plz', 'give me my friend', 'be my friend', 'xp please', 'xp plz', 'xp pls', 'give me avatar', 'canihasavatar'];
 			var str = a.message.toLowerCase();
 			for(var i = 0; i < bank.length; i++)if(bank[i] === str)API.sendChat('@'+a.un+' please do not beg!');
-			var c = /[A-Z]/ || /(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ || /\\W/;
+			var c = /[A-Z]/ /\\W/;
 			var b = new RegExp(c, "g");
-			if(str.match(b))return API.sendChat('@'+a.un+' please do not send that!');
+			var d = /(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/;
+			var e = new RegExp(d, "g");
+			var f = new RegExp("\\W", "g");
+			if(str.match(b) || str.match(e) || str.match(f))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
 		}
 		for(var i in u){
 			if(data[u[i].id].isAfk&&a.message.indexOf('@'+u[i].username)&&a.un!==data[u[i].id].name){
@@ -1002,6 +1006,17 @@
 				API.moderateMoveDJ(u[i].id, pos);
 			}
 		}
+	};
+	cmds.bplus.levelup = function(a){
+		var cdd;
+		if(cdd)return;
+		API.sendChat('/em ['+a.un+' leveled up]');
+		cdd=true;
+		var b = Math.floor(settings.cdTime / 1000),
+		c = Math.floor((b+10)*1000);
+		setTimeout(function(){
+			cdd=false;
+		},!isNan(c)?c:10000);
 	};
 	cmds.manager.save = function(a){
 		saveSettings();
