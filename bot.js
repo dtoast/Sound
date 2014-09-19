@@ -1121,7 +1121,7 @@
 	};
 	cmds.manager.commands = function(a){
 		if(a.message.split(' ')[1] === undefined){
-			API.sendChat('/em ['+a.un+'] [!commands] '+Object.keys(cmds.users).join(', '));
+			return API.sendChat('/em ['+a.un+'] [!commands] '+Object.keys(cmds.users).join(', '));
 		}
 		if(a.message.split(' ')[1].toLowerCase() === 'manager'){
 			API.sendChat('/em ['+a.un+'] [!commands] '+Object.keys(cmds.manager).join(', '));
