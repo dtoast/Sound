@@ -971,7 +971,7 @@
 		API.sendChat('/em ['+a.un+'] [!save] Saved!');
 	}
 	cmds.bplus.cycle = function(a){
-		API.sendChat('/em ['+a.un+' toggle the dj cycle]');
+		API.sendChat('/em ['+a.un+' toggled the dj cycle]');
 		$('.cycle-toggle').click();
 	};
 	cmds.manager.reload = function(a){
