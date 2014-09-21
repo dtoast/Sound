@@ -258,6 +258,8 @@
 					cmds.staff[cmd](chatData);
 				}else if(cmds.manager[cmd]){
 					cmds.manager[cmd](chatData);
+				}else if(cmds.bplus[cmd]){
+					cmds.bplus[cmd](chatData);
 				}
 			}
 			if(API.getUser(a.uid).role===5){
@@ -265,6 +267,8 @@
 					cmds.host[cmd](chatData);
 				}else if(cmds.manager[cmd]){
 					cmds.manager[cmd](chatData);
+				}else if(cmds.bplus[cmd]){
+					cmds.bplus[cmd](chatData);
 				}else if(cmds.staff[cmd]){
 					cmds.staff[cmd](chatData);
 				}else if(cmds.users[cmd]){
