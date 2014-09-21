@@ -1020,6 +1020,54 @@
 			cdd=false;
 		},c);
 	};
+	cmds.bplus.hist = function(a){
+		if(a.message.split(' ')[1] === undefined){
+			return API.sendChat('/em ['+a.un+ '] [!hist] Enabled: '+settings.histSkp);
+		}
+		var arg = a.message.split(' ')[1].toLowerCase();
+		if(arg === 'on'){
+			if(!settings.histSkip){
+				settings.histSkp = true;
+				API.sendChat('/em ['+a.un+' enabled history skip]');
+				saveSettings();
+			}else{
+				API.sendChat('/em ['+a.un+'] [!hist] Historyskip is already enabled!');
+			}
+		}
+		if(arg === 'off'){
+			if(settings.histSkp){
+				settings.histSkp = false;
+				API.sendChat('/em ['+a.un+' disabled history skip]');
+				saveSettings();
+			}else{
+				API.sendChat('/em ['+a.un+'] [!hist] Historyskip is already disabled!');
+			}
+		}
+	};
+	cmds.bplus.op = function(a){
+		if(a.message.split(' ')[1] === undefined){
+			return API.sendChat('/em ['+a.un+'] [!op] Enabled: '+settings.opEnabled)
+		}
+		var arg = a.message.split(' ')[1].toLowerCase();
+		if(arg === 'on'){
+			if(!settings.opEnabled){
+				settings.opEnabled = true;
+				API.sendChat('/em ['+a.un+' enabled opcheck]');
+				saveSettings();
+			}else{
+				API.sendChat('/em ['+a.un+'] [!op] opcheck is already enabled!');
+			}
+		}
+		if(arg === 'off'){
+			if(settings.opEnabled){
+				settings.opEnabled = false;
+				API.sendChat('/em ['+a.un+' disabled opcheck]');
+				saveSettings();
+			}else{
+				API.sendChat('/em ['+a.un+'] [!op] opcheck is already disabled!');
+			}
+		}
+	};
 	cmds.manager.save = function(a){
 		saveSettings();
 		API.sendChat('/em ['+a.un+'] [!save] Saved!');
