@@ -738,7 +738,7 @@
 		API.sendChat('/em ['+a.un+'] [!community] To make a community: you must be level 3+. Go to your profile -> "My Communities" -> "Create Community"');
 	};
 	cmds.users.web = function(a){
-		API.sendChat('/em ['+a.un+'] [!web] http://astroshock.bl.ee');
+		API.sendChat('/em ['+a.un+'] [!web] FourBit got really tired of hostinger, so let\'s just wait and see if anything changes... That was awkward.');
 	};
 	cmds.users.pastebin = function(a){
 		API.sendChat('/em ['+a.un+'] [!pastebin] FourBit\'s pastebin: http://pastebin.com/u/AstroShock');
