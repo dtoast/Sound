@@ -114,7 +114,7 @@
 			_services_afk = setInterval(function(){services.antiAfk()},60000);
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
-			API.sendChat('/em Now running!);
+			API.sendChat('/em Now running!');
 			if(settings.afkResp){
 				settings.afkResp = false;
 				setTimeout(function(){settings.afkResp = true},1000);
