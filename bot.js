@@ -27,6 +27,7 @@
 		pendingUp: false,
 		motd: true,
 		mI: 1500000,
+		motdMsg: ['Welcome to The Lounge!'],
 		antiAfk: true,
 		aaI: 3600000,
 		songChk: true,
@@ -54,7 +55,9 @@
 	rule = true,
 	songLim = 10,
 	_services_afk,
+	_services_motd,
 	blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
+	motdMsg = settings.motdMsg,
 	oplist = ['Pegboard Nerds - Here It Comes', 'Astronaut - Champions'],
 	cookies = ['sugar', 'lemon', 'peanut butter', 'chocolate', 'chocolate chip', 'vanilla', 'rose', 'cookie with frosting', 'frog cookie'],
 	outcome = ['You eat it. Man that was good!', 'Tasty!', 'They take it back D:', 'They smack it out of your hand </3', 'Touching it duplicates it into more. Weird, but AWESOME! :D', 'I never give it to you, but I can\'t eat it. D:', 'Wow what a taste!', 'It becoms your favorite :3'],
@@ -111,7 +114,11 @@
 			_services_afk = setInterval(function(){services.antiAfk()},60000);
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
-			API.sendChat('/em Now running Soundbot v.Dev.'+version+'!');
+			API.sendChat('/em Now running!);
+			if(settings.afkResp){
+				settings.afkResp = false;
+				setTimeout(function(){settings.afkResp = true},1000);
+			}
 		}
 	}
 	function loadEvents(){
@@ -189,6 +196,11 @@
 					}
 				}, 120000);
 			}
+		}
+	};
+	services.motd = function(a){
+		if(settings.motd){
+			API.sendChat('/em '+motdMsg[Math.floor(Math.random()*motdMsg.length)]);
 		}
 	};
 	function goWhenSpot(){
@@ -1161,6 +1173,16 @@
 			time = parseInt(opt);
 			settings.mI = Math.floor(time*1000);
 			API.sendChat('/em ['+a.un+' set the motd interval to '+time+' seconds]');
+			saveSettings();
+		}
+		if(arg === 'msg'){
+			if(a.message.split(' ')[2] === unefined){
+				return API.sendChat('/em ['+a.un+'] [!motd] Messages: '+motdMsg.join(', '));
+			}
+			var opt = a.message.split(' ')[2].toLowerCase();
+			if(typeof parseInt(opt) === 'number')return;
+			if(typeof opt === 'boolean')return;
+			motdMsg.push(opt);
 			saveSettings();
 		}
 	};
