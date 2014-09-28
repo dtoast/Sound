@@ -1,6 +1,10 @@
 Soundbot <> plug.dj
 ======
 
+###Edit: 
+> Soundbot is now __open source__ meantion you can edit and just include the link to the repo.
+I decided that to help people, there can't be restrictions.
+
 ### Soundbot has been updated!
 #### Version 1.0 is here and includes the following:
 1. Complete recode
