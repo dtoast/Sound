@@ -1,6 +1,9 @@
 /*
 	Copyright (c) 2014 FourBit.
-	Please do not copy or modify without my permission.
+	
+	If you want to modify, please
+	fork this and include the
+	link to this repository.
 */
 
 (function(){
@@ -289,11 +292,14 @@
 			}
 			if(settings.userCmds&&!data[a.uid].cd&&API.getUser(a.uid).role<2)cmds.users[cmd]?cmds.users[cmd](chatData):API.sendChat(msg);
 			if(settings.cd){
+				var _;
+				if(settings.cdTime<0)_ = 99999999999;
+				else _ = settings.cdTime;
 				if(API.getUser(a.uid).role<2){
 					data[a.uid].cd = true;
 					setTimeout(function(){
 						data[a.uid].cd = false;
-					}, settings.cdTime);
+					}, _);
 				}
 			}
 			API.moderateDeleteChat(a.cid);
