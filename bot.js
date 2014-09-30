@@ -1498,8 +1498,9 @@
 				if(typeof parseInt(arg) !== 'number'){
 					return API.sendChat('/em ['+a.un+'] [!djsettings] The specied input is not a number!');
 				}
-				API.sendChat('/em ['+a.un+' changed the max TimeCheck to '+arg+' minutes]');
+				API.sendChat('/em ['+a.un+' changed the max TimeCheck to '+args+' minutes]');
 				settings.songLim = parseInt(args);
+				return true;
 			}
 			if(opt==='on'&&settings.songChk)return API.sendChat(e);else if(opt==='off'&&!settings.songChk)return API.sendChat(e);
 			settings.songChk = !settings.songChk;
