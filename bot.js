@@ -41,7 +41,6 @@
 		safeMode: false,
 		maxDisc: 7200000,
 		bouncerPlus: true,
-		afkResp: true,
 		songLim: 10
 	},
 	bouncerList = {
@@ -118,10 +117,6 @@
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
 			API.sendChat('/em Now running!');
-			if(settings.afkResp){
-				settings.afkResp = false;
-				setTimeout(function(){settings.afkResp = true},1000);
-			}
 		}
 	}
 	function loadEvents(){
@@ -309,28 +304,27 @@
 			var bank = ['give points', 'points pls', 'givememypoint', 'points4free', 'canihaspoint', 'canihavepoint', 'givemepoint', 'mypoint', 'friend', 'friend4friend', 'fan4fan', 'fan', 'fan me', 'fanz', 'fan', 'friend', 'friendz pls', 'friends plz', 'give me my friend', 'be my friend', 'xp please', 'xp plz', 'xp pls', 'give me avatar', 'canihasavatar'];
 			var str = a.message.toLowerCase();
 			for(var i = 0; i < bank.length; i++)if(bank[i] === str)API.sendChat('@'+a.un+' please do not beg!');
-			var c = /[A-Z]/;
+			var c = /[A-Z]/g;
 			var b = new RegExp(c, "g");
 			var d = /(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/;
 			var e = new RegExp(d, "g");
 			var f = new RegExp("\\W", "g");
 			if(str.indexOf(b) || str.indexOf(e) || str.indexOf(f))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
 		}
-		if(settings.afkResp){
-			for(var i in u){
-				if(a.message.indexOf('@'+u[i].username)&&a.un!==data[u[i].id].name&&data[u[i].id].isAfk){
+		for(var i in u){
+			if(a.message.indexOf('@'+u[i].username) && u[i].username !== a.un){
+				if(data[u[i].id].isAfk){
 					API.sendChat('[AFK Message] @'+a.un+', '+data[u[i].id].afkMsg);
-				}else if(data[u[i].id].isAfk&&a.un===data[u[i].id].name){
-					data[u[i].id].isAfk = false;
-					data[u[i].id].afkMsg = 'I\'m away right now. Talk to me later!';
-				}
-				if(data[u[i].id].afkWarn && data[u[i].id].afkFinal && data[u[i].id].name === a.un){
-					data[u[i].id].afkWarn = false;
-					data[u[i].id].afkFinal = false;
-					data[u[i].id].afkTime = Date.now();
 				}
 			}
+			if(a.un === u[i].username && data[u[i].id].isAfk){
+				data[u[i].id].isAfk = false;
+				data[u[i].id].afkMsg = 'I\'m away right now. Talk to me later!';
+			}
 		}
+		var id = API.getUser(a.uid).id;
+		if(data[id].afkWarn)data[id].afkWarn = false;data[u[i].id].afkTime = Date.now();
+		if(data[id].afkFinal)data[id].afkFinal = false;data[u[i].id].afkTime = Date.now();
 		if(bouncerList.enabled){
 			for(var i = 0; i < bouncerList.users.length; i++){
 				if(a.message.substr(1).toLowerCase() === 'promote' && API.getUser(a.uid).role < 1 && a.un === bouncerList.users[i]){
