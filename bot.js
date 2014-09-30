@@ -56,7 +56,7 @@
 	var data = {},
 	services = {},
 	rule = true,
-	songLim = 10,
+	settings.songLim = 10,
 	_services_afk,
 	_services_motd,
 	blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
@@ -372,7 +372,7 @@
 			}
 		}
 		if(settings.songChk){
-			if(API.getTimeRemaining() > Math.floor(songLim*60)){
+			if(API.getTimeRemaining() > Math.floor(settings.songLim*60)){
 				API.sendChat('@'+API.getDJ().username+' that song is over the limit (10min)');
 				settings.gqueue.push(API.getDJ().id);
 				API.moderateLockWaitList(true, false);
@@ -1182,7 +1182,7 @@
 			saveSettings();
 		}
 		if(arg === 'msg'){
-			if(a.message.split(' ')[2] === unefined){
+			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!motd] Messages: '+motdMsg.join(', '));
 			}
 			var opt = a.message.split(' ')[2].toLowerCase();
@@ -1453,6 +1453,57 @@
 			}else{
 				API.sendChat('/em ['+a.un+'] [!bouncerplus] Bouncer+ is already disabled!');
 			}
+		}
+	};
+	cmds.manager.djsettings = function(a){
+		if(a.message.split(' ')[1] === undefined){
+			return API.sendChat('/em ['+a.un+'] [!djsettings] HistorySkip: '+(settings.histSkp?'on':'off')+', Blacklist: '+(settings.blackEnabed?'on':'off')+', TimeCheck: ['+(settings.songChk?'on':'off')+', Max: '+settings.songLim+'.');
+		}
+		var arg = a.message.split(' ')[1].toLowerCase();
+		if(arg === 'hist'){
+			if(a.message.split(' ')[2] === undefined){
+				return API.sendChat('/em ['+a.un+'] [!djsettings] HistorySkip: '+(settings.histSkp?'on':'off'));
+			}
+			var opt = a.message.split(' ')[2].toLowerCase(),
+			er = '/em ['+a.un+'] [!djsettings] HistorySkip is alerady '+(settings.histSkp?'enabled':'disabled')+'!';
+			if(opt === 'on' || opt === 'off'){
+				if(opt==='on'&&settings.histSkp)return API.sendChat(er);else if(opt==='off'&!settings.histSkp)return API.sendChat(er);
+				settings.histSkp = !settings.histSkp;
+				API.sendChat('/em ['+a.un+' '+(settings.histSkp?'enabled':'disabled')+' HistorySkip]');
+				saveSettings();
+			}
+		}
+		if(arg === 'bl'){
+			if(a.message.split(' ')[2] === undefined){
+				return API.sendChat('/em ['+a.un+'] [!djsettings] BlackList: '+(settings.blackEnabed?'on':'off'));
+			}
+			var arg = a.message.split(' ')[2].toLowerCase(),
+			er = '/em ['+a.un+'] [!djsettings] BlackList is already '+(settings.blackEnabed?'enabled':'disabled')+'!';
+			if(opt==='on'&&settings.blackEnabed)return API.sendChat(er);else if(opt==='off'&&!settings.blackEnabed)return API.sendChat(er);
+			settings.blackEnabed = !settings.blackEnabed;
+			API.sendChat('/em ['+a.un+' '+(settings.blackEnabed?'enabled':'disabled')+' BlackList]');
+			saveSettings();
+		}
+		if(arg === 'tc'){
+			if(a.message.split(' ')[2] === undefined){
+				return API.sendChat('/em ['+a.un+'] [!djsettings] TimeCheck: '+(settings.songChk?'on':'off'));
+			}
+			var opt = a.message,split(' ')[2].toLowerCase(),
+			e = '/em ['+a.un+'] [!djsettings] TimeCheck is already '+(settings.songChk?'enabled':'disab;ed')+'!';
+			if(opt === 'int'){
+				if(a.message.split(' ')[3] === undefined){
+					return API.sendChat('/em ['+a.un+'] [!djsettings] Please specify a TimeCheck time greater that 5 minutes!');
+				}
+				var args = a.message.split(' ')[3];
+				if(typeof parseInt(arg) !== 'number'){
+					return API.sendChat('/em ['+a.un+'] [!djsettings] The specied input is not a number!');
+				}
+				API.sendChat('/em ['+a.un+' changed the max TimeCheck to '+arg+' minutes]');
+				settings.songLim = parseInt(args);
+			}
+			if(opt==='on'&&settings.songChk)return API.sendChat(e);else if(opt==='off'&&!settings.songChk)return API.sendChat(e);
+			settings.songChk = !settings.songChk;
+			API.sendChat('/em ['+a.un+' '+(settings.songChk?'enabled':'disabled')+' TimeCheck]');
 		}
 	};
 	cmds.host.party = function(a){
