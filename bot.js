@@ -1457,7 +1457,7 @@
 	};
 	cmds.manager.djsettings = function(a){
 		if(a.message.split(' ')[1] === undefined){
-			return API.sendChat('/em ['+a.un+'] [!djsettings] HistorySkip: '+(settings.histSkp?'on':'off')+', Blacklist: '+(settings.blackEnabed?'on':'off')+', TimeCheck: ['+(settings.songChk?'on':'off')+', Max: '+settings.songLim+'.');
+			return API.sendChat('/em ['+a.un+'] [!djsettings] HistorySkip: '+(settings.histSkp?'on':'off')+', Blacklist: '+(settings.blackEnabed?'on':'off')+', TimeCheck: ['+(settings.songChk?'on':'off')+', Max: '+settings.songLim+']');
 		}
 		var arg = a.message.split(' ')[1].toLowerCase();
 		if(arg === 'hist'){
@@ -1520,10 +1520,4 @@
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click()}}
 	startup();
-	$(window).bind('beforeunload', function(a){
-		saveBouncers();
-		saveSettings();
-		shutdown();
-		return true;
-	})
 })();
