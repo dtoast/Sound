@@ -41,7 +41,8 @@
 		safeMode: false,
 		maxDisc: 7200000,
 		bouncerPlus: true,
-		afkResp: true
+		afkResp: true,
+		songLim: 10
 	},
 	bouncerList = {
 		users: [],
@@ -55,9 +56,8 @@
 	cmds.host = {};
 	var data = {},
 	services = {},
-	rule = true;
-	var settings.songLim = 10;
-	var _services_afk,
+	rule = true,
+	_services_afk,
 	_services_motd,
 	blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
 	motdMsg = settings.motdMsg,
