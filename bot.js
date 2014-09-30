@@ -1488,7 +1488,7 @@
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!djsettings] TimeCheck: '+(settings.songChk?'on':'off'));
 			}
-			var opt = a.message,split(' ')[2].toLowerCase(),
+			var opt = a.message.split(' ')[2].toLowerCase(),
 			e = '/em ['+a.un+'] [!djsettings] TimeCheck is already '+(settings.songChk?'enabled':'disab;ed')+'!';
 			if(opt === 'int'){
 				if(a.message.split(' ')[3] === undefined){
