@@ -250,15 +250,12 @@
 				if(settings.bouncerPlus){
 					if(cmds.bplus[cmd]){
 						cmds.bplus[cmd](chatData);
-					}else{
-						if(cmds.staff[cmd]){
-							cmds.staff[cmd](chatData);
-						}else{
-							if(cmds.users[cmd]){
-								cmds.users[cmd](chatData);
-							}
-						}
 					}
+				}
+				if(cmds.staff[cmd]){
+					cmds.staff[cmd](chatData);
+				}else if(cmds.users[cmd]){
+					cmds.users[cmd](chatData);
 				}
 			}
 			if(API.getUser(a.uid).role > 2 && API.getUser(a.uid).role < 5){
