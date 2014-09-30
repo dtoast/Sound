@@ -55,8 +55,8 @@
 	cmds.host = {};
 	var data = {},
 	services = {},
-	rule = true,
-	settings.songLim = 10;
+	rule = true;
+	var settings.songLim = 10;
 	var _services_afk,
 	_services_motd,
 	blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
