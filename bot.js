@@ -56,8 +56,8 @@
 	var data = {},
 	services = {},
 	rule = true,
-	settings.songLim = 10,
-	_services_afk,
+	settings.songLim = 10;
+	var _services_afk,
 	_services_motd,
 	blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
 	motdMsg = settings.motdMsg,
