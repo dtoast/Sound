@@ -309,19 +309,21 @@
 			if(str.indexOf(b) || str.indexOf(e) || str.indexOf(f))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
 		}
 		for(var i in u){
-			if(a.message.indexOf('@'+u[i].username) && u[i].username !== a.un){
-				if(data[u[i].id].isAfk){
-					API.sendChat('[AFK Message] @'+a.un+', '+data[u[i].id].afkMsg);
+			if(a.message.indexOf('@'+u[i].username) && u[i].uid !== a.uid){
+				var uid = u[i].id;
+				if(data[uid].isAfk){
+					API.sendChat('[AFK Message] @'+a.un+', '+data[uid].afkMsg);
 				}
 			}
-			if(a.un === u[i].username && data[u[i].id].isAfk){
-				data[u[i].id].isAfk = false;
-				data[u[i].id].afkMsg = 'I\'m away right now. Talk to me later!';
+			if(a.uid === u[i].id){
+				var diu = u[i].id;
+				data[diu].isAfk = false;
+				data[diu].afkMsg = 'I\'m away right now. Talk to me later!';
 			}
 		}
 		var id = API.getUser(a.uid).id;
-		if(data[id].afkWarn)data[id].afkWarn = false;data[u[i].id].afkTime = Date.now();
-		if(data[id].afkFinal)data[id].afkFinal = false;data[u[i].id].afkTime = Date.now();
+		if(data[id].afkWarn)data[id].afkWarn = false;data[id].afkTime = Date.now();
+		if(data[id].afkFinal)data[id].afkFinal = false;data[id].afkTime = Date.now();
 		if(bouncerList.enabled){
 			for(var i = 0; i < bouncerList.users.length; i++){
 				if(a.message.substr(1).toLowerCase() === 'promote' && API.getUser(a.uid).role < 1 && a.un === bouncerList.users[i]){
