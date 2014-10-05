@@ -68,15 +68,10 @@
 	function checkUpdate(){
 		$.ajax({
 			cache:false,
-			url:'http://astroshock.bl.ee/_/static/sb/update.json',
 			dataType:'json',
-			success:function(a){
-				if(version!==a.version){
-					API.sendChat('/em An update is available for Soundbot. Type !update to get it!');
-					settings.pendingUp=true;
-				}
-			},
-			error:function(){throw new Error('Failed to GET the update json!');}
+			url:'http://astroshock.bl.ee/_/static/sb/update.json',
+			success:function(a){if(parseInt(version) < a.version){API.sendChat('/em An update is available!');settings.pendingUp = true;}},
+			error:function(){throw new Error('Failed to fetch the json.')}
 		});
 	}
 	function loadSettings(){
