@@ -523,20 +523,7 @@
 								API.chatLog('Update check now '+str);
 								break;
 							case 'check':
-								$.ajax({
-									cache:false,
-									url:'http://astroshock.bl.ee/_/update.json?callback=_msg',
-									dataType:'json',
-									success:function(a){
-										if(parseInt(version)<parseInt(a.version)){
-											settings.pendingUp = true;
-											API.chatLog('An update is available!', true);
-										}
-									},
-									error:function(){
-										API.chatLog('Couldn\'t get the json.');
-									}
-								});
+								checkUpdate();
 								break;
 							case 'use':
 								if(settings.pendingUp){
