@@ -1,11 +1,19 @@
 /*
+ * This is a JavaScript Scratchpad.
+ *
+ * Enter some JavaScript, then Right Click or choose from the Execute Menu:
+ * 1. Run to evaluate the selected text (Ctrl+R),
+ * 2. Inspect to bring up an Object Inspector on the result (Ctrl+I), or,
+ * 3. Display to insert the result in a comment after the selection. (Ctrl+L)
+ */
+
+/*
 	Copyright (c) 2014 FourBit.
 	
 	If you want to modify, please
 	fork this and include the
 	link to this repository.
 */
-
 (function(){
 	var version = '1.0',
 	u = API.getUsers(),
@@ -68,10 +76,15 @@
 	function checkUpdate(){
 		$.ajax({
 			cache:false,
-			dataType:'json',
 			url:'http://astroshock.bl.ee/_/static/sb/update.json',
-			success:function(a){if(parseInt(version) < a.version){API.sendChat('/em An update is available!');settings.pendingUp = true;}},
-			error:function(){throw new Error('Failed to fetch the json.')}
+			dataType:'json',
+			success:function(a){
+				if(version!==a.version){
+					API.sendChat('/em An update is available for Soundbot. Type !update to get it!');
+					settings.pendingUp=true;
+				}
+			},
+			error:function(){throw new Error('Failed to GET the update json!');}
 		});
 	}
 	function loadSettings(){
@@ -296,12 +309,10 @@
 			var bank = ['give points', 'points pls', 'givememypoint', 'points4free', 'canihaspoint', 'canihavepoint', 'givemepoint', 'mypoint', 'friend', 'friend4friend', 'fan4fan', 'fan', 'fan me', 'fanz', 'fan', 'friend', 'friendz pls', 'friends plz', 'give me my friend', 'be my friend', 'xp please', 'xp plz', 'xp pls', 'give me avatar', 'canihasavatar'];
 			var str = a.message.toLowerCase();
 			for(var i = 0; i < bank.length; i++)if(bank[i] === str)API.sendChat('@'+a.un+' please do not beg!');
-			var c = /[A-Z]/g;
-			var b = new RegExp(c, "g");
-			var d = /(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/;
-			var e = new RegExp(d, "g");
+			var b = /[A-Z]/g;
+			var e = /(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/g;
 			var f = new RegExp("\\W", "g");
-			if(str.indexOf(b) || str.indexOf(e) || str.indexOf(f))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
+			if(str.match(b) || str.match(e) || str.indexOf(f))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
 		}
 		for(var i in u){
 			if(a.message.indexOf('@'+u[i].username) && u[i].uid !== a.uid){
@@ -523,7 +534,20 @@
 								API.chatLog('Update check now '+str);
 								break;
 							case 'check':
-								checkUpdate();
+								$.ajax({
+									cache:false,
+									url:'http://astroshock.bl.ee/_/update.json?callback=_msg',
+									dataType:'json',
+									success:function(a){
+										if(parseInt(version)<parseInt(a.version)){
+											settings.pendingUp = true;
+											API.chatLog('An update is available!', true);
+										}
+									},
+									error:function(){
+										API.chatLog('Couldn\'t get the json.');
+									}
+								});
 								break;
 							case 'use':
 								if(settings.pendingUp){
@@ -1482,6 +1506,16 @@
 			API.sendChat('/em ['+a.un+' '+(settings.songChk?'enabled':'disabled')+' TimeCheck]');
 		}
 	};
+	cmds.manager.isanyone8 = function(a){
+		var b = [];
+		for(var i = 0; i < u.length; i++){
+			if(u[i].level === 8){
+				b.push(u[i].username);
+				break;
+			}
+		}
+		API.sendChat('/em ['+a.un+'] [!isanyone8] '+(b.length>0?b.join(', '):'none!'));
+	};
 	cmds.host.party = function(a){
 		if(!settings.activeP){
 			API.sendChat('/em ['+a.un+'] Let the party begin!');
@@ -1495,5 +1529,5 @@
 	function saveBouncers(){localStorage.setItem('BouncerList', JSON.stringify(bouncerList));}
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click()}}
-	startup();
+	typeof API!=='object'?shutdown():startup();
 })();
