@@ -1,4 +1,13 @@
 /*
+ * This is a JavaScript Scratchpad.
+ *
+ * Enter some JavaScript, then Right Click or choose from the Execute Menu:
+ * 1. Run to evaluate the selected text (Ctrl+R),
+ * 2. Inspect to bring up an Object Inspector on the result (Ctrl+I), or,
+ * 3. Display to insert the result in a comment after the selection. (Ctrl+L)
+ */
+
+/*
 	Copyright (c) 2014 FourBit.
 	
 	If you want to modify, please
@@ -300,10 +309,8 @@
 			var bank = ['give points', 'points pls', 'givememypoint', 'points4free', 'canihaspoint', 'canihavepoint', 'givemepoint', 'mypoint', 'friend', 'friend4friend', 'fan4fan', 'fan', 'fan me', 'fanz', 'fan', 'friend', 'friendz pls', 'friends plz', 'give me my friend', 'be my friend', 'xp please', 'xp plz', 'xp pls', 'give me avatar', 'canihasavatar'];
 			var str = a.message.toLowerCase();
 			for(var i = 0; i < bank.length; i++)if(bank[i] === str)API.sendChat('@'+a.un+' please do not beg!');
-			var b = /[A-Z]/g;
 			var e = /(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/g;
-			var f = new RegExp("\\W", "g");
-			if(str.match(b) || str.match(e) || str.indexOf(f))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
+			if(str.match(e))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
 		}
 		for(var i in u){
 			if(a.message.indexOf('@'+u[i].username) && u[i].uid !== a.uid){
