@@ -6,7 +6,7 @@
 	link to this repository.
 */
 (function(){
-	var version = '1.0',
+	var version = '1.1',
 	u = API.getUsers(),
 	settings = {
 		autowoot: true,
@@ -40,6 +40,7 @@
 		safeMode: false,
 		maxDisc: 7200000,
 		bouncerPlus: true,
+		showVer:true,
 		songLim: 10
 	},
 	bouncerList = {
@@ -115,7 +116,7 @@
 			_services_afk = setInterval(function(){services.antiAfk()},60000);
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
-			API.sendChat('/em Now running!');
+			API.sendChat('/em Now running'+(settings.showVer?' v'+version+'!':'!'));
 		}
 	}
 	function loadEvents(){
