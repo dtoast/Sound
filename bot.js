@@ -174,7 +174,7 @@
 			e = Math.floor((b - c) / 50000);
 			if(d>settings.aaI&&!data[a[i].id].afkWarn&&!data[a[i].id].afkFinal){
 				API.sendChat('@'+a[i].username+' you\'ve been AFK for '+e+' minutes. Chat soon or I will remove you.');
-				data[a[i]].afkWarn = true;
+				data[a[i].id].afkWarn = true;
 				setTimeout(function(){
 					for(var x in a){
 						if(data[a[x].id].afkWarn&&!data[a[x].id].afkFinal){
