@@ -787,6 +787,7 @@
 				$(this).click();
 			}
 			API.sendChat('/em ['+a.un+' lockskipped the current song]');
+			setTimeout(function(){},1000);
 			API.moderateForceSkip();
 			if($('.cycle-toggle').hasClass('enabled')&&!rule){
 				$(this).click();
@@ -800,7 +801,9 @@
 				$(this).click();
 			}
 			API.sendChat('/em ['+a.un+' lockskipped the current song]');
+			setTimeout(function(){},500);
 			API.sendChat('@'+API.getDJ().username+' that song is overplayed. Please pick a new one.');
+			setTimeout(function(){},500);
 			API.moderateForceSkip();
 			if($('.cycle-toggle').hasClass('enabled')&&!rule){
 				$(this).click();
@@ -813,6 +816,7 @@
 				$(this).click();
 			}
 			API.sendChat('/em ['+a.un+' lockskipped the current song]');
+			setTimeout(function(){},1000);
 			API.sendChat('@'+API.getDJ().username+' that song is on the history. Please pick a new one.');
 			API.moderateForceSkip();
 			if($('.cycle-toggle').hasClass('enabled')&&!rule){
@@ -822,7 +826,7 @@
 		}
 	}
 	cmds.staff.skip = function(a){
-		API.sendChat('/em ['+a.un+'] [!skip] Skipping.');
+		API.sendChat('/em ['+a.un+' skipped the current song]');
 		API.moderateForceSkip();
 	};
 	cmds.staff.queue = function(a){
