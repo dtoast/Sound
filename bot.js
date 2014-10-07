@@ -857,25 +857,13 @@
 	};
 	cmds.staff.stats = function(a){
 		if(a.message.split(' ')[1] === undefined){
-			var b = settings.advStat?'on':'off';
-			return API.sendChat('/em ['+a.un+'] [!stats] Stats: '+b);
+			return API.sendChat('/em ['+a.un+'] [!stats] Stats: '+(settings.advStat?'on':'off'));
 		}
 		var arg = a.message.split(' ')[1].toLowerCase();
-		if(arg === 'on'){
-			if(!settings.advStat){
-				settings.advStat = true;
-				API.sendChat('/em ['+a.un+' enabled stats]');
-			}else{
-				API.senChat('/em ['+a.un+'] [!stats] Stats are already enabled!');
-			}
-		}
-		if(arg === 'off'){
-			if(settings.advStat){
-				settings.advStat = false;
-				API.sendChat('/em ['+a.un+' disabled stats]');
-			}else{
-				API.sendChat('/em ['+a.un+'] [!stats] Stats are already disabled!');
-			}
+		if(arg==='on'||arg==='off'){
+			settings.advStat=!settings.advStat;
+			saveSettings();
+			API.sendChat('/em ['+a.un+' '+(settings.advStat?'enabled':'disabled')+' stats]');
 		}
 	};
 	cmds.staff.add = function(a){
@@ -883,7 +871,7 @@
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!add] Please specify a user and position!');
 		}
-		if(a.message.split(' ')[1] === undefined){
+		if(a.message.split(' ')[1] === undefined || typeof parseInt(a.message.split(' ')[1]) === 'number'){
 			return API.sendChat('/em ['+a.un+'] [!add] Please specify a user!');
 		}
 		if(a.message.split(' ')[2] === undefined){
