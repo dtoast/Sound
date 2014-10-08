@@ -330,7 +330,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 			if(str.match(e))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
 		}*/
 		for(var i in u){
-			if(a.message.indexOf('@'+u[i].username) && u[i].uid !== a.uid){
+			if(a.message.indexOf('@'+u[i].username) && u[i].id !== a.uid){
 				var uid = u[i].id;
 				if(data[uid].isAfk){
 					API.sendChat('[AFK Message] @'+a.un+', '+data[uid].afkMsg);
