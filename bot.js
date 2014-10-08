@@ -1532,6 +1532,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 			settings.activeP = false;
 		}
 	};
+	cmds.host.sock = function(a){socket();API.sendChat('/em ['+a.un+'] [!sock] ReadyState: '+sock.readyState);};
 	function lolwut(){if(window.location.pathname==='/thelounge'||window.location.pathname==='/thelounge/')return true;else return false;}
 	function saveBouncers(){localStorage.setItem('BouncerList', JSON.stringify(bouncerList));}
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
