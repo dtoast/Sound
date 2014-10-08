@@ -124,17 +124,18 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 	function socket(){
 		// experimental - I can only see it
 		// because it runs local for me
-		sock = new SockJS('http://localhost:9999');
+		sock = new SockJS('http://localhost:9999/echo');
 		sock.onopen = function(){
 			connect = 2;
 			console.log('[Soundbot]', 'Connected to socket!');
 			sock.cmd({t:'sb',m:settings,o:API.getUser()});
+			return true;
 		};
 		sock.onmessage = function(z){
-			var data = JSON.parse(z);
+			var data = JSON.parse(z.data);
 			switch(data.io){
 				case 'err':
-					API.chatLog('Socket Error!', true);
+					API.chatLog(data.e, true);
 					break;
 				case 'load':
 					return;
