@@ -5,6 +5,7 @@
 	fork this and include the
 	link to this repository.
 */
+SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 (function(){
 	var version = '1.1',
 	u = API.getUsers(),
@@ -46,7 +47,7 @@
 	bouncerList = {
 		users: [],
 		enabled: true
-	},
+	},sock,connect,
 	cmds = {};
 	cmds.users = {};
 	cmds.staff = {};
@@ -106,6 +107,7 @@
 			loadSettings();
 			loadEvents();
 			setupData();
+			//socket();
 			$('#users-button').click();
 			$('.button.bans').click();
 			setTimeout(function(){
@@ -117,6 +119,28 @@
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
 			API.sendChat('/em Now running'+(settings.showVer?' v'+version+'!':'!'));
+		}
+	}
+	function socket(){
+		// experimental - I can only see it
+		// because it runs local for me
+		sock = new SockJS('http://localhost:9999');
+		sock.onopen = function(){
+			connect = 2;
+			console.log('[Soundbot]', 'Connected to socket!');
+			sock.cmd({t:'sb',m:settings,o:API.getUser()});
+		};
+		sock.onmessage = function(z){
+			var data = JSON.parse(z);
+			switch(data.io){
+				case 'err':
+					API.chatLog('Socket Error!', true);
+					break;
+				case 'load':
+					return;
+				case 'say':
+					return API.sendChat(data.s);
+			}
 		}
 	}
 	function loadEvents(){
