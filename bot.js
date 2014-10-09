@@ -197,7 +197,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		}
 	}
 	services.antiAfk = function(){
-		refreshUsers();
 		var a = API.getWaitList(),
 		b = Date.now();
 		for(var i in a){
@@ -239,7 +238,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		});
 	}
 	function dclookup(a){
-		refreshUsers();
 		var b = API.getUser(a);
 		if(typeof b === 'boolean')return API.sendChat('/em ['+b.username+'] [!dc] wut.');
 		var c = b.username;
@@ -275,7 +273,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 	//events
 
 	function eventChat(a){
-		refreshUsers();
 		if(a.message.substr(0,1).indexOf('!') !=-1){
 			var cmd = a.message.substr(1).split(' ')[0].toLowerCase();
 			var chatData = {message:a.message,un:a.un,uid:a.uid,type:a.type,cmd:cmd,role:a.role},
