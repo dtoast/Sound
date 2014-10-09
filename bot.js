@@ -9,9 +9,8 @@
 */
 SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 (function(){
-	var services = {};
-	function makeSb(){
-		var version = '1.1',
+	var services = {},
+		version = '1.1',
 		u = [],
 		settings = {
 			autowoot: true,
@@ -67,7 +66,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		cmds.manager = {};
 		cmds.host = {};
 		refr = 4;
-	}
 	
 	if(lolwut()){makeSb();}
 
