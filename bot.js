@@ -9,6 +9,7 @@
 */
 SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 (function(){
+	var services = {};
 	function makeSb(){
 		var version = '1.1',
 		u = [],
@@ -51,8 +52,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			users: [],
 			enabled: true
 		},sock,connect,
-		data={},services={},
-		rule=true,
+		data={},rule=true,
 		_services_afk,
 		_services_motd,
 		blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
