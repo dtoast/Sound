@@ -380,8 +380,8 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 							}
 						}
 					}catch(e){
-            re++;
-            afkchat();
+                				re++;
+                				afkchat();
 						throw new Error(e);
 					}
 				}, Math.pow(2,re)*1000);
