@@ -329,24 +329,38 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 			var e = /(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/g;
 			if(str.match(e))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
 		}*/
-		for(var i in u){
-			if(a.message.indexOf('@'+u[i].username) && u[i].id !== a.uid){
-				var uid = u[i].id;
-				if(data[uid].isAfk){
-					API.sendChat('[AFK Message] @'+a.un+', '+data[uid].afkMsg);
-				}
+		//{
+			function afkchat(){
+				var rcon = {},re=2;
+				rcon.tryC = setTimeout(function(){
+					try{
+						for(var i in u){
+							if(a.message.indexOf('@'+u[i].username) && u[i].id !== a.uid){
+								var uid = u[i].id;
+								if(data[uid].isAfk){
+									API.sendChat('[AFK Message] @'+a.un+', '+data[uid].afkMsg);
+								}
+							}
+							if(a.uid === u[i].id){
+								var diu = u[i].id;
+								data[diu].isAfk = false;
+								data[diu].afkMsg = 'I\'m away right now. Talk to me later!';
+							}
+						}
+					}catch(e){
+						throw new Error(e);
+						re++;
+						afkchat();
+					}
+				}, Math.pow(2,re)*1000);
 			}
-			if(a.uid === u[i].id){
-				var diu = u[i].id;
-				data[diu].isAfk = false;
-				data[diu].afkMsg = 'I\'m away right now. Talk to me later!';
-			}
-		}
-		var id = API.getUser(a.uid).id;
+			afkchat();
+		//}
+		var id = a.uid;
 		if(data[id].afkWarn)data[id].afkWarn = false;data[id].afkTime = Date.now();
 		if(data[id].afkFinal)data[id].afkFinal = false;data[id].afkTime = Date.now();
 		if(bouncerList.enabled){
-			for(var i = 0; i < bouncerList.users.length; i++){
+			for(var i in bouncerList.users){
 				if(a.message.substr(1).toLowerCase() === 'promote' && API.getUser(a.uid).role < 1 && a.un === bouncerList.users[i]){
 					API.sendChat('/em [Promoting '+a.un+']');
 					API.moderateSetRole(a.uid, API.ROLE.BOUNCER);
