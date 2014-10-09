@@ -66,8 +66,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		cmds.manager = {};
 		cmds.host = {};
 		refr = 4;
-	
-	if(lolwut()){makeSb();}
 
 	function checkUpdate(){
 		$.ajax({
@@ -105,13 +103,12 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 	}
 	function startup(){
 		if(lolwut()){
-			makeSb();
 			if(settings.hidden)return API.sendChat('/em Error (hidden enabled)');
 			if(API.getUser().role<3)return API.sendChat('/em I need to have permission!');
 			loadSettings();
 			loadEvents();
 			setupData();
-			//socket();
+			socket();
 			$('#users-button').click();
 			$('.button.bans').click();
 			setTimeout(function(){
