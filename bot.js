@@ -68,6 +68,8 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 		cmds.host = {};
 		refr = 4;
 	}
+	
+	if(lolwout()){makeSb()}
 
 	function checkUpdate(){
 		$.ajax({
