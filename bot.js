@@ -121,10 +121,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			else _services_afk;
 			API.sendChat('/em Now running'+(settings.showVer?' v'+version+'!':'!'));
 			var temp = API.getUsers();
-			for(var i = 0; i < temp.length; i++){
-				u.push(temp[i]);
-				break;
-			}
 			return true;
 		}
 	}
@@ -200,20 +196,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			};
 		}
 	}
-	function refreshUsers(){
-		u = [];
-		var a = API.getUsers();
-		for(var i = 0; i < a.length; i++){
-			for(var c = 0; c < u.length; c++){
-				if(u[c].id !== a[i].id){
-					u.pop(u[c]);
-				}else{
-					u.push(a[i]);
-				}
-			}
-		}
-	}
-	services.refresh = setInterval(function(){refreshUsers();},Math.pow(2,refr)*1000);
 	services.antiAfk = function(){
 		refreshUsers();
 		var a = API.getWaitList(),
@@ -494,13 +476,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		}
 	}
 	function eventJoin(a){
-		u.push(API.getUser(a.id));
-		for(var i = 0; i < data.length; i++){
-			if(data[i].id === a.id){
-				data[i].dis = false;
-				return true;
-			}
-		}
 		if(API.getUser().id===a.id)return;
 		data[a.id] = {
 			name: a.username,
@@ -517,11 +492,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		};
 	}
 	function eventLeave(a){
-		for(var i in u){
-			if(u[i].id === a.id){
-				u.pop(a.id);
-			}
-		}
 		if(API.getUser().id===a.id)return;
 		data[a.id].dis = true;
 		data[a.id].lastDC = Date.now();
@@ -1569,19 +1539,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			}
 		}
 		API.sendChat('/em ['+a.un+'] [!isanyone8] '+(b.length>0?b.join(', '):'none!'));
-	};
-	//list our user obj
-	cmds.manager.users = function(a){
-		var b = [];
-		for(var i = 0; i < u.length; i++){
-			b.push(u[i].username);
-			break;
-		}
-		API.sendChat('/em ['+a.un+'] [!users] '+b.join(', '));
-	};
-	cmds.manager.refresh = function(a){
-		refreshUsers();
-		API.sendChat('/em ['+a.un+'] [!refresh] Refreshed all users.');
 	};
 	cmds.host.party = function(a){
 		if(!settings.activeP){
