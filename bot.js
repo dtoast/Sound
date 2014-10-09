@@ -4,69 +4,70 @@
 	If you want to modify, please
 	fork this and include the
 	link to this repository.
-	
-	Any issues? Open one in the right panel!
+
+	Found a bug? Make an issue! ->
 */
 SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 (function(){
-	var version = '1.1',
-	u = [],
-	settings = {
-		autowoot: true,
-		stats: false,
-		hidden: false,
-		blackEnabled: true,
-		opEnabled: false,
-		histSkp: false,
-		activeP: false,
-		activeR: false,
-		userCmds: true,
-		advStat: true,
-		chatFil: true,
-		cd: false,
-		cdTime: 1000,
-		queue: true,
-		gqueue: [],
-		lockdown: false,
-		chkUpdate: true,
-		pendingUp: false,
-		motd: true,
-		mI: 1500000,
-		motdMsg: ['Welcome to The Lounge!'],
-		antiAfk: true,
-		aaI: 3600000,
-		songChk: true,
-		dcLookUp: true,
-		removeStaffBecauseTheyWereADickEnabled: true,
-		removeStaffBecauseTheyWereADick: null,
-		allowSafeMode: false,
-		safeMode: false,
-		maxDisc: 7200000,
-		bouncerPlus: true,
-		showVer:true,
-		songLim: 10
-	},
-	bouncerList = {
-		users: [],
-		enabled: true
-	},sock,connect,
-	cmds = {};
-	cmds.users = {};
-	cmds.staff = {};
-	cmds.bplus = {};
-	cmds.manager = {};
-	cmds.host = {};
-	var data = {},
-	services = {},
-	rule = true,
-	_services_afk,
-	_services_motd,
-	blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
-	motdMsg = settings.motdMsg,
-	oplist = ['Pegboard Nerds - Here It Comes', 'Astronaut - Champions'],
-	cookies = ['sugar', 'lemon', 'peanut butter', 'chocolate', 'chocolate chip', 'vanilla', 'rose', 'cookie with frosting', 'frog cookie'],
-	outcome = ['You eat it. Man that was good!', 'Tasty!', 'They take it back D:', 'They smack it out of your hand </3', 'Touching it duplicates it into more. Weird, but AWESOME! :D', 'I never give it to you, but I can\'t eat it. D:', 'Wow what a taste!', 'It becoms your favorite :3'],
-	questions = ['If you could throw any kind of party, what would it be like and what would it be for?', 'If you could paint a picture of any scenery you’ve seen before, what would you paint?', 'If you could change one thing about the world, regardless of guilt or politics, what would you do?', 'What is the key to finding happiness?', 'What do you think about tis song? http://goo.gl/koaB8R', 'ou’ve been hired to write a teen dictionary.  What would be the first 10 words all teens should know about?', 'When someone has bad breath do you tell them or try and ignore it?', 'I will never forgive ________ for ________ .', 'If the entire world is in debt, where did all the money go?', 'RANDOM GIFS! GOGOGOGO', 'What’s something valuable that you accidentally dropped and broke?', 'What’s something you should throw away, but can’t?', 'f there was a public execution on TV would you watch it?', 'hi. wassap?'];
+	function makeSb(){
+		var version = '1.1',
+		u = [],
+		settings = {
+			autowoot: true,
+			stats: false,
+			hidden: false,
+			blackEnabled: true,
+			opEnabled: false,
+			histSkp: false,
+			activeP: false,
+			activeR: false,
+			userCmds: true,
+			advStat: true,
+			chatFil: true,
+			cd: false,
+			cdTime: 1000,
+			queue: true,
+			gqueue: [],
+			lockdown: false,
+			chkUpdate: true,
+			pendingUp: false,
+			motd: true,
+			mI: 1500000,
+			motdMsg: ['Welcome to The Lounge!'],
+			antiAfk: true,
+			aaI: 3600000,
+			songChk: true,
+			dcLookUp: true,
+			removeStaffBecauseTheyWereADickEnabled: true,
+			removeStaffBecauseTheyWereADick: null,
+			allowSafeMode: false,
+			safeMode: false,
+			maxDisc: 7200000,
+			bouncerPlus: true,
+			showVer:true,
+			songLim: 10
+		},refr,cmds={},
+		bouncerList = {
+			users: [],
+			enabled: true
+		},sock,connect,
+		data={},services={},
+		rule=true,
+		_services_afk,
+		_services_motd,
+		blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
+		motdMsg = settings.motdMsg,
+		oplist = ['Pegboard Nerds - Here It Comes', 'Astronaut - Champions'],
+		cookies = ['sugar', 'lemon', 'peanut butter', 'chocolate', 'chocolate chip', 'vanilla', 'rose', 'cookie with frosting', 'frog cookie'],
+		outcome = ['You eat it. Man that was good!', 'Tasty!', 'They take it back D:', 'They smack it out of your hand </3', 'Touching it duplicates it into more. Weird, but AWESOME! :D', 'I never give it to you, but I can\'t eat it. D:', 'Wow what a taste!', 'It becoms your favorite :3'],
+		questions = ['If you could throw any kind of party, what would it be like and what would it be for?', 'If you could paint a picture of any scenery you’ve seen before, what would you paint?', 'If you could change one thing about the world, regardless of guilt or politics, what would you do?', 'What is the key to finding happiness?', 'What do you think about tis song? http://goo.gl/koaB8R', 'ou’ve been hired to write a teen dictionary.  What would be the first 10 words all teens should know about?', 'When someone has bad breath do you tell them or try and ignore it?', 'I will never forgive ________ for ________ .', 'If the entire world is in debt, where did all the money go?', 'RANDOM GIFS! GOGOGOGO', 'What’s something valuable that you accidentally dropped and broke?', 'What’s something you should throw away, but can’t?', 'f there was a public execution on TV would you watch it?', 'hi. wassap?'];
+		cmds.users = {};
+		cmds.staff = {};
+		cmds.bplus = {};
+		cmds.manager = {};
+		cmds.host = {};
+		refr = 4;
+	}
 
 	function checkUpdate(){
 		$.ajax({
@@ -104,6 +105,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 	}
 	function startup(){
 		if(lolwut()){
+			makeSb();
 			if(settings.hidden)return API.sendChat('/em Error (hidden enabled)');
 			if(API.getUser().role<3)return API.sendChat('/em I need to have permission!');
 			loadSettings();
@@ -150,6 +152,9 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 				case 'say':
 					return API.sendChat(data.s);
 			}
+		};
+		sock.onclose = function(){
+			console.log('[Soundbot]', 'Disconnected from socket!');
 		}
 	}
 	function loadEvents(){
@@ -198,7 +203,22 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 			};
 		}
 	}
+	function refreshUsers(){
+		u = [];
+		var a = API.getUsers();
+		for(var i = 0; i < a.length; i++){
+			for(var c = 0; c < u.length; c++){
+				if(u[c].id !== a[i].id){
+					u.pop(u[c]);
+				}else{
+					u.push(a[i]);
+				}
+			}
+		}
+	}
+	services.refresh = setInterval(function(){refreshUsers()},Math.pow(2,refr)*1000);
 	services.antiAfk = function(){
+		refreshUsers();
 		var a = API.getWaitList(),
 		b = Date.now();
 		for(var i in a){
@@ -240,6 +260,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 		});
 	}
 	function dclookup(a){
+		refreshUsers();
 		var b = API.getUser(a);
 		if(typeof b === 'boolean')return API.sendChat('/em ['+b.username+'] [!dc] wut.');
 		var c = b.username;
@@ -275,6 +296,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 	//events
 
 	function eventChat(a){
+		refreshUsers();
 		if(a.message.substr(0,1).indexOf('!') !=-1){
 			var cmd = a.message.substr(1).split(' ')[0].toLowerCase();
 			var chatData = {message:a.message,un:a.un,uid:a.uid,type:a.type,cmd:cmd,role:a.role},
@@ -1559,6 +1581,10 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 			break;
 		}
 		API.sendChat('/em ['+a.un+'] [!users] '+b.join(', '));
+	};
+	cmds.manager.refresh = function(a){
+		refreshUsers();
+		API.sendChat('/em ['+a.un+'] [!refresh] Refreshed all users.');
 	};
 	cmds.host.party = function(a){
 		if(!settings.activeP){
