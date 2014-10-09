@@ -7,7 +7,7 @@
 
 	Found a bug? Make an issue! ->
 */
-SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
+SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 (function(){
 	function makeSb(){
 		var version = '1.1',
@@ -69,7 +69,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 		refr = 4;
 	}
 	
-	if(lolwut()){makeSb()}
+	if(lolwut()){makeSb();}
 
 	function checkUpdate(){
 		$.ajax({
@@ -121,7 +121,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 				$('#chat-button').click();
 			}, 100);
 			if(settings.autowoot)$('#woot').click();
-			_services_afk = setInterval(function(){services.antiAfk()},60000);
+			_services_afk = setInterval(function(){services.antiAfk();},60000);
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
 			API.sendChat('/em Now running'+(settings.showVer?' v'+version+'!':'!'));
@@ -157,7 +157,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 		};
 		sock.onclose = function(){
 			console.log('[Soundbot]', 'Disconnected from socket!');
-		}
+		};
 	}
 	function loadEvents(){
 		API.on({
@@ -218,7 +218,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 			}
 		}
 	}
-	services.refresh = setInterval(function(){refreshUsers()},Math.pow(2,refr)*1000);
+	services.refresh = setInterval(function(){refreshUsers();},Math.pow(2,refr)*1000);
 	services.antiAfk = function(){
 		refreshUsers();
 		var a = API.getWaitList(),
@@ -380,9 +380,9 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 							}
 						}
 					}catch(e){
+            re++;
+            afkchat();
 						throw new Error(e);
-						re++;
-						afkchat();
 					}
 				}, Math.pow(2,re)*1000);
 			}
@@ -548,7 +548,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 				switch(arg){
 					case 'woot':
 						settings.autowoot = !settings.autowoot;
-						settings.autowoot?str+='on':str+='off'
+						settings.autowoot?str+='on':str+='off';
 						API.chatLog('Autowoot now '+str);
 						break;
 					case 'stats':
@@ -902,7 +902,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 			}
 			return true;
 		}
-	}
+	};
 	cmds.staff.skip = function(a){
 		API.sendChat('/em ['+a.un+' skipped the current song]');
 		API.moderateForceSkip();
@@ -1126,7 +1126,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 	};
 	cmds.bplus.op = function(a){
 		if(a.message.split(' ')[1] === undefined){
-			return API.sendChat('/em ['+a.un+'] [!op] Enabled: '+settings.opEnabled)
+			return API.sendChat('/em ['+a.un+'] [!op] Enabled: '+settings.opEnabled);
 		}
 		var arg = a.message.split(' ')[1].toLowerCase();
 		if(arg === 'on'){
@@ -1151,7 +1151,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 	cmds.manager.save = function(a){
 		saveSettings();
 		API.sendChat('/em ['+a.un+'] [!save] Saved!');
-	}
+	};
 	cmds.bplus.cycle = function(a){
 		API.sendChat('/em ['+a.un+' toggled the dj cycle]');
 		$('.cycle-toggle').click();
@@ -1399,7 +1399,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 		setTimeout(function(){
 			var b = API.getWaitList();
 			for(var i = 0; i < b.length; i++){
-				var c = API.getWaitListPosition(b[i].id)
+				var c = API.getWaitListPosition(b[i].id);
 				API.moderateMoveDJ(b[i].id, c);
 				break;
 			}
@@ -1417,7 +1417,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 		}else{
 			checkUpdate();
 		}
-	}
+	};
 	cmds.manager.rule = function(a){
 		rule = !rule;
 		var str = rule?'enabled':'disabled';
@@ -1525,7 +1525,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 			var opt = a.message.split(' ')[2].toLowerCase(),
 			er = '/em ['+a.un+'] [!djsettings] HistorySkip is alerady '+(settings.histSkp?'enabled':'disabled')+'!';
 			if(opt === 'on' || opt === 'off'){
-				if(opt==='on'&&settings.histSkp)return API.sendChat(er);else if(opt==='off'&!settings.histSkp)return API.sendChat(er);
+				if(opt==='on'&&settings.histSkp)return API.sendChat(er);else if(opt==='off'&&!settings.histSkp)return API.sendChat(er);
 				settings.histSkp = !settings.histSkp;
 				API.sendChat('/em ['+a.un+' '+(settings.histSkp?'enabled':'disabled')+' HistorySkip]');
 				saveSettings();
@@ -1535,9 +1535,9 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!djsettings] BlackList: '+(settings.blackEnabed?'on':'off'));
 			}
-			var arg = a.message.split(' ')[2].toLowerCase(),
-			er = '/em ['+a.un+'] [!djsettings] BlackList is already '+(settings.blackEnabed?'enabled':'disabled')+'!';
-			if(opt==='on'&&settings.blackEnabed)return API.sendChat(er);else if(opt==='off'&&!settings.blackEnabed)return API.sendChat(er);
+			var opt = a.message.split(' ')[2].toLowerCase(),
+			err = '/em ['+a.un+'] [!djsettings] BlackList is already '+(settings.blackEnabed?'enabled':'disabled')+'!';
+			if(opt==='on'&&settings.blackEnabed)return API.sendChat(err);else if(opt==='off'&&!settings.blackEnabed)return API.sendChat(err);
 			settings.blackEnabed = !settings.blackEnabed;
 			API.sendChat('/em ['+a.un+' '+(settings.blackEnabed?'enabled':'disabled')+' BlackList]');
 			saveSettings();
@@ -1601,6 +1601,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 	function lolwut(){if(window.location.pathname==='/thelounge'||window.location.pathname==='/thelounge/')return true;else return false;}
 	function saveBouncers(){localStorage.setItem('BouncerList', JSON.stringify(bouncerList));}
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
-	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click()}}
-	typeof API!=='object'?shutdown():startup();
+	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click();}}
+	if(typeof API !== 'object')shutdown();
+	else startup();
 })();
