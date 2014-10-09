@@ -4,6 +4,8 @@
 	If you want to modify, please
 	fork this and include the
 	link to this repository.
+	
+	Any issues? Open one in the right panel!
 */
 SockJS.prototype.cmd = function(z){this.send(JSON.parse(z))};
 (function(){
