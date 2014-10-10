@@ -362,7 +362,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			}
 			afkchat();
 		//}
-		var id = a.uid;
+		var id = API.getUser(a.uid).id;
 		if(data[id].afkWarn)data[id].afkWarn = false;data[id].afkTime = Date.now();
 		if(data[id].afkFinal)data[id].afkFinal = false;data[id].afkTime = Date.now();
 		if(bouncerList.enabled){
