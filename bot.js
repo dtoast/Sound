@@ -313,7 +313,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 					cmds.users[cmd](chatData);
 				}
 			}
-			if(settings.userCmds&&!data[a.uid].cd&&API.getUser(a.uid).role<2)cmds.users[cmd]?cmds.users[cmd](chatData):API.sendChat(msg);
+			if(settings.userCmds&&data[a.uid].cd===false&&API.getUser(a.uid).role<2)cmds.users[cmd]?cmds.users[cmd](chatData):API.sendChat(msg);
 			if(settings.cd){
 				var _;
 				if(settings.cdTime<0)_ = 99999999999;
