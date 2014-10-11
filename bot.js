@@ -335,6 +335,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			var e = /(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/g;
 			if(str.match(e))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
 		}*/
+		if((a.un && a.uid) === (API.getUser().username && API.getUser().id))return;
 		//{
 			function afkchat(){
 				var rcon = {},re=2;
