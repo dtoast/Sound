@@ -356,7 +356,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 					}catch(e){
                 				re++;
                 				afkchat();
-						throw new Error(e);
+						throw new Error('[Internal] '+e);
 					}
 				}, Math.pow(2,re)*1000);
 			}
