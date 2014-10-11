@@ -473,6 +473,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		}
 	}
 	function eventJoin(a){
+              u = API.getUsers();
 		if(API.getUser().id===a.id)return;
 		data[a.id] = {
 			name: a.username,
@@ -489,6 +490,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		};
 	}
 	function eventLeave(a){
+              u = API.getUsers();
 		if(API.getUser().id===a.id)return;
 		data[a.id].dis = true;
 		data[a.id].lastDC = Date.now();
@@ -501,7 +503,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		}, settings.maxDisc);
 	}
 	function eventCmd(a){
-		var cmd = a.trim().substr(1).split(' ')[0].toLowerCase();
+		var cmd = a.substr(1).split(' ')[0].toLowerCase();
 		switch(cmd){
 			case 'set':
 			if(a.trim().substr(1).split(' ')[1] === undefined)return API.chatLog('Available arguments: woot, stats, blacklist, hist, usercmds, filter, cd, queue, update, motd, afk', true);
