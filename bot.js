@@ -414,6 +414,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		}
 		if(settings.songChk){
 			if(obj.media.duration > Math.floor(settings.songLim*60)){
+				var returns;
 				API.sendChat('@'+API.getDJ().username+' that song is over the limit (10min)');
 				settings.gqueue.push(API.getDJ().id);
 				API.moderateLockWaitList(true, false);
@@ -423,11 +424,21 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 					goWhenSpot()?adv=true:adv=false;
 					do{
 						API.moderateAddDJ(settings.gqueue[0]);
+						API.moderateMoveDJ(settings.gqueue[0], 3);
 						settings.gqueue.pop(settings.gqueue[0]);
 						if(API.getWaitList().length > 49)adv = false;
 						else if(settings.gqueue.length <= 0)adv = false;
 					}while(adv);
+				}else{
+					for(var i = 0; i < settings.gqueue.length; i++){
+						API.moderateAddDJ(settings.gqueue[i]);
+						if(API.getWaitList().length < 4)return true;
+						else API.moderateMoveDJ(settings.gqueue[i], 3);
+						settings.gqueue.pop(settings.gqueue[i]);
+						break;
+					}
 				}
+				settings.gqueue.length>0?API.sendChat('/em Users in queue: '+settings.gqueue.join(', ')):returns=false;
 			}
 		}
 		if(settings.queue){
