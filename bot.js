@@ -1538,7 +1538,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 	};
 	cmds.manager.isanyone8 = function(a){
 		var b = [];
-		for(var i = 0; i < u.length; i++){
+		for(var i in u){
 			if(u[i].level === 8){
 				b.push(u[i].username);
 				break;
