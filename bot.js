@@ -45,7 +45,8 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			maxDisc: 7200000,
 			bouncerPlus: true,
 			showVer:true,
-			songLim: 10
+			songLim: 10,
+			autoskip: true
 		},refr,cmds={},
 		bouncerList = {
 			users: [],
@@ -380,6 +381,11 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		}
 	}
 	function eventAdvance(a){
+		if(settings.autoskip){
+			clearTimeout(b);
+			var b,c = a.media.duration;
+			b = setTimeout(function(){API.moderateForceSkip();},c*1000+5000);
+		}
 		if(settings.autowoot)$('#woot').click();
 		if(settings.advStat){
 			API.sendChat('/em '+a.lastPlay.media.author+' - '+a.lastPlay.media.title+' received '+a.lastPlay.score.positive+' woots, '+a.lastPlay.score.negative+' mehs, and '+a.lastPlay.score.grabs+' grabs!');
@@ -1539,6 +1545,11 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			}
 		}
 		API.sendChat('/em ['+a.un+'] [!isanyone8] '+(b.length>0?b.join(', '):'none!'));
+	};
+	cmds.manager.autoskip = function(a){
+		settings.autoskip = !settings.autoskip;
+		API.sendChat('/em ['+a.un+' toggled autoskip '+(settings.autoskip?'on':'off')+']');
+		saveSettings();
 	};
 	cmds.host.party = function(a){
 		if(!settings.activeP){
