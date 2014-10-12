@@ -413,19 +413,30 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			}
 		}
 		if(settings.songChk){
-			if(API.getTimeRemaining() > Math.floor(settings.songLim*60)){
+			if(obj.media.duration > Math.floor(settings.songLim*60)){
 				API.sendChat('@'+API.getDJ().username+' that song is over the limit (10min)');
 				settings.gqueue.push(API.getDJ().id);
 				API.moderateLockWaitList(true, false);
+				if(API.getWaitList().length > 49){
+					API.sendChat('/em You will be added to the waitlist when there is room. Queue: '+settings.gqueue.length);
+					var adv = false;
+					goWhenSpot()?adv=true:adv=false;
+					do{
+						API.moderateAddDJ(settings.gqueue[0]);
+						settings.gqueue.pop(settings.gqueue[0]);
+						if(API.getWaitList().length > 49)adv = false;
+						else if(settings.gqueue.length <= 0)adv = false;
+					}while(adv);
+				}
 			}
 		}
 		if(settings.queue){
 			//advance queue
 			if(settings.gqueue.length===0)return;
 			else if(API.getWaitList().length <= 49){
-				API.moderateAddDJ(settings.gqueue[1]);
-				API.moderateMoveDJ(settings.gqueue[1], 4);
-				settings.gqueue.pop(settings.gqueue[1]);
+				API.moderateAddDJ(settings.gqueue[0]);
+				API.moderateMoveDJ(settings.gqueue[0], 4);
+				settings.gqueue.pop(settings.gqueue[0]);
 				for(var i = 0; i < settings.gqueue.length; i++){
 					if(settings.gqueue.length > 0&&API.getWaitList().length <= 49){
 						var b = settings.gqueue[i];
