@@ -670,7 +670,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 				API.sendChat('/em [Local] [/reload] Reloading...');
 				shutdown();
 				window.location.reload();
-				setTImeout(function(){
+				setTimeout(function(){
 					$.getScript('https://raw.githubusercontent.com/FourBitus/Sound/master/bot.js');
 				}, 5000);
 				break;
