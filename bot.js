@@ -413,7 +413,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			}
 		}
 		if(settings.songChk){
-			if(obj.media.duration > Math.floor(settings.songLim*60)){
+			if(a.media.duration > Math.floor(settings.songLim*60)){
 				var returns;
 				API.sendChat('@'+API.getDJ().username+' that song is over the limit (10min)');
 				settings.gqueue.push(API.getDJ().id);
