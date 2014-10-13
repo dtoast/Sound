@@ -440,6 +440,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 				API.sendChat('@'+API.getDJ().username+' that song is over the limit (10min)');
 				settings.gqueue.push(API.getDJ().id);
 				API.moderateLockWaitList(true, false);
+				API.moderateForceSkip();
 				if(API.getWaitList().length > 49){
 					API.sendChat('/em You will be added to the waitlist when there is room. Queue: '+settings.gqueue.length);
 					var adv = false;
@@ -461,6 +462,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 					}
 				}
 				settings.gqueue.length>0?API.sendChat('/em Users in queue: '+settings.gqueue.join(', ')):returns=false;
+				API.moderateLockWaitList(false);
 			}
 		}
 		if(settings.queue){
