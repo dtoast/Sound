@@ -412,6 +412,39 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		if(settings.advStat){
 			API.sendChat('/em '+a.lastPlay.media.author+' - '+a.lastPlay.media.title+' received '+a.lastPlay.score.positive+' woots, '+a.lastPlay.score.negative+' mehs, and '+a.lastPlay.score.grabs+' grabs!');
 		}
+		if(settings.histSkp){
+			var z = API.getHistory();
+			for(var i in z){
+				if(z[i].title === a.media.title){
+					API.sendChat('@'+API.getDJ().username+', that song is on the history!');
+					settings.gqueue.push(API.getDJ().id);
+					API.moderateLockWaitList(true, false);
+					API.moderateForceSkip();
+					if(API.getWaitList().length > 49){
+						API.sendChat('/em You will be added to the waitlist when there is room. Queue: '+settings.gqueue.length);
+						var adv = false;
+						goWhenSpot()?adv=true:adv=false;
+						do{
+							API.moderateAddDJ(settings.gqueue[0]);
+							API.moderateMoveDJ(settings.gqueue[0], 3);
+							settings.gqueue.pop(settings.gqueue[0]);
+							if(API.getWaitList().length > 49)adv = false;
+							else if(settings.gqueue.length <= 0)adv = false;
+						}while(adv);
+					}else{
+						for(var i = 0; i < settings.gqueue.length; i++){
+							API.moderateAddDJ(settings.gqueue[i]);
+							if(API.getWaitList().length < 4)return true;
+							else API.moderateMoveDJ(settings.gqueue[i], 3);
+							settings.gqueue.pop(settings.gqueue[i]);
+							break;
+						}
+					}
+					settings.gqueue.length>0?API.sendChat('/em Users in queue: '+settings.gqueue.join(', ')):returns=false;
+					API.moderateLockWaitList(false);
+				}
+			}
+		}
 		if(settings.blackEnabled){
 			var b = a.media.title;
 			for(var i = 0; i < blacklist.length; i++){
