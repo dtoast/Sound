@@ -282,51 +282,71 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 				if(settings.bouncerPlus){
 					if(cmds.bplus[cmd]){
 						cmds.bplus[cmd](chatData);
+						return true;
 					}
 				}
 				if(cmds.staff[cmd]){
 					cmds.staff[cmd](chatData);
+					return true;
 				}else if(cmds.users[cmd]){
 					cmds.users[cmd](chatData);
+					return true;
 				}
 			}
 			if(API.getUser(a.uid).role > 2 && API.getUser(a.uid).role < 5){
 				if(cmds.users[cmd]){
 					cmds.users[cmd](chatData);
+					return true;
 				}else if(cmds.staff[cmd]){
 					cmds.staff[cmd](chatData);
+					return true;
 				}else if(cmds.manager[cmd]){
 					cmds.manager[cmd](chatData);
+					return true;
 				}else if(cmds.bplus[cmd]){
 					cmds.bplus[cmd](chatData);
+					return true;
 				}
 			}
 			if(API.getUser(a.uid).role===5){
 				if(cmds.host[cmd]){
 					cmds.host[cmd](chatData);
+					return true;
 				}else if(cmds.manager[cmd]){
 					cmds.manager[cmd](chatData);
+					return true;
 				}else if(cmds.bplus[cmd]){
 					cmds.bplus[cmd](chatData);
+					return true;
 				}else if(cmds.staff[cmd]){
 					cmds.staff[cmd](chatData);
+					return true;
 				}else if(cmds.users[cmd]){
 					cmds.users[cmd](chatData);
+					return true;
 				}
 			}
-			if(settings.userCmds&&data[a.uid].cd===false&&API.getUser(a.uid).role<2)cmds.users[cmd]?cmds.users[cmd](chatData):API.sendChat(msg);
-			if(settings.cd){
-				var _;
-				if(settings.cdTime<0)_ = 99999999999;
-				else _ = settings.cdTime;
-				if(API.getUser(a.uid).role<2){
-					data[a.uid].cd = true;
-					setTimeout(function(){
-						data[a.uid].cd = false;
-					}, _);
+			if(settings.userCmds&&data[a.uid].cd===false&&API.getUser(a.uid).role<2){
+				if(cmds.users[cmd]){
+					cmds.users[cmd](chatData);
+					if(settings.cd){
+						var _;
+						if(settings.cdTime<0)_ = 99999999999;
+						else _ = settings.cdTime;
+						if(API.getUser(a.uid).role<2){
+							data[a.uid].cd = true;
+							setTimeout(function(){
+								data[a.uid].cd = false;
+							}, _);
+						}
+					}
+					return true;
+				}else{
+					API.sendChat(msg);
+					return false;
 				}
 			}
-			API.moderateDeleteChat(a.cid);
+			return false;
 		}
 		if(a.message.substr(0,2).indexOf('!!') !=-1)return API.sendChat('@'+a.un+' you put !! instead of !');
 		/*if(settings.chatFil){
@@ -372,10 +392,12 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 				if(a.message.substr(1).toLowerCase() === 'promote' && API.getUser(a.uid).role < 1 && a.un === bouncerList.users[i]){
 					API.sendChat('/em [Promoting '+a.un+']');
 					API.moderateSetRole(a.uid, API.ROLE.BOUNCER);
+					return true;
 				}
 				if(a.message.substr(1).toLowerCase() === 'demote' && API.getUser(a.uid).role === 2 && a.un === bouncerList.users[i]){
 					API.sendChat('/em [Demoting '+a.un+' so they can afk]');
 					API.moderateSetRole(a.uid, API.ROLE.NONE);
+					return true;
 				}
 			}
 		}
