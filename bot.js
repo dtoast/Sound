@@ -736,7 +736,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 				API.chatLog('Local commands: set [argument] ~ shutdown ~ reload ~ commands | help ~ lol ~ hide', true);
 				break;
 			case 'lol':
-				API.sendChat('!lolomgwtfbbq');
+				cmds.manager.lolomgwtfbbq('Local');
 				break;
 			/*case 'hide':
 				if(!settings.hidden){
