@@ -184,8 +184,8 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		$.each(u, function(z){
 			if(z.id === API.getUser().id)return;
 			data[z.id] = {
-				name: u[i].username,
-				id: u[i].id,
+				name: z.username,
+				id: z.id,
 				afkTime: Date.now(),
 				afkWarn: false,
 				afkFinal: false,
