@@ -181,7 +181,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 	}
 	function setupData(){
 		u = API.getUsers();
-		for(var i = 0; i < u.length; i++){
+		for(var i in u){
 			if(API.getUser().id===u[i].id)return;
 			data[u[i].id] = {
 				name: u[i].username,
@@ -196,7 +196,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 				lastDCpos: 50,
 				dis: false
 			};
-			break;
 		}
 	}
 	services.antiAfk = function(){
