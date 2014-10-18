@@ -181,9 +181,9 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 	}
 	function setupData(){
 		u = API.getUsers();
-		for(var i in u){
-			if(API.getUser().id===u[i].id)return;
-			data[u[i].id] = {
+		$.each(u, function(z){
+			if(z.id === API.getUser().id)return;
+			data[z.id] = {
 				name: u[i].username,
 				id: u[i].id,
 				afkTime: Date.now(),
@@ -196,7 +196,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 				lastDCpos: 50,
 				dis: false
 			};
-		}
+		});
 	}
 	services.antiAfk = function(){
 		var a = API.getWaitList(),
@@ -359,18 +359,17 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		}*/
 		if((a.un && a.uid) === (API.getUser().username && API.getUser().id))return;
 		//{
-			function afkchat(){
+			function afkchat(a){
 				var rcon = {},re=2;
 				rcon.tryC = setTimeout(function(){
 					try{
 						for(var i in u){
-							if(a.message.indexOf('@'+u[i].username) && u[i].id !== a.uid){
+							if((u[i].username !== undefined) && a.message.indexOf('@'+u[i].username) && u[i].id !== a.uid && (a.uid !== API.getUser().id || u[i].id !== API.getUser().id)){
 								var uid = u[i].id;
 								if(data[uid].isAfk){
 									API.sendChat('[AFK Message] @'+a.un+', '+data[uid].afkMsg);
 								}
-							}
-							if(a.uid === u[i].id){
+							}else if(a.uid === u[i].id && API.getUser().id !== a.uid){
 								var diu = u[i].id;
 								data[diu].isAfk = false;
 								data[diu].afkMsg = 'I\'m away right now. Talk to me later!';
@@ -383,11 +382,13 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 					}
 				}, Math.pow(2,re)*1000);
 			}
-			afkchat();
+			afkchat(a);
 		//}
 		var id = API.getUser(a.uid).id;
-		if(data[id].afkWarn)data[id].afkWarn = false;data[id].afkTime = Date.now();
-		if(data[id].afkFinal)data[id].afkFinal = false;data[id].afkTime = Date.now();
+		if(id !== undefined){
+			if(data[id].afkWarn)data[id].afkWarn = false;data[id].afkTime = Date.now();
+			if(data[id].afkFinal)data[id].afkFinal = false;data[id].afkTime = Date.now();
+		}else throw new Error('[Internal] "id" is undefined!');
 		if(bouncerList.enabled){
 			for(var i in bouncerList.users){
 				if(a.message.substr(1).toLowerCase() === 'promote' && API.getUser(a.uid).role < 1 && a.un === bouncerList.users[i]){
