@@ -1088,6 +1088,8 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		var time = a.message.split(' ')[2];
 		if(typeof parseInt(time) === 'number'){
 			dur = parseInt(time);
+		}else if(isNaN(parseInt(time))){
+			dur = 0.2;
 		}
 		for(var i in u){
 			if(u[i].username === user){
