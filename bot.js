@@ -38,8 +38,8 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			aaI: 3600000,
 			songChk: true,
 			dcLookUp: true,
-			removeStaffBecauseTheyWereADickEnabled: true,
-			removeStaffBecauseTheyWereADick: null,
+			removeStaffEnabled: true,
+			removeStaff: null,
 			allowSafeMode: false,
 			safeMode: false,
 			maxDisc: 7200000,
@@ -110,6 +110,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			loadEvents();
 			setupData();
 			socket();
+			$('#playback').remove();
 			$('#users-button').click();
 			$('.button.bans').click();
 			setTimeout(function(){
@@ -275,10 +276,43 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 	//events
 
 	function eventChat(a){
+		if(a.type !== 'message')return;
+		if(a.uid === undefined)return;
+		if(a.un === undefined)return;
+		if(data[a.uid] === undefined){
+			data[a.uid] = {
+				name: a.un,
+				id: a.uid,
+				afkTime: Date.now(),
+				afkWarn: false,
+				afkFinal: false,
+				cd: false,
+				isAfk: false,
+				afkMsg: 'I\'m away right now. Talk to me later!',
+				lastDC: Date.now(),
+				lastDCpos: 50,
+				dis: false
+			};
+		}
 		if(a.message.substr(0,1).indexOf('!') !=-1){
+			if(bouncerList.enabled){
+				for(var i in bouncerList.users){
+					if(a.message.substr(1).toLowerCase() === 'promote' && API.getUser(a.uid).role < 1 && a.un === bouncerList.users[i]){
+						API.sendChat('/em [Promoting '+a.un+']');
+						API.moderateSetRole(a.uid, API.ROLE.BOUNCER);
+						return true;
+					}
+					if(a.message.substr(1).toLowerCase() === 'demote' && API.getUser(a.uid).role === 2 && a.un === bouncerList.users[i]){
+						API.sendChat('/em [Demoting '+a.un+' so they can afk]');
+						API.moderateSetRole(a.uid, API.ROLE.NONE);
+						return true;
+					}
+				}
+			}
 			var cmd = a.message.substr(1).split(' ')[0].toLowerCase();
 			var chatData = {message:a.message,un:a.un,uid:a.uid,type:a.type,cmd:cmd,role:a.role},
 			msg='/em ['+a.un+'] [!'+cmd+'] Unknown command.';
+			try{
 			if(API.getUser(a.uid).role===2){
 				if(settings.bouncerPlus){
 					if(cmds.bplus[cmd]){
@@ -348,57 +382,29 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 				}
 			}
 			return false;
+		}catch(e){API.sendChat(cmd+' '+e);}
 		}
 		if(a.message.substr(0,2).indexOf('!!') !=-1)return API.sendChat('@'+a.un+' you put !! instead of !');
-		/*if(settings.chatFil){
-			var bank = ['give points', 'points pls', 'givememypoint', 'points4free', 'canihaspoint', 'canihavepoint', 'givemepoint', 'mypoint', 'friend', 'friend4friend', 'fan4fan', 'fan', 'fan me', 'fanz', 'fan', 'friend', 'friendz pls', 'friends plz', 'give me my friend', 'be my friend', 'xp please', 'xp plz', 'xp pls', 'give me avatar', 'canihasavatar'];
-			var str = a.message.toLowerCase();
-			for(var i = 0; i < bank.length; i++)if(bank[i] === str)API.sendChat('@'+a.un+' please do not beg!');
-			var e = /(\bhttps?:\/\/(www.)?plug\.dj[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/g;
-			if(str.match(e))API.moderateDeleteChat(a.cid);return API.sendChat('@'+a.un+' please do not send that!');
-		}*/
-		if((a.un && a.uid) === (API.getUser().username && API.getUser().id))return;
-		//{
-			function afkchat(a){
-				var rcon = {},re=2;
-				rcon.tryC = setTimeout(function(){
-					try{
-						for(var i in u){
-							if((u[i].username !== undefined) && a.message.indexOf('@'+u[i].username) && u[i].id !== a.uid && (a.uid !== API.getUser().id || u[i].id !== API.getUser().id)){
-								var uid = u[i].id;
-								if(data[uid].isAfk){
-									API.sendChat('[AFK Message] @'+a.un+', '+data[uid].afkMsg);
-								}
-							}else if(a.uid === u[i].id && API.getUser().id !== a.uid){
-								var diu = u[i].id;
-								data[diu].isAfk = false;
-								data[diu].afkMsg = 'I\'m away right now. Talk to me later!';
-							}
-						}
-					}catch(e){
-                				re++;
-                				afkchat();
-						throw new Error('[Internal] '+e);
-					}
-				}, Math.pow(2,re)*1000);
+		u = API.getUsers();
+		if(a.un === API.getUser().username)return;
+		for(var i in u){
+			if(data[u[i].id] === undefined)return;
+			if(data[u[i].id].afkWarn){
+				data[u[i].id].afkWarn = false;
+				data[u[i].id].afkTime = Date.now();
 			}
-			afkchat(a);
-		//}
-		var id = API.getUser(a.uid).id;
-		if(id !== undefined){
-			if(data[id].afkWarn)data[id].afkWarn = false;data[id].afkTime = Date.now();
-			if(data[id].afkFinal)data[id].afkFinal = false;data[id].afkTime = Date.now();
-		}else throw new Error('[Internal] "id" is undefined!');
-		if(bouncerList.enabled){
-			for(var i in bouncerList.users){
-				if(a.message.substr(1).toLowerCase() === 'promote' && API.getUser(a.uid).role < 1 && a.un === bouncerList.users[i]){
-					API.sendChat('/em [Promoting '+a.un+']');
-					API.moderateSetRole(a.uid, API.ROLE.BOUNCER);
-					return true;
-				}
-				if(a.message.substr(1).toLowerCase() === 'demote' && API.getUser(a.uid).role === 2 && a.un === bouncerList.users[i]){
-					API.sendChat('/em [Demoting '+a.un+' so they can afk]');
-					API.moderateSetRole(a.uid, API.ROLE.NONE);
+			if(data[u[i].id].afkFinal){
+				data[u[i].id].afkFinal = false;
+				data[u[i].id].afkTime = Date.now();
+			}
+			if(data[a.uid].isAfk && data[a.uid] !== undefined){
+				data[a.uid].isAfk = false;
+				data[a.uid].afkMsg = '';
+				return true;
+			}
+			if(u[i].username !== undefined && a.message.match(new RegExp('@'+u[i].username, 'g')) && a.type === 'message' && data[u[i].id] !== undefined && data[u[i].id].isAfk === true){
+				if(u[i].username !== a.un){
+					API.sendChat('[AFK Message] @'+a.un+' '+(String(data[u[i].id].afkMsg)&&data[u[i].id].afkMsg.length>0?data[u[i].id].afkMsg:'I\'m away right now. Talk to me later!'));
 					return true;
 				}
 			}
@@ -412,7 +418,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		}
 		if(settings.autowoot)$('#woot').click();
 		if(settings.advStat){
-			API.sendChat('/em '+a.lastPlay.media.author+' - '+a.lastPlay.media.title+' received '+a.lastPlay.score.positive+' woots, '+a.lastPlay.score.negative+' mehs, and '+a.lastPlay.score.grabs+' grabs!');
+			if(a.lastPlay !== undefined)API.sendChat('/em '+a.lastPlay.media.author+' - '+a.lastPlay.media.title+' received '+a.lastPlay.score.positive+' woots, '+a.lastPlay.score.negative+' mehs, and '+a.lastPlay.score.grabs+' grabs!');
 		}
 		if(settings.histSkp){
 			var z = API.getHistory();
@@ -520,8 +526,8 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 				API.moderateLockWaitList(false);
 			}
 		}
-		if(settings.removeStaffBecauseTheyWereADickEnabled&&settings.activeP){
-			var b = settings.removeStaffBecauseTheyWereADick;
+		if(settings.removeStaffEnabled&&settings.activeP){
+			var b = settings.removeStaff;
 			API.sendChat('@'+b+' wow such disappoint.');
 			for(var i in u){
 				if(u[i].username === b && u[i].role === 2){
@@ -655,7 +661,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 							case 'check':
 								$.ajax({
 									cache:false,
-									url:'http://astroshock.bl.ee/_/update.json?callback=_msg',
+									url:'http://astroshock.bl.ee/_/update.json',
 									dataType:'json',
 									success:function(a){
 										if(parseInt(version)<parseInt(a.version)){
@@ -780,8 +786,8 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 	function eventMod(a){
 		if(settings.activeP){
 			API.sendChat('@'+a+' thou shall not skip songs on parties.');
-			settings.removeStaffBecauseTheyWereADick = a;
-			settings.removeStaffBecauseTheyWereADickEnabled = true;
+			settings.removeStaff = a;
+			settings.removeStaffEnabled = true;
 		}
 	}
 	function lockdownChat(z){
@@ -891,7 +897,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		}else{
 			if(!data[a.uid].isAfk){
 				data[a.uid].isAfk = true;
-				data[a.uid].afkMsg = a.message.split(' ')[1].substr(1);
+				data[a.uid].afkMsg = a.message.split(' ')[1];
 				API.sendChat('/em ['+a.un+'] [!afk] AFK message set! It will be disabled next time you chat.');
 			}else{
 				data[a.uid].isAfk = false;
@@ -1066,7 +1072,10 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 						case 'perma':dur=3;break;
 						case 'perm':dur=3;break;
 					}
-				}else dur = parseInt(opt);
+				}else if(!isNaN(parseInt(opt)))dur = parseInt(opt);
+				else dur = 1;
+				dur>3?dur=3:dur=dur;
+				dur<1?dur=1:dur=dur;
 				switch(dur){
 					case 1:dur=API.BAN.HOUR;break;
 					case 2:dur=API.BAN.DAY;break;
@@ -1098,6 +1107,12 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 					setTimeout(function(){
 						API.sendChat('/em ['+a.un+' used kick]');
 						API.moderateBanUser(u[i].id, 0, -1);
+						$('#users-button').click();
+						$('.button.bans').click();
+						setTimeout(function(){
+							$('.button.room').click();
+							$('#chat-button').click();
+						}, 100);
 						setTimeout(function(){
 							API.moderateUnbanUser(u[i].id);
 						}, Math.floor(dur*1000));
@@ -1352,7 +1367,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		if(arg === 'on'){
 			if(!settings.antiAfk){
 				settings.antiAfk = true;
-				_services_afk;
+				_services_afk = false;
 				API.sendChat('/em ['+a.un+' enabled AntiAFK]');
 				saveSettings();
 			}else{
@@ -1648,6 +1663,6 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 	function saveBouncers(){localStorage.setItem('BouncerList', JSON.stringify(bouncerList));}
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click();}}
-	if(typeof API !== 'object')shutdown();
+	if(typeof API !== 'object')return;
 	else startup();
 })();
