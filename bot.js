@@ -404,7 +404,7 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			}
 			if(u[i].username !== undefined && a.message.match(new RegExp('@'+u[i].username, 'g')) && a.type === 'message' && data[u[i].id] !== undefined && data[u[i].id].isAfk === true){
 				if(u[i].username !== a.un){
-					API.sendChat('[AFK Message] @'+a.un+' '+(String(data[u[i].id].afkMsg)&&data[u[i].id].afkMsg.length>0?data[u[i].id].afkMsg:'I\'m away right now. Talk to me later!'));
+					API.sendChat('['+u[i].username+'] [AFK Message] @'+a.un+' '+(String(data[u[i].id].afkMsg)&&data[u[i].id].afkMsg.length>0?data[u[i].id].afkMsg:'I\'m away right now. Talk to me later!'));
 					return true;
 				}
 			}
