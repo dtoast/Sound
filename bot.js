@@ -6,8 +6,53 @@
 	link to this repository.
 
 	Found a bug? Make an issue! ->
+
+	Check out the wiki for commands!
 */
 SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
+Math.rand = function(a,b){
+	if(Object.prototype.toString.call(a) ==== '[object Array]'){
+		if(!b || b === null || b === undefined){
+			return a[Math.floor(Math.random()*a.length)];
+		}else{
+			throw new SyntaxError('Input "'+b+'" is invalid because the first input is an array');
+		}
+	}else{
+		if(typeof a === 'number'){
+			if(!isNaN(a)){
+				if(typeof b === 'number'){
+					if(!isNaN(b)){
+						if(b < a){
+							throw new SyntaxError('Input "'+b+'" is less than '+a);
+						}else{
+							var z = Math.round(a/60)*60,
+							y = Math.round(b/60)*60,
+							x = Math.floor(Math.random()*z*Math.random());
+							if(x > y){
+								x = Math.floor(x - y);
+								return x;
+							}else if(x <= y){
+								return x;
+							}else if(isNaN(x) || isNaN(y) || isNaN(z)){
+								throw new Error((isNaN(x)?x:isNaN(y)?y:isNaN(z)?z:'null')+' is NaN');
+							}else{
+								throw new Error('An error occurred');
+							}
+						}
+					}else{
+						throw new Error('The second input is NaN');
+					}
+				}else{
+					throw new Error(b+' is not a number');
+				}
+			}else{
+				throw new Error('The first input is NaN');
+			}
+		}else{
+			throw new Error(a+' is not a number');
+		}
+	}
+};
 (function(){
 	var services = {},
 		version = '1.1',
@@ -57,7 +102,8 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 		_services_motd,
 		blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
 		motdMsg = settings.motdMsg,
-		oplist = ['Pegboard Nerds - Here It Comes', 'Astronaut - Champions'],
+		fightArr = ['wears overalls', 'is a brony', 'hates chocolate', 'denys the use of peanut butter for physical therapy', 'no', 'yes', 'does this to you! http://i.imgur.com/ciGpQyC.gif', 'is satan', 'loves unicorns', 'hates me </3', 'loves to fake having a disease', 'not old bay', 'ha lol'],
+		oplist = ['Here It Comes', 'Champions'],
 		cookies = ['sugar', 'lemon', 'peanut butter', 'chocolate', 'chocolate chip', 'vanilla', 'rose', 'cookie with frosting', 'frog cookie'],
 		outcome = ['You eat it. Man that was good!', 'Tasty!', 'They take it back D:', 'They smack it out of your hand </3', 'Touching it duplicates it into more. Weird, but AWESOME! :D', 'I never give it to you, but I can\'t eat it. D:', 'Wow what a taste!', 'It becoms your favorite :3'],
 		questions = ['If you could throw any kind of party, what would it be like and what would it be for?', 'If you could paint a picture of any scenery you’ve seen before, what would you paint?', 'If you could change one thing about the world, regardless of guilt or politics, what would you do?', 'What is the key to finding happiness?', 'What do you think about tis song? http://goo.gl/koaB8R', 'ou’ve been hired to write a teen dictionary.  What would be the first 10 words all teens should know about?', 'When someone has bad breath do you tell them or try and ignore it?', 'I will never forgive ________ for ________ .', 'If the entire world is in debt, where did all the money go?', 'RANDOM GIFS! GOGOGOGO', 'What’s something valuable that you accidentally dropped and broke?', 'What’s something you should throw away, but can’t?', 'f there was a public execution on TV would you watch it?', 'hi. wassap?'];
@@ -842,6 +888,18 @@ SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 			SC.get('/tracks/'+API.getMedia().cid, function(b){
 				API.sendChat('/em ['+a.un+'] [!link] '+b.permalink_url);
 			});
+		}
+	};
+	cmds.users.rek = function(a){
+		if(a.message.split(' ')[1] === undefined){
+			return API.sendChat('/em ['+a.un+'] [!rek] You failed to rek someone.');
+		};
+		var arg = a.message.split(' ')[1];
+		u = API.getUsers();
+		for(var i in u){
+			if(u[i].username === arg){
+				API.sendChat('['+a.un+'] [!rek] '+'@'+u[i].username+' '+Math.rand(fightArr, null));
+			}
 		}
 	};
 	cmds.users.cookie = function(a){
