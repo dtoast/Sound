@@ -897,7 +897,7 @@ Math.rand = function(a,b){
 		z = Math.rand(fightArr, null);
 		for(var i in u){
 			if(u[i].username === arg){
-				API.sendChat('['+a.un+'] [!rek] '+'@'+u[i].username+' '+(z.match(new RegExp('does this to you', 'g'))?a.un:'')+z);
+				API.sendChat('['+a.un+'] [!rek] '+'@'+u[i].username+' '+(z.match(new RegExp('does this to you', 'g'))?a.un+' ':'')+z);
 			}
 		}
 	};
