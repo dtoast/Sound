@@ -11,7 +11,7 @@
 */
 SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 Math.rand = function(a,b){
-	if(Object.prototype.toString.call(a) ==== '[object Array]'){
+	if(Object.prototype.toString.call(a) === '[object Array]'){
 		if(!b || b === null || b === undefined){
 			return a[Math.floor(Math.random()*a.length)];
 		}else{
