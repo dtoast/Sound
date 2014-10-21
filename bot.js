@@ -895,7 +895,6 @@ Math.rand = function(a,b){
 			return API.sendChat('/em ['+a.un+'] [!rek] You failed to rek someone.');
 		};
 		var arg = a.message.split(' ')[1];
-		u = API.getUsers();
 		for(var i in u){
 			if(u[i].username === arg){
 				API.sendChat('['+a.un+'] [!rek] '+'@'+u[i].username+' '+Math.rand(fightArr, null));
