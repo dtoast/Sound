@@ -358,7 +358,7 @@ Math.rand = function(a,b){
 			var cmd = a.message.substr(1).split(' ')[0].toLowerCase();
 			var chatData = {message:a.message,un:a.un,uid:a.uid,type:a.type,cmd:cmd,role:a.role},
 			msg='/em ['+a.un+'] [!'+cmd+'] Unknown command.';
-			try{
+			API.moderateDeleteChat(a.cid);
 			if(API.getUser(a.uid).role===2){
 				if(settings.bouncerPlus){
 					if(cmds.bplus[cmd]){
@@ -428,7 +428,6 @@ Math.rand = function(a,b){
 				}
 			}
 			return false;
-		}catch(e){API.sendChat(cmd+' '+e);}
 		}
 		if(a.message.substr(0,2).indexOf('!!') !=-1)return API.sendChat('@'+a.un+' you put !! instead of !');
 		u = API.getUsers();
