@@ -1691,15 +1691,20 @@ Math.rand = function(a,b){
 			API.sendChat('/em ['+a.un+' '+(settings.songChk?'enabled':'disabled')+' TimeCheck]');
 		}
 	};
-	cmds.manager.isanyone8 = function(a){
+	cmds.manager.isanyone = function(a){
+		u = API.getUsers();
 		var b = [];
+		if(a.message.split(' ')[1] === undefined){
+			return API.sendChat('/em ['+a.un+'] [!isanyone] Please specify a number!');
+		}
+		if(typeof parseInt(a.message.split(' ')[1]) !== 'number')return API.sendChat('/em ['+a.un+'] [!isanyone] Input is not a number!');
 		for(var i in u){
-			if(u[i].level === 8){
+			if(u[i].level === parseInt(a.message.split(' ')[1])){
 				b.push(u[i].username);
 				break;
 			}
 		}
-		API.sendChat('/em ['+a.un+'] [!isanyone8] '+(b.length>0?b.join(', '):'none!'));
+		API.sendChat('/em ['+a.un+'] [!isanyone] '+(b.length>0?b.join(', '):'none!'));
 	};
 	cmds.manager.autoskip = function(a){
 		settings.autoskip = !settings.autoskip;
