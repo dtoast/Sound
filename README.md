@@ -31,7 +31,7 @@ __Refer [here](https://github.com/FourBitus/Sound/wiki/Code-Submissions) for the
 To edit more easily, install this repository locally.
 
 ```
-git clone https://github.com/FourBitus/Sound Soundbot
+git clone https://github.com/FourBitus/Sound.git Soundbot
 ```
 
 ========
