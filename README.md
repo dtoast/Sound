@@ -1,4 +1,4 @@
-Soundbot <> plug.dj
+Soundbot - Plug.dj
 ======
 
 ###Rationale
