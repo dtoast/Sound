@@ -1,8 +1,21 @@
 Soundbot <> plug.dj
 ======
 
+###Rationale
+
+Soundbot is written in Javascript to take advantage of [plug.dj's](http://plug.dj) API.
+There are bugs and if you would like to help squash them, please make an issue if you encounter, and try to include the following:
+
+1. Short, detailed description
+2. Console error (Press F12 -> console tab, it should say on the right [bot.js]. On the left is the error.)
+3. Line number (this may not be always available)
+
+###__*This was designed to be run on FireFox*__
+
+----------
+
 ###Edit: 
-> Soundbot is now __open source__ meantion you can edit and just include the link to the repo.
+> Soundbot is now __open source__ meaning you can edit and just include the link to the repo.
 I decided that to help people, there can't be restrictions.
 
 ### Soundbot has been updated!
