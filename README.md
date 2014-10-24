@@ -16,7 +16,7 @@ If you are new to Javascript, and would like to contribute, [here is a link to a
 For more advanced stuff and syntax highlighting, [go here to look at some documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference).
 
 ###__*This was designed to be run on FireFox*__
-__If you can help with some compatibilty with chrome, that'd be great. __
+__If you can help with some compatibilty with chrome, that'd be great.__
 
 ####Uniform
 
