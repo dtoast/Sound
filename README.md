@@ -9,8 +9,18 @@ There are bugs and if you would like to help squash them, please make an issue i
 1. Short, detailed description
 2. Console error (Press F12 -> console tab, it should say on the right [bot.js]. On the left is the error.)
 3. Line number (this may not be always available)
+4. 
+
+If you are new to Javascript, and would like to contribute, [here is a link to a pretty good website that helps with the basics.](http://codecademy.com). 
+
+For more advanced stuff and syntax highlighting, [go here to look at some documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference).
 
 ###__*This was designed to be run on FireFox*__
+__If you can help with some compatibilty with chrome, that'd be great.
+
+####Uniform
+
+This is meant for a guideline on how the code is easier to read and evaluate.
 
 ----------
 
