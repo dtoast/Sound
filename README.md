@@ -22,6 +22,8 @@ __If you can help with some compatibilty with chrome, that'd be great.__
 
 This is meant for a guideline on how the code is easier to read and evaluate.
 
+__Refer [here](https://github.com/FourBitus/Sound/wiki/Code-Submissions) for the guidelines.__
+
 ----------
 
 ###Edit: 
