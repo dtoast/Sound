@@ -55,7 +55,7 @@ Math.rand = function(a,b){
 };
 (function(){
 	var services = {},
-		version = '1.1',
+		version = '1.1.5.9043',
 		u = [],
 		settings = {
 			autowoot: true,
@@ -89,9 +89,11 @@ Math.rand = function(a,b){
 			safeMode: false,
 			maxDisc: 7200000,
 			bouncerPlus: true,
-			showVer:true,
+			showVer:false,
 			songLim: 10,
-			autoskip: true
+			autoskip: true,
+			mcpc: true,
+			mcpcUrl: ''
 		},refr,cmds={},
 		bouncerList = {
 			users: [],
@@ -113,6 +115,15 @@ Math.rand = function(a,b){
 		cmds.manager = {};
 		cmds.host = {};
 		refr = 4;
+
+	function dcTime(a){
+		a = Math.floor(a/60000);
+		var m = (a-Math.floor(a/60)*60),
+		h = ~~((a/3600000)*2)
+		o = {hrs:h,min:m};
+		if(!isNaN(o.hrs) || !isNaN(o.min))return o;
+		else return NaN;
+	}
 
 	function checkUpdate(){
 		$.ajax({
@@ -167,14 +178,13 @@ Math.rand = function(a,b){
 			_services_afk = setInterval(function(){services.antiAfk();},60000);
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
-			API.sendChat('/em Now running'+(settings.showVer?' v'+version+'!':'!'));
+			API.sendChat('/em Now running dev'+(settings.showVer?' v'+version+'!':'!'));
 			var temp = API.getUsers();
 			return true;
 		}
 	}
 	function socket(){
-		// experimental - I can only see it
-		// because it runs local for me
+		// experimental
 		sock = new SockJS('http://localhost:9999/echo');
 		sock.onopen = function(){
 			connect = 2;
@@ -230,21 +240,100 @@ Math.rand = function(a,b){
 		u = API.getUsers();
 		$.each(u, function(z){
 			if(z.id === API.getUser().id)return;
-			data[z.id] = {
-				name: z.username,
-				id: z.id,
-				afkTime: Date.now(),
-				afkWarn: false,
-				afkFinal: false,
-				cd: false,
-				isAfk: false,
-				afkMsg: 'I\'m away right now. Talk to me later!',
-				lastDC: Date.now(),
-				lastDCpos: 50,
-				dis: false
-			};
+			if(z.id === undefined)return;
+			else{
+				data[z.id] = {
+					name: z.username,
+					id: z.id,
+					afkTime: Date.now(),
+					afkWarn: false,
+					afkFinal: false,
+					cd: false,
+					isAfk: false,
+					afkMsg: 'I\'m away right now. Talk to me later!'
+				};
+			}
 		});
 	}
+	function getVideos(){
+		if(settings.mcpc && (new Date().getDay() === 4)){
+			var a = 'http://gdata.youtube.com/feeds/api/users/monstercatmedia/uploads?max-results=1';
+			String.prototype.trunc = String.prototype.trunc || function(z){
+				return this.length>z?this.substr(0,z-1)+'...':this;
+			};
+			$.ajax({
+				async: false,
+				type: 'GET',
+				url: a,
+				success: function(data){
+					data = xmlToJson(data).feed;
+					var video = {
+						url: data.entry.link[0]['@attributes'].href,
+						id: data.entry.link[0]['@attributes'].href.match(/.*(?:youtu.be\/|v\/|u\/w\/|embed\/watch\?v=)([^#\&\?]*).*/)[1],
+						title: data.entry.title['#text']
+					};
+					if(video.title.match(new RegExp('Podcast', 'g'))){
+						settings.mcpcUrl = video.url;
+						return true;
+					}
+				}
+			});
+		}
+	}
+	function xmlToJson(xml){
+		var obj = {};
+		if(xml.nodeType === 1){
+			if(xml.attributes.length > 0){
+				obj['@attributes'] = {};
+				for(var i = 0; i < xml.attributes.length; i++){
+					var attribute = xml.attributes.item(i);
+					obj['@attributes'][attribute.nodeName] = attribute.nodeValue;
+				}
+			}
+		}else if(xml.nodeType === 3){
+			obj = xml.nodeValue;
+		}
+		if(xml.hasChildNodes()){
+			for(var i = 0; i < xml.childNodes.length; i++){
+				var item = xml.childNodes.item(i),
+				nodeName = item.nodeName;
+				if(typeof(obj[nodeName]) === 'undefined'){
+					obj[nodeName] = xmlToJson(item);
+				}else{
+					if(typeof(obj[nodeName].push) === 'undefined'){
+						var old = obj[nodeName];
+						obj[nodeName] = [];
+						obj[nodeName].push(old);
+					}
+					obj[nodeName].push(xmlToJson(item));
+				}
+			}
+		}
+		return obj;
+	}
+	var dc = {
+		users: {},
+		getDc: function(a){
+			for(var i in dc.users){
+				if(dc.users[i] === a){
+					return dc.users[i];
+				}else{
+					return dc.users;
+				}
+			}
+		},
+		newDc: function(a){
+			this.id = a;
+			this.pos = API.getWaitListPosition(a);
+			this.time = Date.now();
+			this.valid = true;
+			dc.users[a] = this;
+			setTimeout(function(){if(dc.users[a].valid){dc.users[a].valid = false;}}, 3600000);
+		},
+		remDc: function(a){
+			delete dc.users[a];
+		}
+	};
 	services.antiAfk = function(){
 		var a = API.getWaitList(),
 		b = Date.now();
@@ -286,38 +375,6 @@ Math.rand = function(a,b){
 			return true;
 		});
 	}
-	function dclookup(a){
-		var b = API.getUser(a);
-		if(typeof b === 'boolean')return API.sendChat('/em ['+b.username+'] [!dc] wut.');
-		var c = b.username;
-		if(data[b.id].lastDC === null)return API.sendChat('/em ['+b.username+'] [!dc] Your lastDC is null!');
-		var d = data[b.id].lastDC;
-		var e = data[b.id].lastDCpos;
-		if(e===null)return null;
-		var f = Date.now()-d;
-		var valid = false;
-	    if(settings.maxDC*60*1000>f){
-	      valid=true;
-	    }else{
-	      valid=false;
-	    }
-	    if(!valid)API.sendChat('/em ['+b.username+'] [!dc] Invalid DC!');
-		if(valid && API.getWaitList().length < 50){
-			API.sendChat('/em ['+b.username+'] [!dc] You should be at pos '+data[a.id].lastDCpos+'.');
-			API.moderateAddDJ(b.id);
-			API.moderateMoveDJ(b.id, data[a.id].lastDCpos);
-		}else if(valid && API.getWaitList().length >= 50){
-			API.sendChat('/em ['+b.username+'] [!dc] You should be at pos '+data[a.id].lastDCpos+'. Queue: '+settings.gqueue.length+' users being added.');
-			var h;
-			goWhenSpot()?h=true:h=false;
-			while(h){
-				API.moderateAddDJ(b.id);
-				API.moderateMoveDJ(b.id, data[a.id].lastDCpos);
-				h = false;
-			}
-			return true;
-		}
-	}
 
 	//events
 
@@ -334,10 +391,7 @@ Math.rand = function(a,b){
 				afkFinal: false,
 				cd: false,
 				isAfk: false,
-				afkMsg: 'I\'m away right now. Talk to me later!',
-				lastDC: Date.now(),
-				lastDCpos: 50,
-				dis: false
+				afkMsg: 'I\'m away right now. Talk to me later!'
 			};
 		}
 		if(a.message.substr(0,1).indexOf('!') !=-1){
@@ -468,7 +522,7 @@ Math.rand = function(a,b){
 		if(settings.histSkp){
 			var z = API.getHistory();
 			for(var i in z){
-				if(z[i].title === a.media.title){
+				if(a.media !== undefined && z[i].title === a.media.title){
 					API.sendChat('@'+API.getDJ().username+', that song is on the history!');
 					settings.gqueue.push(API.getDJ().id);
 					API.moderateLockWaitList(true, false);
@@ -584,14 +638,6 @@ Math.rand = function(a,b){
 				}
 			}
 		}
-		if(settings.dcLookUp){
-			var wl = API.getWaitList();
-			for(var i = 0; i < wl.length; i++){
-				data[wl[i].id].lastDC = Date.now();
-				data[wl[i].id].lastDCpos = API.getWaitListPosition(wl[i].id);
-				break;
-			}
-		}
 	}
 	function eventWlUp(a){
 		if(settings.queue){
@@ -612,7 +658,7 @@ Math.rand = function(a,b){
 		}
 	}
 	function eventJoin(a){
-              u = API.getUsers();
+        u = API.getUsers();
 		if(API.getUser().id===a.id)return;
 		data[a.id] = {
 			name: a.username,
@@ -622,24 +668,13 @@ Math.rand = function(a,b){
 			afkFinal: false,
 			cd: false,
 			isAfk: false,
-			afkMsg: 'I\'m away right now. Talk to me later!',
-			lastDC: null,
-			lastDCpos: null,
-			dis: false
+			afkMsg: 'I\'m away right now. Talk to me later!'
 		};
 	}
 	function eventLeave(a){
-              u = API.getUsers();
-		if(API.getUser().id===a.id)return;
-		data[a.id].dis = true;
-		data[a.id].lastDC = Date.now();
-		setTimeout(function(){
-			for(var i = 0; i < data.length; i++){
-				if(data[i].dis === true && data[i].id === a.id){
-					delete data[i];
-				}
-			}
-		}, settings.maxDisc);
+		u = API.getUsers();
+		delete data[a.id];
+		new dc.newDc(a.id);
 	}
 	function eventCmd(a){
 		var cmd = a.substr(1).split(' ')[0].toLowerCase();
@@ -789,7 +824,7 @@ Math.rand = function(a,b){
 				API.chatLog('Local commands: set [argument] ~ shutdown ~ reload ~ commands | help ~ lol ~ hide', true);
 				break;
 			case 'lol':
-				cmds.manager.lolomgwtfbbq('Local');
+				cmds.manager.lolomgwtfbbq({un:'Local'});
 				break;
 			/*case 'hide':
 				if(!settings.hidden){
@@ -806,6 +841,9 @@ Math.rand = function(a,b){
 				break;*/
 			case 'save':
 				saveSettings();
+				break;
+			case 'podcast':
+				cmds.manager.podcast({un:'Local'});
 				break;
 		}
 		str = '';
@@ -846,9 +884,6 @@ Math.rand = function(a,b){
 	cmds.users.help = function(a){
 		API.sendChat('/em ['+a.un+'] [!help] Commands: http://astroshock.bl.ee/soundbot');
 	};
-	cmds.users.dc = function(a){
-		dclookup(a.uid);
-	};
 	cmds.users.theme = function(a){
 		API.sendChat('/em ['+a.un+'] [!theme] The theme is Electronic Dance Music (EDM)');
 	};
@@ -881,13 +916,11 @@ Math.rand = function(a,b){
 		}
 	};
 	cmds.users.link = function(a){
-		if(API.getMedia().format === 1){
-			API.sendChat('/em ['+a.un+'] [!link] http://youtube.com/watch?v='+API.getMedia().cid+'#t='+API.getTimeElapsed());
-		}else{
-			SC.get('/tracks/'+API.getMedia().cid, function(b){
-				API.sendChat('/em ['+a.un+'] [!link] '+b.permalink_url);
-			});
-		}
+		var b = API.getMedia();
+        if (b.format === '1' || b.format === 1)API.sendChat('/em ['+a.un+'] [!link] Current song: http://youtu.be/'+b.cid);
+        else SC.get('/tracks/'+b.cid, function(c){
+            API.sendChat('/em ['+a.un+'] [!link] Current song: '+(c.permalink_url?c.permalink_url:'Link not found'));
+        });
 	};
 	cmds.users.rek = function(a){
 		if(a.message.split(' ')[1] === undefined){
@@ -964,6 +997,69 @@ Math.rand = function(a,b){
 	};
 	cmds.users.ask = function(a){
 		API.sendChat('/em ['+a.un+'] [!ask] '+questions[Math.floor(Math.random()*questions.length)]);
+	};
+	cmds.users.dc = function(a){
+		if(a.message.split(' ')[1] === undefined){
+			if(dc.getDc(a.uid)){
+				if((Date.now() - dc.getDc(a.uid).time) <= 3600000){
+					var pos = dc.getDc(a.uid).pos;
+					API.sendChat('/em ['+a.un+'] [!dc] You will be added to spot '+pos+'.');
+					if(API.getWaitList().length < 50){
+						API.modereateAddDJ(a.uid);
+						setTimeout(function(){API.moderateMoveDJ(a.uid, pos);},250);
+					}else{
+						do{
+							API.modereateAddDJ(a.uid);
+							setTimeout(function(){API.moderateMoveDJ(a.uid, pos);},250);
+						}while(API.getWaitList().length < 50 && API.getWaitListPosition(a.uid) === -1);
+					}
+				}else{
+					var h = dc.getDc(a.uid).time/3600000,
+					m = dc.getDc(a.uid).time/60000.12;
+					API.sendChat('/em ['+a.un+'] [!dc] You dc\'d too long ago ('+(dcTime(dc.getDc(a.uid).time).hrs+'h '+dcTime(dc.getDc(a.uid).time).min)+'m)');
+				}
+			}else{
+				API.sendChat('/em ['+a.un+'] [!dc] Your dc wasn\'t found!');
+			}
+		}else{
+			u = API.getUsers();
+			for(var i in u){
+				if(u[i].username === a.message.split(' ')[1].substr(1)){
+					if(dc.getDc(u[i].id)){
+						if((Date.now() - dc.getDc(u[i].id).time) <= 3600000){
+							var pos = dc.getDc(u[i].id).pos;
+							API.sendChat('/em ['+a.un+'] [!dc] '+u[i].username+' will be added to spot '+pos+'.');
+							if(API.getWaitList().length < 50){
+								API.modereateAddDJ(u[i].id);
+								setTimeout(function(){API.moderateMoveDJ(u[i].id, pos);},250);
+							}else{
+								do{
+									API.modereateAddDJ(u[i].id);
+									setTimeout(function(){API.moderateMoveDJ(u[i].id, pos);},250);
+								}while(API.getWaitList().length < 50 && API.getWaitListPosition(u[i].id) === -1);
+							}
+						}else{
+							API.sendChat('/em ['+a.un+'] [!dc] You dc\'d too long ago ('+(dcTime(dc.getDc(u[i].id).time).hrs+'h '+(dcTime(dc.getDc(u[i].id).time).min))+'m)');
+						}
+					}else{
+						API.sendChat('/em ['+a.un+'] [!dc] That user\'s dc wasn\'t found!');
+					}
+				}else{
+					API.sendChat('/em ['+a.un+'] [!dc] User not found.');
+				}
+			}
+		}
+	};
+	cmds.staff.woot = function(a){
+		if(a.message.split(' ')[1] === undefined){
+			return $('#woot').click();
+		}
+		var arg = a.message.split(' ')[1].toLowerCase();
+		if(arg === 'on' || arg === 'off'){
+			settings.autowoot = !settings.autowoot;
+			saveSettings();
+			API.sendChat('/em ['+a.un+' '+(settings.autowoot?'enabled':'disabled')+' autowoot]');
+		}
 	};
 	cmds.staff.unlock = function(a){
 		API.sendChat('/em ['+a.un+'] [!unlock] Unlocking the waitlist.');
@@ -1329,6 +1425,34 @@ Math.rand = function(a,b){
 	    		}
 	    	}
 	};
+	cmds.manager.podcast = function(a){
+		if(getVideos()){
+			API.sendChat('/em I will now play the monstercat podcast. It can last from 30min. to 1hr. long. It will not be skipped.');
+			API.moderateLockWaitList(true, false);
+			if($('.cycle-toggle').hasClass('enabled')){
+				$('.cycle-toggle').click();
+			}
+			API.once('waitListUpdate', function(){
+				API.moderateAddDJ(API.getUser().id);
+				if($('#dj-button').hasClass('.is-leave')){
+					API.moderateMoveDJ(API.getUser().id, 2);
+					setTimeout(function(){
+						$('#playlist-button').click();
+						setTimeout(function(){
+							$('#search-input-field').val(settings.mcpcUrl);
+							setTimeout(function(){
+								var e = jQuery.Event('keypress');
+								e.which = 13;
+								e.keyCode = 13;
+								$('#search-input-field').trigger(e);
+								API.chatLog('Please add the podcast to my playlist!', true);
+							}, 500);
+						}, 500);
+					}, 500);
+				}
+			});
+		}
+	}
 	cmds.manager.motd = function(a){
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!motd] Enabled: '+settings.motd+', interval: '+Math.floor(settings.mI/1000));
@@ -1725,6 +1849,6 @@ Math.rand = function(a,b){
 	function saveBouncers(){localStorage.setItem('BouncerList', JSON.stringify(bouncerList));}
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click();}}
-	if(typeof API !== 'object')return;
+	if(typeof API !== 'object')shutdown();
 	else startup();
 })();
