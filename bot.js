@@ -9,6 +9,7 @@
 
 	Check out the wiki for commands!
 */
+
 SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 Math.rand = function(a,b){
 	if(Object.prototype.toString.call(a) === '[object Array]'){
@@ -53,7 +54,7 @@ Math.rand = function(a,b){
 		}
 	}
 };
-(function(){
+//(function(){
 	var services = {},
 		version = '1.1.5.9043',
 		u = [],
@@ -89,7 +90,7 @@ Math.rand = function(a,b){
 			safeMode: false,
 			maxDisc: 7200000,
 			bouncerPlus: true,
-			showVer:false,
+			showVer:true,
 			songLim: 10,
 			autoskip: true,
 			mcpc: true,
@@ -104,11 +105,11 @@ Math.rand = function(a,b){
 		_services_motd,
 		blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
 		motdMsg = settings.motdMsg,
-		fightArr = ['wears overalls', 'is a brony', 'hates chocolate', 'denys the use of peanut butter for physical therapy', 'no', 'yes', 'does this to you! http://i.imgur.com/ciGpQyC.gif', 'is satan', 'loves unicorns', 'hates me </3', 'loves to fake having a disease', 'not old bay', 'ha lol'],
+		fightArr = [" doesn't like water."," likes to wear thier pants at their knees."," hates cookies."," likes to take hot showers infront of homeless people."," doesn't know how to use an ipad."," abuses people."," wears hello-kitty clothes to work (or school)."," is 40 years old and lives in their parents basement."," takes long walks in volcanos."," has water, never wakes up."," loves one-direction."," eats coconuts",' wears overalls', ' is a brony', ' hates chocolate', ' denys the use of peanut butter for physical therapy', ' no', ' yes', ' does this to you! http://i.imgur.com/ciGpQyC.gif', ' is satan', ' loves unicorns', ' hates me </3', ' loves to fake having a disease', ' not old bay', ' ha lol'],
 		oplist = ['Here It Comes', 'Champions'],
 		cookies = ['sugar', 'lemon', 'peanut butter', 'chocolate', 'chocolate chip', 'vanilla', 'rose', 'cookie with frosting', 'frog cookie'],
 		outcome = ['You eat it. Man that was good!', 'Tasty!', 'They take it back D:', 'They smack it out of your hand </3', 'Touching it duplicates it into more. Weird, but AWESOME! :D', 'I never give it to you, but I can\'t eat it. D:', 'Wow what a taste!', 'It becoms your favorite :3'],
-		questions = ['If you could throw any kind of party, what would it be like and what would it be for?', 'If you could paint a picture of any scenery you’ve seen before, what would you paint?', 'If you could change one thing about the world, regardless of guilt or politics, what would you do?', 'What is the key to finding happiness?', 'What do you think about tis song? http://goo.gl/koaB8R', 'ou’ve been hired to write a teen dictionary.  What would be the first 10 words all teens should know about?', 'When someone has bad breath do you tell them or try and ignore it?', 'I will never forgive ________ for ________ .', 'If the entire world is in debt, where did all the money go?', 'RANDOM GIFS! GOGOGOGO', 'What’s something valuable that you accidentally dropped and broke?', 'What’s something you should throw away, but can’t?', 'f there was a public execution on TV would you watch it?', 'hi. wassap?'];
+		questions = ["Why is an alarm clock going 'off' when it actually turns on?","If you mated a bull dog and a shitsu, would it be called a bullsh*t?","If an ambulance is on its way to save someone, and it runs someone over, does it stop to help them?","Why is Grape Nuts cereal called that, when it contains neither grapes, nor nuts?","Why is it called a 'drive through' if you have to stop?","Why are Softballs hard?","Do the minutes on the movie boxes include the previews, credits, and special features, or just the movie itself?","If the professor on Giligan's Island can make a radio out of coconut, why can't he fix a hole in a boat?","Why do we scrub Down and wash Up?","Why is an electrical outlet called an outlet when you plug things into it? Shouldn't it be called an inlet.","Why do people point to their wrist when asking for the time, but people don't point to their crotch when they ask where the bathroom is?","Can blind people see their dreams?","Why do most cars have speedometers that go up to at least 130 when you legally can't go that fast on any road?","Why do they call it 'getting your dog fixed' if afterwards it doesn't work anymore?","Why do they call it taking a dump? Shouldn't it be leaving a dump?","Where in the nursery rhyme does it say humpty dumpty is an egg?","Why do they sterilize needles for lethal injections?","Why do banks leave the door wide open but the pens chained to the counter?","If electricity comes from electrons, does morality come from morons?","If all the countries in the world are in debt, where did all the money go?","Why does Donald Duck wear a towel when he comes out of the shower, when he doesn't usually wear any pants?","How come you press harder on a remote control when you know the battery is dead?","If an orange is orange, why isn't a lime called a green or a lemon called a yellow?","If a cat always lands on its feet, and buttered bread always lands butter side down, what would happen if you tied buttered bread on top of a cat?","If the #2 pencil is the most popular, why's it still #2?","What color would a smurf turn if you choked it?","Where's the egg in an egg roll?","Why aren't blue berries blue?","Where is the lead in a lead pencil?","Why is Greenland called green when it is covered in ice?","If a person owns a piece of land, do they own it all the way down to the center of the earth?","Why are they called stairs inside but steps outside?","Why is there a light in the fridge but not in the freezer?","Why does mineral water that has trickled through mountains for centuries have a use by date?","Why do toasters always have a setting on them which burns your toast to a horrible crisp no one would eat?",'If you could throw any kind of party, what would it be like and what would it be for?', 'If you could paint a picture of any scenery you’ve seen before, what would you paint?', 'If you could change one thing about the world, regardless of guilt or politics, what would you do?', 'What is the key to finding happiness?', 'What do you think about tis song? http://goo.gl/koaB8R', 'ou’ve been hired to write a teen dictionary.  What would be the first 10 words all teens should know about?', 'When someone has bad breath do you tell them or try and ignore it?', 'I will never forgive ________ for ________ .', 'If the entire world is in debt, where did all the money go?', 'RANDOM GIFS! GOGOGOGO', 'What’s something valuable that you accidentally dropped and broke?', 'What’s something you should throw away, but can’t?', 'f there was a public execution on TV would you watch it?', 'hi. wassap?'];
 		cmds.users = {};
 		cmds.staff = {};
 		cmds.bplus = {};
@@ -121,8 +122,7 @@ Math.rand = function(a,b){
 		var m = (a-Math.floor(a/60)*60),
 		h = ~~((a/3600000)*2)
 		o = {hrs:h,min:m};
-		if(!isNaN(o.hrs) || !isNaN(o.min))return o;
-		else return NaN;
+		return o;
 	}
 
 	function checkUpdate(){
@@ -930,7 +930,7 @@ Math.rand = function(a,b){
 		z = Math.rand(fightArr, null);
 		for(var i in u){
 			if(u[i].username === arg){
-				API.sendChat('['+a.un+'] [!rek] '+'@'+u[i].username+' '+(z.match(new RegExp('does this to you', 'g'))?a.un+' ':'')+z);
+				API.sendChat('['+a.un+'] [!rek] '+'@'+u[i].username+(z.match(new RegExp(' does this to you', 'g'))?a.un+' ':'')+z);
 			}
 		}
 	};
@@ -954,13 +954,13 @@ Math.rand = function(a,b){
 		if(b>10)b=10;
 		if(b<3)b=3;
 		var str = '',end=true;
-    	while(end){
+    	do{
     		if(str.length <= b){
     			str+=letters[Math.floor(Math.random()*letters.length)];
    			}else{
    				end = false;
    			}
-    	}
+    	}while(end);
 		API.sendChat('/em ['+a.un+'] [!acronym] Make a word with these letters: '+str.toUpperCase());
 	};
 	cmds.users.rdj = function(a){
@@ -1851,4 +1851,4 @@ Math.rand = function(a,b){
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click();}}
 	if(typeof API !== 'object')shutdown();
 	else startup();
-})();
+//})();
