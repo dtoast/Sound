@@ -54,7 +54,7 @@ Math.rand = function(a,b){
 		}
 	}
 };
-(function(){
+//(function(){
 	var services = {},
 		version = '1.1.5.9043',
 		u = [],
@@ -90,7 +90,7 @@ Math.rand = function(a,b){
 			safeMode: false,
 			maxDisc: 7200000,
 			bouncerPlus: true,
-			showVer:false,
+			showVer:true,
 			songLim: 10,
 			autoskip: true,
 			mcpc: true,
@@ -160,7 +160,6 @@ Math.rand = function(a,b){
 		}
 	}
 	function startup(){
-		if(lolwut()){
 			if(settings.hidden)return API.sendChat('/em Error (hidden enabled)');
 			if(API.getUser().role<3)return API.sendChat('/em I need to have permission!');
 			loadSettings();
@@ -178,10 +177,9 @@ Math.rand = function(a,b){
 			_services_afk = setInterval(function(){services.antiAfk();},60000);
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
-			API.sendChat('/em Now running'+(settings.showVer?' v'+version+'!':'!'));
+			API.sendChat('/em Now running dev'+(settings.showVer?' v'+version+'!':'!'));
 			var temp = API.getUsers();
 			return true;
-		}
 	}
 	function socket(){
 		// experimental
@@ -1845,10 +1843,9 @@ Math.rand = function(a,b){
 		}
 	};
 	cmds.host.sock = function(a){socket();API.sendChat('/em ['+a.un+'] [!sock] ReadyState: '+sock.readyState);};
-	function lolwut(){if(window.location.pathname==='/thelounge'||window.location.pathname==='/thelounge/')return true;else return false;}
 	function saveBouncers(){localStorage.setItem('BouncerList', JSON.stringify(bouncerList));}
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click();}}
 	if(typeof API !== 'object')shutdown();
 	else startup();
-})();
+//})();
