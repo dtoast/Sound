@@ -54,7 +54,7 @@ Math.rand = function(a,b){
 		}
 	}
 };
-//(function(){
+(function(){
 	var services = {},
 		version = '1.1.5.9043',
 		u = [],
@@ -90,7 +90,7 @@ Math.rand = function(a,b){
 			safeMode: false,
 			maxDisc: 7200000,
 			bouncerPlus: true,
-			showVer:true,
+			showVer:false,
 			songLim: 10,
 			autoskip: true,
 			mcpc: true,
@@ -178,7 +178,7 @@ Math.rand = function(a,b){
 			_services_afk = setInterval(function(){services.antiAfk();},60000);
 			if(!settings.antiAfk)clearInterval(_services_afk);
 			else _services_afk;
-			API.sendChat('/em Now running dev'+(settings.showVer?' v'+version+'!':'!'));
+			API.sendChat('/em Now running'+(settings.showVer?' v'+version+'!':'!'));
 			var temp = API.getUsers();
 			return true;
 		}
@@ -1851,4 +1851,4 @@ Math.rand = function(a,b){
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click();}}
 	if(typeof API !== 'object')shutdown();
 	else startup();
-//})();
+})();
