@@ -1388,14 +1388,15 @@ Math.rand = function(a,b){
 		shutdown();
 	};
 	cmds.bplus.deleteimgs = function(a){
-		var msg = $('#chat-messages').children('[data-cid="'+a.cid+'"]');
-		var b = msg.find('.text'),
-		c = b.text().split(' ');
-		API.sendChat('/em ['+a.un+' used delete images]');
-		for(var i = 0; i < c.length; i++){
-	    		if(/.(png|jpg)/i.test(c[i])&&/^https?:\/\//.test(c[i])&&API.getUser(a.uid).role<3){
-	    			API.moderateDeleteChat(a.cid);
-	    			break;
+	    	var msg = $('#chat-messages').children();
+	    	for(var i = 0; i < msg.length; i++){
+	    		var b = msg[i].find('.text'),
+	    		c = b.text().split(' ');
+	    		API.sendChat('/em ['+a.un+' used delete images]');
+	    		for(var e = 0; e < c.length; e++){
+	    			if(/.(png|jpg)/i.test(c[e] &&& /^https?:\/\//.test(c[i])){
+	    				API.moderateDeleteChat($(msg[i]).attr('data-cid'));
+	    			}
 	    		}
 	    	}
 	};
