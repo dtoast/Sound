@@ -99,7 +99,7 @@ Math.rand = function(a,b){
 		bouncerList = {
 			users: [],
 			enabled: true
-		},sock,connect,
+		},sock,connect,joinTime,
 		data={},rule=true,
 		_services_afk,
 		_services_motd,
@@ -160,6 +160,7 @@ Math.rand = function(a,b){
 		}
 	}
 	function startup(){
+		if(API.getUser().username === 'Soundbot' || (API.getUser().role < 2 && (window.location.pathname === '/thelounge' || window.location.pathname === '/thelounge/'))){
 			if(settings.hidden)return API.sendChat('/em Error (hidden enabled)');
 			if(API.getUser().role<3)return API.sendChat('/em I need to have permission!');
 			loadSettings();
@@ -179,7 +180,12 @@ Math.rand = function(a,b){
 			else _services_afk;
 			API.sendChat('/em Now running dev'+(settings.showVer?' v'+version+'!':'!'));
 			var temp = API.getUsers();
+			joinTime = Date.now();
 			return true;
+		}else{
+			API.sendChat('Soundbot is intended to be forked and edited. Visit here to do so: http://github.com/FourBitus/Sound');
+			return true;
+		}
 	}
 	function socket(){
 		// experimental
@@ -1125,7 +1131,8 @@ Math.rand = function(a,b){
 		}
 	};
 	cmds.staff.status = function(a){
-		API.sendChat('/em ['+a.un+'] [!status] Stats: '+settings.advStat+', party: '+settings.activeP+', user commands: '+settings.userCmds+', lockdown: '+settings.lockdown);
+		var z = ~~((Date.now()-joinTime)/1000)
+		API.sendChat('/em ['+a.un+'] [!status] Uptime: '+z+'seconds, Stats: '+settings.advStat+', party: '+settings.activeP+', user commands: '+settings.userCmds+', lockdown: '+settings.lockdown);
 	};
 	cmds.staff.lockdown = function(a){
 		if(!settings.lockdown){
