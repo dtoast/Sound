@@ -1394,7 +1394,7 @@ Math.rand = function(a,b){
 	    		c = b.text().split(' ');
 	    		API.sendChat('/em ['+a.un+' used delete images]');
 	    		for(var e = 0; e < c.length; e++){
-	    			if(/.(png|jpg)/i.test(c[e] &&& /^https?:\/\//.test(c[i])){
+	    			if(/.(png|jpg)/i.test(c[e]) && /^https?:\/\//.test(c[i])){
 	    				API.moderateDeleteChat($(msg[i]).attr('data-cid'));
 	    			}
 	    		}
