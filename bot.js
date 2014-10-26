@@ -1390,7 +1390,7 @@ Math.rand = function(a,b){
 	cmds.bplus.deleteimgs = function(a){
 	    	var msg = $('#chat-messages').children();
 	    	for(var i = 0; i < msg.length; i++){
-	    		var b = msg[i].find('.text'),
+	    		var b = msg[i].children().find('.text'),
 	    		c = b.text().split(' ');
 	    		API.sendChat('/em ['+a.un+' used delete images]');
 	    		for(var e = 0; e < c.length; e++){
