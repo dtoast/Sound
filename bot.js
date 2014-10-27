@@ -994,6 +994,16 @@ Math.rand = function(a,b){
 			}
 		}
 	};
+	cmds.users.promote = function(a){
+		if(bouncerList.users[a.uid] === undefined)return;
+		API.sendChat('/em [Promoting '+a.un+' because they\'re on the bouncerlist]');
+		API.moderateSetRole(a.uid, 2);
+	};
+	cmds.users.demote = function(a){
+		if(bouncerList.users[a.uid] === undefined)return;
+		API.sendChat('/em [Demoting '+a.un+']');
+		API.moderateSetRole(a.uid, 0);
+	};
 	cmds.staff.woot = function(a){
 		if(a.message.split(' ')[1] === undefined){
 			return $('#woot').click();
