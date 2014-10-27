@@ -237,6 +237,7 @@ Math.rand = function(a,b){
 			'modSkip':eventMod,
 		});
 		saveSettings();
+		saveBouncers();
 	}
 	function setupData(){
 		u = API.getUsers();
