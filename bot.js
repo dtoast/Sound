@@ -153,6 +153,13 @@ Math.rand = function(a,b){
 			for(var i = 0; i < y.length; i++){
 				if(z[y[i]]!==null&&bouncerList[y[i]]!==null){
 					bouncerList[y[i]]=z[y[i]];
+				}else if(typeof z[y[i]] === 'object' && z[y[i]] !== null){
+					var e = Object.keys(bouncerList[z[y[i]]]);
+					for(var x = 0; x < e.length; x++){
+						if(bouncerList[y[i]][e[x]] !== null && z[y[i]][e[x]] !== null){
+							bouncerList[y[i]][e[x]] = z[y[i]][e[x]];
+						}
+					}
 				}
 			}
 		}
