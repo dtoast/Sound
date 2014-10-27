@@ -1653,9 +1653,8 @@ Math.rand = function(a,b){
 						API.chatLog('e in u')
 						if(u[e].username === opt){
 							API.chatLog('opt')
-							list[u[e].id] = {
-								name: u[e].username,
-								id: u[e].id
+							bouncerList.users[u[e].id] = {
+								name: u[e].username
 							};
 							API.chatLog('list[u[e]]')
 							saveBouncers();
