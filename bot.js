@@ -1635,7 +1635,7 @@ Math.rand = function(a,b){
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!bouncer] Enabled: '+(bouncerList.enabled?'on':'off')+', users: '+(bouncerList.users.length>0?bouncerList.users.length:'0')+'.');
 		}
-		var arg = a.message.split(' ')[1].toLowerCase(),
+		var arg = a.message.split(' ')[1].toLowerCase();
 		list = bouncerList.users;
 		if(arg === 'add'){
 			if(a.message.split(' ')[2] === undefined){
@@ -1648,12 +1648,16 @@ Math.rand = function(a,b){
 				}else{
 					u = API.getUsers();
 					for(var e in u){
+						API.chatLog('e in u')
 						if(u[e].username === opt){
+							API.chatLog('opt')
 							list[u[e].id] = {
 								name: u[e].username,
 								id: u[e].id
 							};
+							API.chatLog('list[u[e]]')
 							saveBouncers();
+							API.chatLog('send save');
 							return API.sendChat('/em ['+a.un+' added '+u[e].username+' to the bouncerlist]');
 						}else{
 							return API.sendChat('/em ['+a.un+'] [!bouncer] I can\'t see that person in the room!');
