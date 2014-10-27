@@ -1642,6 +1642,7 @@ Math.rand = function(a,b){
 				return API.sendChat('/em ['+a.un+'] [!bouncer] Please specify a user!');
 			}
 			var opt = a.message.split(' ')[2].substr(1);
+			try{
 			for(var i = 0; i < list.length; i++){
 				if(list[i] === opt){
 					return API.sendChat('/em ['+a.un+'] [!bouncer] That user is already in the bouncerlist!');
@@ -1665,6 +1666,7 @@ Math.rand = function(a,b){
 					}
 				}
 			}
+			}catch(e){API.chatLog(e,true);}
 		}else if(arg === 'remove' || arg === 'del' || arg === 'delete'){
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!bouncer] Please specify a user!');
