@@ -1654,7 +1654,7 @@ Math.rand = function(a,b){
 								id: u[e].id
 							};
 							saveBouncers();
-							return API.sendChat('/em ['+a.un+' added '+u[i].username+' to the bouncerlist]');
+							return API.sendChat('/em ['+a.un+' added '+u[e].username+' to the bouncerlist]');
 						}else{
 							return API.sendChat('/em ['+a.un+'] [!bouncer] I can\'t see that person in the room!');
 						}
