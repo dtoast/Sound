@@ -1640,11 +1640,11 @@ Math.rand = function(a,b){
 	};
 	cmds.manager.bouncer = function(a){
 		API.chatLog('a',true);
+		var list = bouncerList.users;
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!bouncer] Enabled: '+(bouncerList.enabled?'on':'off')+', users: '+(bouncerList.users.length>0?bouncerList.users.length:'0')+'.');
 		}
 		var arg = a.message.split(' ')[1].toLowerCase();
-		list = bouncerList.users;
 		if(arg === 'add'){
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!bouncer] Please specify a user!');
