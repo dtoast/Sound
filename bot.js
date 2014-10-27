@@ -1652,14 +1652,18 @@ Math.rand = function(a,b){
 			var opt = a.message.split(' ')[2].substr(1);
 			u = API.getUsers();
 			for(var i in u){
-				if(list[u[i].id] === undefined){
-					list[u[i].id] = {
-						username: u[i].username
-					};
-					saveBouncers();
-					return API.sendChat('/em ['+a.un+' added '+u[i].username+' to the bouncerlist]');
+				if(u[i].username === opt){
+					if(list[u[i].id] === undefined){
+						list[u[i].id] = {
+							username: u[i].username
+						};
+						saveBouncers();
+						return API.sendChat('/em ['+a.un+' added '+u[i].username+' to the bouncerlist]');
+					}else{
+						return API.sendChat('/em ['+a.un+'] [!bouncer] That user is already on the bouncerlist!');
+					}
 				}else{
-					return API.sendChat('/em ['+a.un+'] [!bouncer] That user is already on the bouncerlist!');
+					return API.sendChat('/em ['+a.un+'] [!bouncer] I can\'t see that user in the room!');
 				}
 			}
 		}else if(arg === 'remove' || arg === 'del' || arg === 'delete'){
