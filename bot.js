@@ -1650,30 +1650,18 @@ Math.rand = function(a,b){
 				return API.sendChat('/em ['+a.un+'] [!bouncer] Please specify a user!');
 			}
 			var opt = a.message.split(' ')[2].substr(1);
-			try{
-			for(var i = 0; i < list.length; i++){
-				if(list[i] === opt){
-					return API.sendChat('/em ['+a.un+'] [!bouncer] That user is already in the bouncerlist!');
+			u = API.getUsers();
+			for(var i in u){
+				if(list[u[i].id] === undefined){
+					list[u[i].id] = {
+						username: u[i].username
+					};
+					saveBouncers();
+					return API.sendChat('/em ['+a.un+' added '+u[i].username+' to the bouncerlist]');
 				}else{
-					u = API.getUsers();
-					for(var e in u){
-						API.chatLog('e in u')
-						if(u[e].username === opt){
-							API.chatLog('opt')
-							bouncerList.users[u[e].id] = {
-								name: u[e].username
-							};
-							API.chatLog('list[u[e]]')
-							saveBouncers();
-							API.chatLog('send save');
-							return API.sendChat('/em ['+a.un+' added '+u[e].username+' to the bouncerlist]');
-						}else{
-							return API.sendChat('/em ['+a.un+'] [!bouncer] I can\'t see that person in the room!');
-						}
-					}
+					return API.sendChat('/em ['+a.un+'] [!bouncer] That user is already on the bouncerlist!');
 				}
 			}
-			}catch(e){API.chatLog(e,true);}
 		}else if(arg === 'remove' || arg === 'del' || arg === 'delete'){
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!bouncer] Please specify a user!');
