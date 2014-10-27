@@ -93,11 +93,9 @@ Math.rand = function(a,b){
 			showVer:true,
 			songLim: 10,
 			autoskip: true,
-			mcpc: true,
-			mcpcUrl: ''
 		},refr,cmds={},
 		bouncerList = {
-			users: [],
+			users: {},
 			enabled: true
 		},sock,connect,joinTime,
 		data={},rule=true,
@@ -242,78 +240,20 @@ Math.rand = function(a,b){
 	}
 	function setupData(){
 		u = API.getUsers();
-		$.each(u, function(z){
-			if(z.id === API.getUser().id)return;
-			if(z.id === undefined)return;
-			else{
-				data[z.id] = {
-					name: z.username,
-					id: z.id,
-					afkTime: Date.now(),
-					afkWarn: false,
-					afkFinal: false,
-					cd: false,
-					isAfk: false,
-					afkMsg: 'I\'m away right now. Talk to me later!'
-				};
-			}
-		});
-	}
-	function getVideos(){
-		if(settings.mcpc && (new Date().getDay() === 4)){
-			var a = 'http://gdata.youtube.com/feeds/api/users/monstercatmedia/uploads?max-results=1';
-			String.prototype.trunc = String.prototype.trunc || function(z){
-				return this.length>z?this.substr(0,z-1)+'...':this;
+//
+		for(var i in u){
+			z = u[i];
+			data[z.id] = {
+				name: z.username,
+				id: z.id,
+				afkTime: Date.now(),
+				afkWarn: false,
+				afkFinal: false,
+				cd: false,
+				isAfk: false,
+				afkMsg: 'I\'m away right now. Talk to me later!'
 			};
-			$.ajax({
-				async: false,
-				type: 'GET',
-				url: a,
-				success: function(data){
-					data = xmlToJson(data).feed;
-					var video = {
-						url: data.entry.link[0]['@attributes'].href,
-						id: data.entry.link[0]['@attributes'].href.match(/.*(?:youtu.be\/|v\/|u\/w\/|embed\/watch\?v=)([^#\&\?]*).*/)[1],
-						title: data.entry.title['#text']
-					};
-					if(video.title.match(new RegExp('Podcast', 'g'))){
-						settings.mcpcUrl = video.url;
-						return true;
-					}
-				}
-			});
 		}
-	}
-	function xmlToJson(xml){
-		var obj = {};
-		if(xml.nodeType === 1){
-			if(xml.attributes.length > 0){
-				obj['@attributes'] = {};
-				for(var i = 0; i < xml.attributes.length; i++){
-					var attribute = xml.attributes.item(i);
-					obj['@attributes'][attribute.nodeName] = attribute.nodeValue;
-				}
-			}
-		}else if(xml.nodeType === 3){
-			obj = xml.nodeValue;
-		}
-		if(xml.hasChildNodes()){
-			for(var i = 0; i < xml.childNodes.length; i++){
-				var item = xml.childNodes.item(i),
-				nodeName = item.nodeName;
-				if(typeof(obj[nodeName]) === 'undefined'){
-					obj[nodeName] = xmlToJson(item);
-				}else{
-					if(typeof(obj[nodeName].push) === 'undefined'){
-						var old = obj[nodeName];
-						obj[nodeName] = [];
-						obj[nodeName].push(old);
-					}
-					obj[nodeName].push(xmlToJson(item));
-				}
-			}
-		}
-		return obj;
 	}
 	var dc = {
 		users: {},
@@ -399,20 +339,20 @@ Math.rand = function(a,b){
 			};
 		}
 		if(a.message.substr(0,1).indexOf('!') !=-1){
-			if(bouncerList.enabled){
-				for(var i in bouncerList.users){
-					if(a.message.substr(1).toLowerCase() === 'promote' && API.getUser(a.uid).role < 1 && a.un === bouncerList.users[i]){
-						API.sendChat('/em [Promoting '+a.un+']');
-						API.moderateSetRole(a.uid, API.ROLE.BOUNCER);
-						return true;
-					}
-					if(a.message.substr(1).toLowerCase() === 'demote' && API.getUser(a.uid).role === 2 && a.un === bouncerList.users[i]){
-						API.sendChat('/em [Demoting '+a.un+' so they can afk]');
-						API.moderateSetRole(a.uid, API.ROLE.NONE);
-						return true;
-					}
-				}
-			}
+			// if(bouncerList.enabled){
+			// 	for(var i in bouncerList.users){
+			// 		if(a.message.substr(1).toLowerCase() === 'promote' && API.getUser(a.uid).role < 1 && a.un === bouncerList.users[i]){
+			// 			API.sendChat('/em [Promoting '+a.un+']');
+			// 			API.moderateSetRole(a.uid, API.ROLE.BOUNCER);
+			// 			return true;
+			// 		}
+			// 		if(a.message.substr(1).toLowerCase() === 'demote' && API.getUser(a.uid).role === 2 && a.un === bouncerList.users[i]){
+			// 			API.sendChat('/em [Demoting '+a.un+' so they can afk]');
+			// 			API.moderateSetRole(a.uid, API.ROLE.NONE);
+			// 			return true;
+			// 		}
+			// 	}
+			// }
 			var cmd = a.message.substr(1).split(' ')[0].toLowerCase();
 			var chatData = {message:a.message,un:a.un,uid:a.uid,type:a.type,cmd:cmd,role:a.role},
 			msg='/em ['+a.un+'] [!'+cmd+'] Unknown command.';
@@ -1680,43 +1620,62 @@ Math.rand = function(a,b){
 		API.sendChat('/em ['+a.un+' '+str+' "the" rule]');
 		return true;
 	};
-	cmds.manager.addbouncer = function(a){
+	cmds.manager.bouncer = function(a){
 		if(a.message.split(' ')[1] === undefined){
-			return API.sendChat('/em ['+a.un+'] [!addbouncer] Please specify a user!');
+			return API.sendChat('/em ['+a.un+'] [!bouncer] Enabled: '+(bouncerList.enabled?'on':'off')+', users: '+(bouncerList.users.length>0?bouncerList.users.length:'0')+'.');
 		}
-		var arg = a.message.split(' ')[1].substr(1);
-		for(var i in bouncerList.users){
-			if(bouncerList.users[i] === arg){
-				return API.sendChat('/em ['+a.un+'] [!addbouncer] User is already on the list!');
-			}else{
-				bouncerList.users.push(arg);
-				API.sendChat('/em ['+a.un+' added '+arg+' to the bouncer list]');
+		var arg = a.message.split(' ')[1].toLowerCase(),
+		list = bouncerList.users;
+		if(arg === 'add'){
+			if(a.message.split(' ')[2] === undefined){
+				return API.sendChat('/em ['+a.un+'] [!bouncer] Please specify a user!');
 			}
-			saveBouncers();
-			return true;
-		}
-	};
-	cmds.manager.removebouncer = function(a){
-		if(a.message.split(' ')[1] === undefined){
-			return API.sendChat('/em ['+a.un+'] [!addbouncer] Please specify a user!');
-		}
-		var arg = a.message.split(' ')[1].substr(1);
-		for(var i in bouncerList.users){
-			if(bouncerList.users[i] !== arg){
-				return API.sendChat('/em ['+a.un+'] [!addbouncer] User is not on the list!');
-			}else{
-				bouncerList.users.pop(arg);
-				API.sendChat('/em ['+a.un+' removed '+arg+' to the bouncer list]');
+			var opt = a.message.split(' ')[2].substr(1);
+			for(var i = 0; i < list.length; i++){
+				if(list[i] === opt){
+					return API.sendChat('/em ['+a.un+'] [!bouncer] That user is already in the bouncerlist!');
+				}else{
+					u = API.getUsers();
+					for(var e in u){
+						if(u[e].username === opt){
+							list[u[e].id] = {
+								name: u[e].username,
+								id: u[e].id
+							};
+							saveBouncers();
+							return API.sendChat('/em ['+a.un+' added '+u[i].username+' to the bouncerlist]');
+						}else{
+							return API.sendChat('/em ['+a.un+'] [!bouncer] I can\'t see that person in the room!');
+						}
+					}
+				}
 			}
-			saveBouncers();
-			return true;
+		}else if(arg === 'remove' || arg === 'del' || arg === 'delete'){
+			if(a.message.split(' ')[2] === undefined){
+				return API.sendChat('/em ['+a.un+'] [!bouncer] Please specify a user!');
+			}
+			var arg = a.message.split(' ')[2].substr(1),
+			l = bouncerList.users;
+			u = API.getUsers();
+			for(var i in u){
+				if(u[i].username === arg){
+					if(l[u[i].id] === undefined){
+						return API.sendChat('/em ['+a.un+'] [!bouncer] That use is not in the bouncerlist!');
+					}else{
+						delete l[u[i].id];
+						saveBouncers();
+						return API.sendChat('/em ['+a.un+' removed '+u[i].username+' from the bouncerlist]');
+					}
+				}else{
+					return API.sendChat('/em ['+a.un+'] [!bouncer] I can\'t see that user in the waitlist!');
+				}
+			}
+		}else if(arg === 'list'){
+			return API.sendChat('/em ['+a.un+'] [!bouncer] '+(Object.keys(bouncerList.users).length>0?Object.keys(bouncerList.users).join(','):'none!'));
 		}
 	};
 	cmds.manager.data = function(a){
 		API.sendChat('/em ['+a.un+'] [!data] '+Object.keys(data).join(', '));
-	};
-	cmds.manager.bouncer = function(a){
-		API.sendChat('/em ['+a.un+'] [!bouncer] '+bouncerList.users.join(', '));
 	};
 	cmds.manager.filter = function(a){
 		if(a.message.split(' ')[1] === undefined){
