@@ -36,22 +36,12 @@ Math.rand = function(a,b){
 								return x;
 							}else if(isNaN(x) || isNaN(y) || isNaN(z)){
 								throw new Error((isNaN(x)?x:isNaN(y)?y:isNaN(z)?z:'null')+' is NaN');
-							}else{
-								throw new Error('An error occurred');
-							}
+							}else{throw new Error('An error occurred');}
 						}
-					}else{
-						throw new Error('The second input is NaN');
-					}
-				}else{
-					throw new Error(b+' is not a number');
-				}
-			}else{
-				throw new Error('The first input is NaN');
-			}
-		}else{
-			throw new Error(a+' is not a number');
-		}
+					}else{throw new Error('The second input is NaN');}
+				}else{throw new Error(b+' is not a number');}
+			}else{throw new Error('The first input is NaN');}
+		}else{throw new Error(a+' is not a number');}
 	}
 };
 //(function(){
