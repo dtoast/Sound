@@ -452,6 +452,10 @@ Math.rand = function(a,b){
 		}
 	}
 	function eventAdvance(a){
+		if(a.media.author === 'Shawn Wasabi'){
+			API.sendChat('@'+API.getDJ().username+' no.');
+			return API.moderateForceSkip();
+		}
 		if(settings.autoskip){
 			clearTimeout(b);
 			var b,c = a.media.duration;
