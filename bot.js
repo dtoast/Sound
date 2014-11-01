@@ -155,7 +155,7 @@ Math.rand = function(a,b){
 		}
 	}
 	function startup(){
-		if(API.getUser().username === 'Soundbot' || (API.getUser().role < 2 && (window.location.pathname === '/thelounge' || window.location.pathname === '/thelounge/'))){
+		if(API.getUser().username === 'Soundbot' || (API.getUser().role < 2 && (window.location.pathname === '/linus-tech-tips' || window.location.pathname === '/linus-tech-tips/'))){
 			if(settings.hidden)return API.sendChat('/em Error (hidden enabled)');
 			if(API.getUser().role<3)return API.sendChat('/em I need to have permission!');
 			loadSettings();
