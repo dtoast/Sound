@@ -10,7 +10,6 @@
 	Check out the wiki for commands!
 */
 
-SockJS.prototype.cmd = function(z){this.send(JSON.parse(z));};
 Math.rand = function(a,b){
 	if(Object.prototype.toString.call(a) === '[object Array]'){
 		if(!b || b === null || b === undefined){
@@ -161,7 +160,6 @@ Math.rand = function(a,b){
 			loadSettings();
 			loadEvents();
 			setupData();
-			socket();
 			$('#playback').remove();
 			$('#users-button').click();
 			$('.button.bans').click();
@@ -181,31 +179,6 @@ Math.rand = function(a,b){
 			API.sendChat('Soundbot is intended to be forked and edited. Visit here to do so: http://github.com/FourBitus/Sound');
 			return true;
 		}
-	}
-	function socket(){
-		// experimental
-		sock = new SockJS('http://localhost:9999/echo');
-		sock.onopen = function(){
-			connect = 2;
-			console.log('[Soundbot]', 'Connected to socket!');
-			sock.cmd({t:'sb',m:settings,o:API.getUser()});
-			return true;
-		};
-		sock.onmessage = function(z){
-			var data = JSON.parse(z.data);
-			switch(data.io){
-				case 'err':
-					API.chatLog(data.e, true);
-					break;
-				case 'load':
-					return;
-				case 'say':
-					return API.sendChat(data.s);
-			}
-		};
-		sock.onclose = function(){
-			console.log('[Soundbot]', 'Disconnected from socket!');
-		};
 	}
 	function loadEvents(){
 		API.on({
@@ -1819,7 +1792,6 @@ Math.rand = function(a,b){
 			settings.activeP = false;
 		}
 	};
-	cmds.host.sock = function(a){socket();API.sendChat('/em ['+a.un+'] [!sock] ReadyState: '+sock.readyState);};
 	function saveBouncers(){localStorage.setItem('BouncerList', JSON.stringify(bouncerList));}
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click();}}
