@@ -76,4 +76,4 @@ SOFTWARE.
 
 #Disclaimer
 --------
-Many of these features are inspiried from tastybot.
+Many of these features are inspiried from the great tastybot.
