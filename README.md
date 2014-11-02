@@ -3,6 +3,8 @@ Soundbot - Plug.dj
 
 ###Rationale
 
+__*Many features are inspired by the great tastybot. All hail. :octocat:*__
+
 Soundbot is written in Javascript to take advantage of [plug.dj's](http://plug.dj) API.
 There are bugs and if you would like to help squash them, please make an issue if you encounter, and try to include the following:
 
