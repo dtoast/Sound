@@ -1712,6 +1712,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			settings.activeP = false;
 		}
 	};
+	function saveData(){localStorage.setItem('SoundbotData', JSON.stringify(data));}
 	function saveBouncers(){localStorage.setItem('BouncerList', JSON.stringify(bouncerList));}
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click();}}
