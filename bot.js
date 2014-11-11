@@ -66,14 +66,17 @@ function check(){
 }
 check();
 
+// create a global object for the API
+
 window.plugAPI = API;
 
-define('6hq6xu/t3tc5c/n3q2rh', function(){
-    var API = window.plugAPI;
-    
-    // begin setup
-    
-    var services = {},
+define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
+	// load the API
+	var API = window.plugAPI;
+	    
+	// begin setup
+	    
+	var services = {},
 		version = '1.1.5.9043',
 		u = [],
 		settings = {
