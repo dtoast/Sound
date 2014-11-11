@@ -43,8 +43,37 @@ Math.rand = function(a,b){
 		}else{throw new Error(a+' is not a number');}
 	}
 };
-//(function(){
-	var services = {},
+/*!
+    Copyright (c) 2014 FourBit.
+    All rights reserved.
+    
+    Licensed under the MIT license.
+*/
+
+Math.rand = function(num){
+    return Math.floor(Math.random()*num);
+};
+Math.sel = function(num){
+    return Math.floor(Math.random()*num.length);
+};
+Math.mstos = function(num){
+    return Math.floor(num/1000);
+};
+
+function check(){
+    if(typeof API !== 'object')return;
+    if(requirejs.defined('6hq6xu/t3tc5c/n3q2rh'))return;
+}
+check();
+
+window.plugAPI = API;
+
+define('6hq6xu/t3tc5c/n3q2rh', function(){
+    var API = window.plugAPI;
+    
+    // begin setup
+    
+    var services = {},
 		version = '1.1.5.9043',
 		u = [],
 		settings = {
@@ -103,130 +132,112 @@ Math.rand = function(a,b){
 		cmds.manager = {};
 		cmds.host = {};
 		refr = 4;
-
-	function dcTime(a){
-		a = Math.floor(a/60000);
-		var m = (a-Math.floor(a/60)*60),
-		h = ~~((a/3600000)*2)
-		o = {hrs:h,min:m};
-		return o;
-	}
-
-	function checkUpdate(){
-		$.ajax({
-			cache:false,
-			url:'http://astroshock.bl.ee/_/static/sb/update.json',
-			dataType:'json',
-			success:function(a){
-				if(version!==a.version){
-					API.sendChat('/em An update is available for Soundbot. Type !update to get it!');
-					settings.pendingUp=true;
-				}
-			},
-			error:function(){throw new Error('Failed to GET the update json!');}
-		});
-	}
-	function loadSettings(){
-		var a = JSON.parse(localStorage.getItem('SoundbotSettings'));
-		var z = JSON.parse(localStorage.getItem('BouncerList'));
-		if(a){
-			var b = Object.keys(settings);
-			for(var i = 0; i < b.length; i++){
-				if(a[b[i]]!==null&&settings[b[i]]!==null){
-					settings[b[i]]=a[b[i]];
-				}
-			}
-		}
-		if(z){
-			var y = Object.keys(bouncerList);
-			for(var i = 0; i < y.length; i++){
-				if(z[y[i]]!==null&&bouncerList[y[i]]!==null){
-					bouncerList[y[i]]=z[y[i]];
-				}else if(typeof z[y[i]] === 'object' && z[y[i]] !== null){
-					var e = Object.keys(bouncerList[z[y[i]]]);
-					for(var x = 0; x < e.length; x++){
-						if(bouncerList[y[i]][e[x]] !== null && z[y[i]][e[x]] !== null){
-							bouncerList[y[i]][e[x]] = z[y[i]][e[x]];
-						}
-					}
-				}
-			}
-		}
-	}
-	function startup(){
-		if(API.getUser().username === 'Soundbot' || (API.getUser().role < 2 && (window.location.pathname === '/linus-tech-tips' || window.location.pathname === '/linus-tech-tips/'))){
-			if(settings.hidden)return API.sendChat('/em Error (hidden enabled)');
-			if(API.getUser().role<3)return API.sendChat('/em I need to have permission!');
-			loadSettings();
-			loadEvents();
-			setupData();
-			$('#playback').remove();
-			$('#users-button').click();
-			$('.button.bans').click();
-			setTimeout(function(){
-				$('.button.room').click();
-				$('#chat-button').click();
-			}, 100);
-			if(settings.autowoot)$('#woot').click();
-			_services_afk = setInterval(function(){services.antiAfk();},60000);
-			if(!settings.antiAfk)clearInterval(_services_afk);
-			else _services_afk;
-			API.sendChat('/em Now running dev'+(settings.showVer?' v'+version+'!':'!'));
-			var temp = API.getUsers();
-			joinTime = Date.now();
-			return true;
-		}else{
-			API.sendChat('Soundbot is intended to be forked and edited. Visit here to do so: http://github.com/FourBitus/Sound');
-			return true;
-		}
-	}
-	function loadEvents(){
-		API.on({
-			'chat':eventChat,
-			'advance':eventAdvance,
-			'waitListUpdate':eventWlUp,
-			'userJoin':eventJoin,
-			'userLeave':eventLeave,
-			'chatCommand':eventCmd,
-			'voteUpdate':eventVote,
-			'grabUpdate':eventGrab,
-			'modSkip':eventMod,
-		});
-	}
-	function shutdown(){
-		if(settings.hidden)return API.chatLog('Can\'t shutdown if hidden!', true);
-		API.off({
-			'chat':eventChat,
-			'advance':eventAdvance,
-			'waitListUpdate':eventWlUp,
-			'userJoin':eventJoin,
-			'userLeave':eventLeave,
-			'chatCommand':eventCmd,
-			'voteUpdate':eventVote,
-			'grabUpdate':eventGrab,
-			'modSkip':eventMod,
-		});
-		saveSettings();
-		saveBouncers();
-	}
-	function setupData(){
-		u = API.getUsers();
-//
-		for(var i in u){
-			z = u[i];
-			data[z.id] = {
-				name: z.username,
-				id: z.id,
-				afkTime: Date.now(),
-				afkWarn: false,
-				afkFinal: false,
-				cd: false,
-				isAfk: false,
-				afkMsg: 'I\'m away right now. Talk to me later!'
-			};
-		}
-	}
-	var dc = {
+    
+    // core functions
+    
+    var sbCoreFunctions = {
+        init: function(){
+            if(API.getUser().username === 'Soundbot' || (API.getUser().role < 2 && (window.location.pathname === '/linus-tech-tips' || window.location.pathname === '/linus-tech-tips/'))){
+                if(settings.hidden)return API.sendChat('/em Error (hidden enabled)');
+                if(API.getUser().role<3)return API.sendChat('/em I need to have permission!');
+                sbCoreFunctions.loadSettings();
+                sbCoreFunctions.loadEvents();
+                sbCoreFunctions.setupData();
+                $('#playback').remove();
+                $('#users-button').click();
+                $('.button.bans').click();
+                setTimeout(function(){
+                    $('.button.room').click();
+                    $('#chat-button').click();
+                }, 100);
+                if(settings.autowoot)$('#woot').click();
+                _services_afk = setInterval(function(){services.antiAfk();},60000);
+                if(!settings.antiAfk)clearInterval(_services_afk);
+                else _services_afk;
+                API.sendChat('/em Now running dev'+(settings.showVer?' v'+version+'!':'!'));
+                var temp = API.getUsers();
+                joinTime = Date.now();
+                return true;
+            }else{
+                API.sendChat('Soundbot is intended to be forked and edited. Visit here to do so: http://github.com/FourBitus/Sound');
+                return true;
+            }
+        },
+        loadSettings: function(){
+            var a = JSON.parse(localStorage.getItem('SoundbotSettings'));
+            var z = JSON.parse(localStorage.getItem('BouncerList'));
+            if(a){
+                var b = Object.keys(settings);
+                for(var i = 0; i < b.length; i++){
+                    if(a[b[i]]!==null&&settings[b[i]]!==null){
+                        settings[b[i]]=a[b[i]];
+                    }
+                }
+            }
+            if(z){
+                var y = Object.keys(bouncerList);
+                for(var i = 0; i < y.length; i++){
+                    if(z[y[i]]!==null&&bouncerList[y[i]]!==null){
+                        bouncerList[y[i]]=z[y[i]];
+                    }else if(typeof z[y[i]] === 'object' && z[y[i]] !== null){
+                        var e = Object.keys(bouncerList[z[y[i]]]);
+                        for(var x = 0; x < e.length; x++){
+                            if(bouncerList[y[i]][e[x]] !== null && z[y[i]][e[x]] !== null){
+                                bouncerList[y[i]][e[x]] = z[y[i]][e[x]];
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        loadEvents: function(){
+            API.on({
+                'chat':eventChat,
+                'advance':eventAdvance,
+                'waitListUpdate':eventWlUp,
+                'userJoin':eventJoin,
+                'userLeave':eventLeave,
+                'chatCommand':eventCmd,
+                'voteUpdate':eventVote,
+                'grabUpdate':eventGrab,
+                'modSkip':eventMod,
+            });
+        },
+        setupData: function(){
+            u = API.getUsers();
+            for(var i in u){
+                z = u[i];
+                data[z.id] = {
+                    name: z.username,
+                    id: z.id,
+                    afkTime: Date.now(),
+                    afkWarn: false,
+                    afkFinal: false,
+                    cd: false,
+                    isAfk: false,
+                    afkMsg: 'I\'m away right now. Talk to me later!'
+                };
+            }
+        },
+        shutdown: function(){
+            if(settings.hidden)return API.chatLog('Can\'t shutdown if I\'m hidden!', true);
+            API.off({
+                'chat':eventChat,
+                'advance':eventAdvance,
+                'waitListUpdate':eventWlUp,
+                'userJoin':eventJoin,
+                'userLeave':eventLeave,
+                'chatCommand':eventCmd,
+                'voteUpdate':eventVote,
+                'grabUpdate':eventGrab,
+                'modSkip':eventMod,
+            });
+            saveSettings();
+            saveBouncers();
+            saveData();
+        }
+    },
+    dc = {
 		users: {},
 		getDc: function(a){
 			for(var i in dc.users){
@@ -249,7 +260,7 @@ Math.rand = function(a,b){
 			delete dc.users[a];
 		}
 	};
-	services.antiAfk = function(){
+    services.antiAfk = function(){
 		var a = API.getWaitList(),
 		b = Date.now();
 		for(var i in a){
@@ -280,20 +291,17 @@ Math.rand = function(a,b){
 			}
 		}
 	};
-	services.motd = function(a){
+    services.motd = function(a){
 		if(settings.motd){
 			API.sendChat('/em '+motdMsg[Math.floor(Math.random()*motdMsg.length)]);
 		}
 	};
-	function goWhenSpot(){
+    function goWhenSpot(){
 		API.once(API.WAIT_LIST_UPDATE, function(){
 			return true;
 		});
 	}
-
-	//events
-
-	function eventChat(a){
+    function eventChat(a){
 		if(a.type !== 'message')return;
 		if(a.uid === undefined)return;
 		if(a.un === undefined)return;
@@ -310,20 +318,6 @@ Math.rand = function(a,b){
 			};
 		}
 		if(a.message.substr(0,1).indexOf('!') !=-1){
-			// if(bouncerList.enabled){
-			// 	for(var i in bouncerList.users){
-			// 		if(a.message.substr(1).toLowerCase() === 'promote' && API.getUser(a.uid).role < 1 && a.un === bouncerList.users[i]){
-			// 			API.sendChat('/em [Promoting '+a.un+']');
-			// 			API.moderateSetRole(a.uid, API.ROLE.BOUNCER);
-			// 			return true;
-			// 		}
-			// 		if(a.message.substr(1).toLowerCase() === 'demote' && API.getUser(a.uid).role === 2 && a.un === bouncerList.users[i]){
-			// 			API.sendChat('/em [Demoting '+a.un+' so they can afk]');
-			// 			API.moderateSetRole(a.uid, API.ROLE.NONE);
-			// 			return true;
-			// 		}
-			// 	}
-			// }
 			var cmd = a.message.substr(1).split(' ')[0].toLowerCase();
 			var chatData = {message:a.message,un:a.un,uid:a.uid,type:a.type,cmd:cmd,role:a.role},
 			msg='/em ['+a.un+'] [!'+cmd+'] Unknown command.';
@@ -675,7 +669,7 @@ Math.rand = function(a,b){
 								break;
 							case 'use':
 								if(settings.pendingUp){
-									shutdown();
+									sbCoreFunctions.shutdown();
 									API.sendChat('/em [Local] [/use] Updating...');
 									setTimeout(function(){
 										$.getScript('https://raw.githubusercontent.com/FourBitus/Sound/master/bot.js');
@@ -728,11 +722,11 @@ Math.rand = function(a,b){
 				break;
 			case 'shutdown':
 				API.sendChat('/em [Local] [/shutdown] Shutting down...');
-				shutdown();
+				sbCoreFunctions.shutdown();
 				break;
 			case 'reload':
 				API.sendChat('/em [Local] [/reload] Reloading...');
-				shutdown();
+				sbCoreFunctions.shutdown();
 				window.location.reload();
 				setTimeout(function(){
 					$.getScript('https://raw.githubusercontent.com/FourBitus/Sound/master/bot.js');
@@ -742,27 +736,8 @@ Math.rand = function(a,b){
 			case 'help':
 				API.chatLog('Local commands: set [argument] ~ shutdown ~ reload ~ commands | help ~ lol ~ hide', true);
 				break;
-			case 'lol':
-				cmds.manager.lolomgwtfbbq({un:'Local'});
-				break;
-			/*case 'hide':
-				if(!settings.hidden){
-					settings.hidden = true;
-					API.sendChat('/em [Local] [/hide] Now hidden!');
-					shutdown();
-					API.on(API.CHAT_COMMAND, eventCmd);
-				}else{
-					settings.hidden = false;
-					API.sendChat('/em [Local] [/hide] no longer hidden!');
-					API.off(API.CHAT_COMMAND, eventCmd);
-					startup();
-				}
-				break;*/
 			case 'save':
 				saveSettings();
-				break;
-			case 'podcast':
-				cmds.manager.podcast({un:'Local'});
 				break;
 		}
 		str = '';
@@ -1085,6 +1060,7 @@ Math.rand = function(a,b){
 		}
 	};
 	cmds.staff.add = function(a){
+        // doesn't work with spaces
 		var opt;
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!add] Please specify a user and position!');
@@ -1125,6 +1101,7 @@ Math.rand = function(a,b){
 		}
 	};
 	cmds.staff.ban = function(a){
+        // doesn't work with spaces
 		var dur;
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!ban] Please specify a user!');
@@ -1169,6 +1146,7 @@ Math.rand = function(a,b){
 		}
 	};
 	cmds.staff.kick = function(a){
+        // doesn't work with spaces
 		var dur;
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!kick] Please specify a user.');
@@ -1205,6 +1183,7 @@ Math.rand = function(a,b){
 		}
 	};
 	cmds.staff.remove = function(a){
+        // doesn't work with names with spaces
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!remove] Please specify a user!');
 		}
@@ -1220,6 +1199,7 @@ Math.rand = function(a,b){
 		API.sendChat('/em ['+a.un+'] [!ping] Pong!');
 	};
 	cmds.staff.move = function(a){
+        // move user (doesn't work with names that have spaces)
 		if(a.message.split(' ')[1] === undefined || a.message.split(' ')[2] === undefined || a.message.split(' ')[1] === undefined && a.message.split(' ')[2] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!move] Please specify a user / position');
 		}
@@ -1242,6 +1222,7 @@ Math.rand = function(a,b){
 		}
 	};
 	cmds.bplus.levelup = function(a){
+        // random command for stuff
 		var cdd;
 		if(cdd)return;
 		API.sendChat('/em ['+a.un+' leveled up]');
@@ -1253,6 +1234,7 @@ Math.rand = function(a,b){
 		},c);
 	};
 	cmds.bplus.hist = function(a){
+        // history check settings
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+ '] [!hist] Enabled: '+settings.histSkp);
 		}
@@ -1310,80 +1292,15 @@ Math.rand = function(a,b){
 	};
 	cmds.manager.reload = function(a){
 		API.sendChat('/em ['+a.un+'] [!reload] Reloading...');
-		shutdown();
+		sbCoreFunctions.shutdown();
 		setTimeout(function(){
 			$.getScript('https://raw.githubusercontent.com/FourBitus/Sound/master/bot.js');
 		}, 1000);
 	};
 	cmds.manager.kill = function(a){
 		API.sendChat('/em ['+a.un+'] [!kill] Shutdown.');
-		shutdown();
+		sbCoreFunctions.shutdown();
 	};
-	cmds.bplus.deleteimgs = function(a){
-	    	var msg = $('#chat-messages').children();
-	    	for(var i = 0; i < msg.length; i++){
-	    		var b = msg[i].children().find('.text'),
-	    		c = b.text().split(' ');
-	    		API.sendChat('/em ['+a.un+' used delete images]');
-	    		for(var e = 0; e < c.length; e++){
-	    			if(/.(png|jpg)/i.test(c[e]) && /^https?:\/\//.test(c[i])){
-	    				API.moderateDeleteChat($(msg[i]).attr('data-cid'));
-	    			}
-	    		}
-	    	}
-	};
-	cmds.bplus.deletegifs = function(a){
-		var msg = $('#chat-messages').children('[data-cid="'+a.cid+'"]');
-		var b = msg.find('.text'),
-		c = b.text().split(' ');
-		API.sendChat('/em ['+a.un+' used delete gifs]');
-		for(var i = 0; i < c.length; i++){
-	    		if(/.(gif)/i.test(c[i])&&/^https?:\/\//.test(c[i])&&API.getUser(a.uid).role<3){
-	    			API.moderateDeleteChat(a.cid);
-	    			break;
-	    		}
-	    	}
-	};
-	cmds.bplus.deleteall = function(a){
-		var msg = $('#chat-messages').children('[data-cid="'+a.cid+'"]');
-		var b = msg.find('.text'),
-		c = b.text().split(' ');
-		API.sendChat('/em ['+a.un+' deleted all images]');
-		for(var i = 0; i < c.length; i++){
-	    		if(/.(png|jpg|gif)/i.test(c[i])&&/^https?:\/\//.test(c[i])&&API.getUser(a.uid).role<3){
-	    			API.moderateDeleteChat(a.cid);
-	    			break;
-	    		}
-	    	}
-	};
-	cmds.manager.podcast = function(a){
-		if(getVideos()){
-			API.sendChat('/em I will now play the monstercat podcast. It can last from 30min. to 1hr. long. It will not be skipped.');
-			API.moderateLockWaitList(true, false);
-			if($('.cycle-toggle').hasClass('enabled')){
-				$('.cycle-toggle').click();
-			}
-			API.once('waitListUpdate', function(){
-				API.moderateAddDJ(API.getUser().id);
-				if($('#dj-button').hasClass('.is-leave')){
-					API.moderateMoveDJ(API.getUser().id, 2);
-					setTimeout(function(){
-						$('#playlist-button').click();
-						setTimeout(function(){
-							$('#search-input-field').val(settings.mcpcUrl);
-							setTimeout(function(){
-								var e = jQuery.Event('keypress');
-								e.which = 13;
-								e.keyCode = 13;
-								$('#search-input-field').trigger(e);
-								API.chatLog('Please add the podcast to my playlist!', true);
-							}, 500);
-						}, 500);
-					}, 500);
-				}
-			});
-		}
-	}
 	cmds.manager.motd = function(a){
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!motd] Enabled: '+settings.motd+', interval: '+Math.floor(settings.mI/1000));
@@ -1590,7 +1507,7 @@ Math.rand = function(a,b){
 		if(settings.pendingUp){
 			API.sendChat('/em ['+a.un+'] [!update] Updating...');
 			setTimeout(function(){
-				shutdown();
+				sbCoreFunctions.shutdown();
 				setTimeout(function(){
 					$.getScript('https://raw.github.com/FourBitus/Sound/master/bot.js');
 				}, 1000);
@@ -1770,7 +1687,7 @@ Math.rand = function(a,b){
 			return API.sendChat('/em ['+a.un+'] [!isanyone] Please specify a number!');
 		}
 		if(typeof parseInt(a.message.split(' ')[1]) !== 'number')return API.sendChat('/em ['+a.un+'] [!isanyone] Input is not a number!');
-		for(var i in u){
+		for(var i = 0; i < u.length; i++){
 			if(u[i].level === parseInt(a.message.split(' ')[1])){
 				b.push(u[i].username);
 				break;
@@ -1795,6 +1712,10 @@ Math.rand = function(a,b){
 	function saveBouncers(){localStorage.setItem('BouncerList', JSON.stringify(bouncerList));}
 	function saveSettings(){localStorage.setItem('SoundbotSettings', JSON.stringify(settings));}
 	function toggleCycle(){if($('.cycle-toggle').hasClass('disabled')){$(this).click();}else{$('.cycle-toggle').click();}}
-	if(typeof API !== 'object')shutdown();
-	else startup();
-//})();
+    // return out core obj
+	return sbCoreFunctions;
+});
+require(['6hq6xu/t3tc5c/n3q2rh'], function(core){
+    // all systems go!
+    core.init();
+});
