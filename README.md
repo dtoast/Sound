@@ -30,7 +30,7 @@ __Refer [here](https://github.com/FourBitus/Sound/wiki/Code-Submissions) for the
 
 ###Install Locally
 
-To edit more easily, install this repository locally.
+To edit with ease, install this repository locally.
 
 ```
 git clone https://github.com/FourBitus/Sound.git Soundbot
@@ -75,7 +75,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-#Disclaimer
---------
-Many of these features are inspiried from the great tastybot.
