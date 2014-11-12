@@ -123,29 +123,33 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
         },
         loadSettings: function(){
             var a = JSON.parse(localStorage.getItem('SoundbotSettings'));
-            var z = JSON.parse(localStorage.getItem('BouncerList'));
+            var d = JSON.parse(localStorage.getItem('BouncerList')),
+            i = JSON.parse(localStorage.getItem('SoundbotData'));
             if(a){
                 var b = Object.keys(settings);
-                for(var i = 0; i < b.length; i++){
-                    if(a[b[i]]!==null&&settings[b[i]]!==null){
-                        settings[b[i]]=a[b[i]];
+                for(var c = 0; c < b.length; c++){
+                    if(a[b[c]]!==null&&settings[b[c]]!==null){
+                        settings[b[c]]=a[b[c]];
                     }
                 }
-            }
-            if(z){
-                var y = Object.keys(bouncerList);
-                for(var i = 0; i < y.length; i++){
-                    if(z[y[i]]!==null&&bouncerList[y[i]]!==null){
-                        bouncerList[y[i]]=z[y[i]];
-                    }else if(typeof z[y[i]] === 'object' && z[y[i]] !== null){
-                        var e = Object.keys(bouncerList[z[y[i]]]);
-                        for(var x = 0; x < e.length; x++){
-                            if(bouncerList[y[i]][e[x]] !== null && z[y[i]][e[x]] !== null){
-                                bouncerList[y[i]][e[x]] = z[y[i]][e[x]];
+            }else saveSettings();
+            if(d){
+                var e = Object.keys(bouncerList);
+                for(var f = 0; f < e.length; f++){
+                    if(d[e[f]]!==null&&bouncerList[e[f]]!==null){
+                        bouncerList[e[f]]=d[e[f]];
+                    }else if(typeof d[e[f]] === 'object' && d[e[f]] !== null){
+                        var g = Object.keys(bouncerList[d[e[f]]]);
+                        for(var h = 0; h < g.length; h++){
+                            if(bouncerList[e[f]][g[h]] !== null && d[e[f]][g[h]] !== null){
+                                bouncerList[e[f]][g[h]] = d[e[f]][g[h]];
                             }
                         }
                     }
                 }
+            }else saveBouncers();
+            if(i){
+            	dc.users = i;
             }
         },
         loadEvents: function(){
@@ -194,31 +198,31 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
             saveBouncers();
             saveData();
         }
-    },
+        },
     dc = {
-		users: {},
-		getDc: function(a){
-			for(var i in dc.users){
-				if(dc.users[i] === a){
-					return dc.users[i];
-				}else{
-					return dc.users;
-				}
+	users: {},
+	getDc: function(a){
+		for(var i in dc.users){
+			if(dc.users[i] === a){
+				return dc.users[i];
+			}else{
+				return dc.users;
 			}
-		},
-		newDc: function(a){
-			this.id = a;
-			this.pos = API.getWaitListPosition(a);
-			this.time = Date.now();
-			this.valid = true;
-			dc.users[a] = this;
-			setTimeout(function(){if(dc.users[a].valid){dc.users[a].valid = false;}}, 3600000);
-		},
-		remDc: function(a){
-			delete dc.users[a];
 		}
-	};
-    services.antiAfk = function(){
+	},
+	newDc: function(a){
+		this.id = a;
+		this.pos = API.getWaitListPosition(a);
+		this.time = Date.now();
+		this.valid = true;
+		dc.users[a] = this;
+		setTimeout(function(){if(dc.users[a].valid){dc.users[a].valid = false;}}, 3600000);
+	},
+	remDc: function(a){
+		delete dc.users[a];
+	}
+};
+        services.antiAfk = function(){
 		var a = API.getWaitList(),
 		b = Date.now();
 		for(var i in a){
@@ -249,17 +253,18 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			}
 		}
 	};
-    services.motd = function(a){
+        services.motd = function(a){
 		if(settings.motd){
 			API.sendChat('/em '+motdMsg[Math.floor(Math.random()*motdMsg.length)]);
 		}
 	};
-    function goWhenSpot(){
+        function goWhenSpot(){
 		API.once(API.WAIT_LIST_UPDATE, function(){
 			return true;
 		});
 	}
-    function eventChat(a){
+	
+        function eventChat(a){
 		if(a.type !== 'message')return;
 		if(a.uid === undefined)return;
 		if(a.un === undefined)return;
