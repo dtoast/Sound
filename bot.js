@@ -1376,17 +1376,12 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 		}
 	};
 	cmds.manager.commands = function(a){
-		if(a.message.split(' ')[1] === undefined){
-			return API.sendChat('/em ['+a.un+'] [!commands] '+Object.keys(cmds.users).join(', '));
-		}
-		if(a.message.split(' ')[1].toLowerCase() === 'manager'){
-			API.sendChat('/em ['+a.un+'] [!commands] '+Object.keys(cmds.manager).join(', '));
-		}
-		if(a.message.split(' ')[1].toLowerCase() === 'staff'){
-			API.sendChat('/em ['+a.un+'] [!commands] '+Object.keys(cmds.staff).join(', '));
-		}
-		if(a.message.split(' ')[1].toLowerCase() === 'host'){
-			API.sendChat('/em ['+a.un+'] [!commands] '+Object.keys(cmds.host).join(', '));
+		if(a.message.split(' ')[1].toLowerCase().match(/[a-z]/g)){
+			if(cmds[a.message.split(' ')[1].toLowerCase()]){
+				API.sendChat('/em ['+a.un+'] [!commands] '+Object.keys(cmds[a.message.split(' ')[1].toLowerCase()]).join(', '));
+			}else{
+				API.sendChat('/em ['+a.un+'] [!commands] Unknown user group. (Available Groups: users, staff, bplus, manager, host)');
+			}
 		}
 	};
 	cmds.manager.antiafk = function(a){
