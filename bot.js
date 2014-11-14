@@ -844,7 +844,9 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 		}else{
 			if(!data[a.uid].isAfk){
 				data[a.uid].isAfk = true;
-				data[a.uid].afkMsg = a.message.split(' ')[1];
+				data[a.uid].afkMsg = a.message.substr(5);
+				// !afk constant - it doesn't change so substr is a perfect fit.
+				// split(' ') was returning just that space split, which was totally incorrect
 				API.sendChat('/em ['+a.un+'] [!afk] AFK message set! It will be disabled next time you chat.');
 			}else{
 				data[a.uid].isAfk = false;
