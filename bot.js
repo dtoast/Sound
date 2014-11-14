@@ -1337,7 +1337,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 	};
 	cmds.manager.commands = function(a){
 		if(a.message.split(' ')[1] === undefined){
-			return API.sendChat('/em ['+a.un+'] [!commands] Unknown user group. (Available Groups: '+Object.keys(cmds).join(', ')')');
+			return API.sendChat('/em ['+a.un+'] [!commands] Unknown user group. (Available Groups: '+Object.keys(cmds).join(', ')+')');
 		}
 		if(a.message.split(' ')[1].toLowerCase().match(/[a-z]/g)){
 			if(cmds[a.message.split(' ')[1].toLowerCase()]){
