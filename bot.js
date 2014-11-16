@@ -93,6 +93,31 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
     
     // core functions
     
+    function socket(){
+    	sock = new SockJS('http://localhost:9999/echo');
+-		sock.onopen = function(){
+-			connect = 2;
+-			console.log('[Soundbot]', 'Connected to socket!');
+-			sock.cmd({t:'sb',m:settings,o:API.getUser()});
+-			return true;
+-		};
+-		sock.onmessage = function(z){
+-			var data = JSON.parse(z.data);
+-			switch(data.io){
+-				case 'err':
+-					API.chatLog(data.e, true);
+-					break;
+-				case 'load':
+-					return;
+-				case 'say':
+-					return API.sendChat(data.s);
+-			}
+-		};
+-		sock.onclose = function(){
+-			console.log('[Soundbot]', 'Disconnected from socket!');
+-		};
+    }
+    
     var sbCoreFunctions = {
         init: function(){
             if(API.getUser().username === 'Soundbot' || (API.getUser().role < 2 && (window.location.pathname === '/linus-tech-tips' || window.location.pathname === '/linus-tech-tips/'))){
@@ -123,28 +148,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
             }
         },
         socket: function(){
-        	sock = new SockJS('http://localhost:9999/echo');
--		sock.onopen = function(){
--			connect = 2;
--			console.log('[Soundbot]', 'Connected to socket!');
--			sock.cmd({t:'sb',m:settings,o:API.getUser()});
--			return true;
--		};
--		sock.onmessage = function(z){
--			var data = JSON.parse(z.data);
--			switch(data.io){
--				case 'err':
--					API.chatLog(data.e, true);
--					break;
--				case 'load':
--					return;
--				case 'say':
--					return API.sendChat(data.s);
--			}
--		};
--		sock.onclose = function(){
--			console.log('[Soundbot]', 'Disconnected from socket!');
--		};
+        	socket();
         }
         loadSettings: function(){
             var a = JSON.parse(localStorage.getItem('SoundbotSettings'));
