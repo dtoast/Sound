@@ -95,27 +95,27 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
     
     function socket(){
     	sock = new SockJS('http://localhost:9999/echo');
--		sock.onopen = function(){
--			connect = 2;
--			console.log('[Soundbot]', 'Connected to socket!');
--			sock.cmd({t:'sb',m:settings,o:API.getUser()});
--			return true;
--		};
--		sock.onmessage = function(z){
--			var data = JSON.parse(z.data);
--			switch(data.io){
--				case 'err':
--					API.chatLog(data.e, true);
--					break;
--				case 'load':
--					return;
--				case 'say':
--					return API.sendChat(data.s);
--			}
--		};
--		sock.onclose = function(){
--			console.log('[Soundbot]', 'Disconnected from socket!');
--		};
+		sock.onopen = function(){
+			connect = 2;
+			console.log('[Soundbot]', 'Connected to socket!');
+			sock.cmd({t:'sb',m:settings,o:API.getUser()});
+			return true;
+		};
+		sock.onmessage = function(z){
+			var data = JSON.parse(z.data);
+			switch(data.io){
+				case 'err':
+					API.chatLog(data.e, true);
+					break;
+				case 'load':
+					return;
+				case 'say':
+					return API.sendChat(data.s);
+			}
+		};
+		sock.onclose = function(){
+			console.log('[Soundbot]', 'Disconnected from socket!');
+		};
     }
     
     var sbCoreFunctions = {
