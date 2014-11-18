@@ -225,6 +225,8 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
             saveSettings();
             saveBouncers();
             saveData();
+            clearInterval(services.motd);
+            clearInterval(services.antiafk);
         }
         },
 	dc = {
