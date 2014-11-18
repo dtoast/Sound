@@ -1301,10 +1301,11 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 		var arg = a.message.split(' ')[1].toLowerCase();
 		if(arg === 'on'){
 			if(!settings.motd){
+				clearInterval(services.motd);
 				settings.motd = true;
 				API.sendChat('/em ['+a.un+' enabled motd]');
 				saveSettings();
-				setInterval(services.motd,settings.mI)
+				setInterval(services.motd,settings.mI);
 			}else{
 				API.sendChat('/em ['+a.un+'] [!motd] Motd is already enabled!');
 			}
@@ -1314,6 +1315,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 				settings.motd = false;
 				API.sendChat('/em ['+a.un+' disabled motd]');
 				saveSettings();
+				clearInterval(services.motd);
 			}else{
 				API.sendChat('/em ['+a.un+'] [!motd] Motd is already disabled!');
 			}
@@ -1330,19 +1332,23 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			settings.mI = Math.floor(time*1000);
 			API.sendChat('/em ['+a.un+' set the motd interval to '+time+' seconds]');
 			saveSettings();
+			clearInterval(services.motd);
+			setInterval(services.motd,settings.mI);
 		}else
+		try{
 		if(arg === 'msg'){
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!motd] Messages: '+settings.motdMsg.join(', '));
 			}
-			var opt = a.message.split(' ')[2].toLowerCase();
-			if(typeof parseInt(opt) === 'number')return;
-			if(typeof opt === 'boolean')return;
+			var customMessage = a.message.split(' ')[2].toLowerCase();
 			settings.motdMsg = [];
-			settings.motdMsg.push(opt);
+			settings.motdMsg.push(customMessage);
 			saveSettings();
-			API.sendChat('New message set!');
+			API.sendChat('['+a.un+'] [!motd] New message set!');
+			clearInterval(services.motd);
+			setInterval(services.motd,settings.mI);
 		}
+		}catch(e){API.chatLog(e);}
 	};
 	cmds.manager.roulette = function(a){
 		if(a.message.split(' ')[1] === undefined){
