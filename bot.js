@@ -1521,7 +1521,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!bouncer] Please specify a user!');
 			}
-			var opt = a.message.split('@')[2];
+			var opt = a.message.split('@')[0];
 			u = API.getUsers();
 			for(var i in u){
 				if(u[i].username === opt){
