@@ -113,9 +113,12 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
                 _services_afk = setInterval(function(){services.antiAfk();},60000);
                 if(!settings.antiAfk)clearInterval(_services_afk);
                 else _services_afk;
-                API.sendChat('/em Now running '+(settings.showVer?' v'+version+'!':'!'));
+                API.sendChat('/em Now running'+(settings.showVer?' v'+version+'!':'!'));
                 var temp = API.getUsers();
                 joinTime = Date.now();
+                if(settings.motd){
+                	setInterval(services.motd,settings.mI);
+                }
                 return true;
             }else{
                 API.sendChat('Soundbot is intended to be forked and edited. Visit here to do so: http://github.com/FourBitus/Sound');
@@ -1301,6 +1304,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 				settings.motd = true;
 				API.sendChat('/em ['+a.un+' enabled motd]');
 				saveSettings();
+				setInterval(services.motd,settings.mI)
 			}else{
 				API.sendChat('/em ['+a.un+'] [!motd] Motd is already enabled!');
 			}
@@ -1329,13 +1333,15 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 		}
 		if(arg === 'msg'){
 			if(a.message.split(' ')[2] === undefined){
-				return API.sendChat('/em ['+a.un+'] [!motd] Messages: '+motdMsg.join(', '));
+				return API.sendChat('/em ['+a.un+'] [!motd] Messages: '+settings.motdMsg.join(', '));
 			}
 			var opt = a.message.split(' ')[2].toLowerCase();
 			if(typeof parseInt(opt) === 'number')return;
 			if(typeof opt === 'boolean')return;
-			motdMsg.push(opt);
+			settings.motdMsg = [];
+			settings.motdMsg.push(opt);
 			saveSettings();
+			API.sendChat('New message set!');
 		}
 	};
 	cmds.manager.roulette = function(a){
