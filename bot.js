@@ -1511,7 +1511,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 		return true;
 	};
 	cmds.manager.bouncer = function(a){
-		API.chatLog('a',true);
+		u = API.getUsers();
 		var list = bouncerList.users;
 		if(a.message.split(' ')[1] === undefined){
 			return API.sendChat('/em ['+a.un+'] [!bouncer] Enabled: '+(bouncerList.enabled?'on':'off')+', users: '+(bouncerList.users.length>0?bouncerList.users.length:'0')+'.');
@@ -1521,7 +1521,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!bouncer] Please specify a user!');
 			}
-			var opt = a.message.split(' ')[2].substr(1);
+			var opt = a.message.split('@')[2];
 			u = API.getUsers();
 			for(var i in u){
 				if(u[i].username === opt){
@@ -1538,7 +1538,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 					return API.sendChat('/em ['+a.un+'] [!bouncer] I can\'t see that user in the room!');
 				}
 			}
-		}else if(arg === 'remove' || arg === 'del' || arg === 'delete'){
+		}else if(arg === 'remove' || arg === 'del' || arg === 'delete' || arg === 'rem'){
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!bouncer] Please specify a user!');
 			}
@@ -1548,7 +1548,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			for(var i in u){
 				if(u[i].username === arg){
 					if(l[u[i].id] === undefined){
-						return API.sendChat('/em ['+a.un+'] [!bouncer] That use is not in the bouncerlist!');
+						return API.sendChat('/em ['+a.un+'] [!bouncer] That user is not in the bouncerlist!');
 					}else{
 						delete l[u[i].id];
 						saveBouncers();
