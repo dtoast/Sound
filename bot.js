@@ -1308,7 +1308,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			}else{
 				API.sendChat('/em ['+a.un+'] [!motd] Motd is already enabled!');
 			}
-		}
+		}else
 		if(arg === 'off'){
 			if(settings.motd){
 				settings.motd = false;
@@ -1317,7 +1317,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			}else{
 				API.sendChat('/em ['+a.un+'] [!motd] Motd is already disabled!');
 			}
-		}
+		}else
 		if(arg === 'int'){
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!motd] Motd Interval: '+Math.floor(settings.mI/1000)+' seconds.');
@@ -1330,7 +1330,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			settings.mI = Math.floor(time*1000);
 			API.sendChat('/em ['+a.un+' set the motd interval to '+time+' seconds]');
 			saveSettings();
-		}
+		}else
 		if(arg === 'msg'){
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!motd] Messages: '+settings.motdMsg.join(', '));
