@@ -95,7 +95,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
     
     var sbCoreFunctions = {
         init: function(){
-            if(API.getUser().username === 'Soundbot' || (API.getUser().role < 2 && (window.location.pathname === '/linus-tech-tips' || window.location.pathname === '/linus-tech-tips/'))){
+            if(API.getUser().username === 'Soundbot' || (API.getUser().role > 2 && (window.location.pathname === '/linus-tech-tips' || window.location.pathname === '/linus-tech-tips/'))){
                 if(settings.hidden)return API.sendChat('/em Error (hidden enabled)');
                 if(API.getUser().role<3)return API.sendChat('/em I need to have permission!');
                 sbCoreFunctions.socket();
@@ -122,6 +122,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
                 return true;
             }else{
                 API.sendChat('Soundbot is intended to be forked and edited. Visit here to do so: http://github.com/FourBitus/Sound');
+                sbCoreFunctions.shutdown();
                 return true;
             }
         },
