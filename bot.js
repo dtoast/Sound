@@ -32,7 +32,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 	// begin setup
 	    
 	var services = {},
-		version = '1.1.6.1',
+		version = '1.1.6.2',
 		u = [],
 		settings = {
 			autowoot: true,
