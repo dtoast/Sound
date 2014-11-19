@@ -13,7 +13,7 @@ There are bugs and if you would like to help squash them, please make an issue i
 3. Line number (this may not be always available)
 4. 
 
-If you are new to Javascript, and would like to contribute, [here is a link to a pretty good website that helps with the basics.](http://codecademy.com). 
+If you are new to Javascript, and would like to contribute, [here is a link to a pretty good website that helps with the basics.](http://codecademy.com). Run through it. I've found that "coding to learn is better than learning to code".
 
 For more advanced stuff and syntax highlighting, [go here to look at some documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference).
 
