@@ -1331,6 +1331,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 				return API.sendChat('/em ['+a.un+'] [!motd] Please specify a number in seconds');
 			}
 			time = parseInt(opt);
+			if(time > 9999999)time = 3600000;
 			settings.mI = Math.floor(time*1000);
 			API.sendChat('/em ['+a.un+' set the motd interval to '+time+' seconds]');
 			saveSettings();
@@ -1338,18 +1339,77 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			setInterval(services.motd,settings.mI);
 		}else
 		try{
-		if(arg === 'msg'){
-			if(a.message.split(' ')[2] === undefined){
-				return API.sendChat('/em ['+a.un+'] [!motd] Messages: '+settings.motdMsg.join(', '));
+			if(arg === 'msg'){
+				if(a.message.split(' ')[2] === undefined){
+					return API.sendChat('/em ['+a.un+'] [!motd] Messages: '+settings.motdMsg.join(', '));
+				}
+				var customMessage = a.message.split(' ')[2].toLowerCase();
+				settings.motdMsg.push(customMessage);
+				saveSettings();
+				API.sendChat('['+a.un+'] [!motd] New message set!');
+				clearInterval(services.motd);
+				setInterval(services.motd,settings.mI);
+			}else if(arg === 'r' || arg === 'replace' || arg === 'repl' || arg === 'rep'){
+				if(a.message.split(' ')[2] === undefined){
+					return API.sendChat('/em ['+a.un+'] [!motd] Messages: '+settings.motdMsg.join(', '));
+				}
+				var opt = a.message.split(' ')[2];
+				if(typeof parseInt(opt) === 'number'){
+					// replace the specified string with the new one
+					if(a.message.split(' ')[3] === undefined){
+						return API.sendChat('/em ['+a.un+'] [!motd] Message: '+(typeof settings.motdMsg[parseInt(opt)]!=='string'?'N/A':settings.motdMsg[opt]));
+					}
+					var ins = a.message.split(' ')[3];
+					opt = parseInt(opt);
+					if(settings.motdMsg[opt]){
+						settings.motdMsg[opt] = ins;
+						API.sendChat('/em ['+a.un+'] [!motd] Successfully replaced message.');
+					}else{
+						settings.motdMsg.push(ins);
+						API.sendChat('/em ['+a.un+'] [!motd] There was no message at that spot, so I put it at the end.');
+					}
+				}else{
+					// send an error
+					API.sendChat('/em ['+a.un+'] [!motd] Could not replace the specified message.')
+				}
+			}else{
+				if(opt === 'list'){
+					// list out as many messages as possible.
+					var arr = settings.motdMsg,
+					len = arr.length,str = '/em ['+a.un+'] [!motd] ',
+					m,e = '',inst = 0;
+					// create a maximum character count.
+					// (plug is 256)
+					m = 250;
+					while(len > 0 && str.length <= m){
+						if(len <= 0)len = 0;
+						else if(inst < 0)inst = 1;
+						// add strings until there are no more
+						// or the length hits the max.
+						e += (inst===0?'1':inst.toString())+': '+arr[inst]+(len === 1?'':', ');
+						str += e;
+						// check if str is > the max
+						if(str.length > m){
+							str = str.substr(0,m);
+						}
+						// subtract one from len everytime this was
+						// completed
+						len>0?len-1:len=len;
+						// add one to inst
+						// inst++ was not used because of issues
+						inst>arr.length?inst=arr.length:inst=inst+1;
+					}
+					// final check
+					if(len === 0 || str.length <= m){
+						// send
+						API.sendChat(str);
+					}else{
+						// if it isn't, then send a message
+						// containing no numbers
+						API.sendChat('/em ['+a.un+'] [!motd] I couldn\'t list out the strings nicely, but here\'s what I could get. '+settings.motdMsg.join(', '));
+					}
+				}
 			}
-			var customMessage = a.message.split(' ')[2].toLowerCase();
-			settings.motdMsg = [];
-			settings.motdMsg.push(customMessage);
-			saveSettings();
-			API.sendChat('['+a.un+'] [!motd] New message set!');
-			clearInterval(services.motd);
-			setInterval(services.motd,settings.mI);
-		}
 		}catch(e){API.chatLog(e);}
 	};
 	cmds.manager.roulette = function(a){
