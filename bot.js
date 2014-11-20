@@ -1374,7 +1374,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 					API.sendChat('/em ['+a.un+'] [!motd] Could not replace the specified message.')
 				}
 			}else{
-				if(opt === 'list'){
+				if(arg === 'list'){
 					// list out as many messages as possible.
 					var arr = settings.motdMsg,
 					len = arr.length,str = '/em ['+a.un+'] [!motd] ',
