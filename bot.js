@@ -1324,6 +1324,8 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			}
 		}else
 		if(arg === 'int'){
+			API.sendChat('/em ['+a.un+'] [!motd] Int is disabled temporarly.')
+			/*
 			if(a.message.split(' ')[2] === undefined){
 				return API.sendChat('/em ['+a.un+'] [!motd] Motd Interval: '+Math.floor(settings.mI/1000)+' seconds.');
 			}
@@ -1337,7 +1339,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			API.sendChat('/em ['+a.un+' set the motd interval to '+time+' seconds]');
 			saveSettings();
 			clearInterval(services.motd);
-			setInterval(services.motd,settings.mI);
+			setInterval(services.motd,settings.mI);*/
 		}else
 		try{
 			if(arg === 'msg'){
