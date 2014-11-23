@@ -121,9 +121,9 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
                 API.sendChat('/em Now running'+(settings.showVer?' v'+version+'!':'!'));
                 var temp = API.getUsers();
                 joinTime = Date.now();
-                if(settings.motd){
-                	setInterval(services.motd,settings.mI);
-                }
+                // if(settings.motd){
+                //	setInterval(services.motd,settings.mI);
+                // }
                 return true;
             }else{
                 API.sendChat('Soundbot is intended to be forked and edited. Visit here to do so: http://github.com/FourBitus/Sound');
