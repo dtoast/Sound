@@ -99,6 +99,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
             if(API.getUser().username === 'Soundbot' || API.getUser().username === 'FourBit'){
             	if(safemode){
             		return API.sendChat('/em Now running in safemode! All external components are disabled.');
+            		API.on('chatCommand',eventCmd);
             	}
                 if(settings.hidden)return API.sendChat('/em Error (hidden enabled)');
                 if(API.getUser().role<3)return API.sendChat('/em I need to have permission!');
