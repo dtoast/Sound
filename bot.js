@@ -34,6 +34,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 	var services = {},
 		version = '1.1.6.2',
 		u = [],
+		safemode = true,
 		settings = {
 			autowoot: true,
 			stats: false,
@@ -96,6 +97,9 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
     var sbCoreFunctions = {
         init: function(){
             if(API.getUser().username === 'Soundbot' || API.getUser().username === 'FourBit'){
+            	if(safemode){
+            		return API.sendChat('/em Now running in safemode! All external components are disabled.');
+            	}
                 if(settings.hidden)return API.sendChat('/em Error (hidden enabled)');
                 if(API.getUser().role<3)return API.sendChat('/em I need to have permission!');
                 sbCoreFunctions.socket();
@@ -733,6 +737,12 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 			case 'save':
 				saveSettings();
 				break;
+			case 'reset':
+				API.sendChat('/em [Local] [reset] Would you like to reset all settings? Type /y or /n');
+				API.on('chatCommand', function(a){
+					if(a.toLowerCase().substr(1) === 'y')localStorage.setItem('SoundbotSettings', {});
+					else return;
+				})
 		}
 		str = '';
 	}
