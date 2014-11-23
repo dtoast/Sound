@@ -742,7 +742,8 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 				API.on('chatCommand', function(a){
 					if(a.toLowerCase().substr(1) === 'y')localStorage.setItem('SoundbotSettings', {});
 					else return;
-				})
+				});
+				break;
 		}
 		str = '';
 	}
