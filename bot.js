@@ -418,6 +418,21 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 		}
 	}
 	function eventAdvance(a){
+		// skip if the song is unavailable
+		if(document.getElementById('dialog-restricted-media')){
+			API.sendChat('@'+API.getDJ().username+' that song is unavailable. Please pick a new one.');
+			if($('.cycle-toggle').hasClass('disabled')){
+				$('.cycle-toggle').click();
+			}
+			var z = API.getDJ().id;
+			API.moderateForceSkip();
+			if($('.cycle-toggle').hasClass('enabled')){
+				$('.cycle-toggle').click();
+			}
+			if(API.getWaitList().length > 5){
+				API.moderateMoveDJ(z, 5);
+			}
+		}
 		if(a.media.author === 'Shawn Wasabi'){
 			API.sendChat('@'+API.getDJ().username+' no.');
 			return API.moderateForceSkip();
