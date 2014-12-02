@@ -79,7 +79,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 		_services_afk,
 		_services_motd,
 		blacklist = ['Pink Fluffy Unicorns', '#SELFIE', 'Troll Song'],
-		motdMsg = settings.motdMsg,keeplock = false,
+		motdMsg = settings.motdMsg,keeplocked = false,
 		fightArr = [" doesn't like water."," likes to wear thier pants at their knees."," hates cookies."," likes to take hot showers infront of homeless people."," doesn't know how to use an ipad."," abuses people."," wears hello-kitty clothes to work (or school)."," is 40 years old and lives in their parents basement."," takes long walks in volcanos."," has water, never wakes up."," loves one-direction."," eats coconuts",' wears overalls', ' is a brony', ' hates chocolate', ' denys the use of peanut butter for physical therapy', ' no', ' yes', ' does this to you! http://i.imgur.com/ciGpQyC.gif', ' is satan', ' loves unicorns', ' hates me </3', ' loves to fake having a disease', ' not old bay', ' ha lol'],
 		oplist = ['Here It Comes', 'Champions'],
 		cookies = ['sugar', 'lemon', 'peanut butter', 'chocolate', 'chocolate chip', 'vanilla', 'rose', 'cookie with frosting', 'frog cookie'],
