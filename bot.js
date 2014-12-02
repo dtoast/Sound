@@ -1797,15 +1797,21 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 	};
 	cmds.manager.keeplocked = function(a){
 		keeplocked = !keeplocked;
+		// safe check
+		if(!keeplocked)alreadyEnabled = true;
+		else alreadyEnabled = false;
+		// lock waitlist
 		if(keeplocked)API.moderateLockWaitList(true, false);
 		if(keeplocked){
 			$('.lock-toggle').attrchange({
 				trackValues: true,
-				callback: function(Event){
-					if(Event.attributeName === 'class' && keeplocked){
-						if(Event.newValue.search(/enabled/i) === -1){
-							API.sendChat('/em Keeplocked is currently on, so the waitlist will stay locked.');
-							API.moderateLockWaitList(true, false);
+				callback: function(changedEvent){
+					if(keeplocked && !alreadyEnabled){
+						if(changedEvent.attributeName === 'class'){
+							if(changedEvent.newValue.search(/enabled/g) === -1){
+								API.sendChat('/em Keeplocked is currently on, so the waitlist will stay locked.');
+								SetTimeout(function(){API.moderateLockWaitList(true, false);},500);
+							}
 						}
 					}
 				}
