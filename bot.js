@@ -300,9 +300,11 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 		});
 	}
 	function eventKeepLockOn(a){
-		if(a.message.match(new RegExp('unlocked the waitlist.', 'g')) || a.message.match(new RegExp('unlocked the waitlist', 'g'))){
-			API.sendChat('@'+a.un+' keeplock is currently '+(keeplock?'on':'off')+' so thw waitlist will stay locked.');
-			API.moderateLockWaitList(true, false);
+		if(a.type === 'moderation'){
+			if(a.message.match(new RegExp('unlocked the waitlist.', 'g')) || a.message.match(new RegExp('unlocked the waitlist', 'g'))){
+				API.sendChat('@'+a.un+' keeplock is currently '+(keeplock?'on':'off')+' so thw waitlist will stay locked.');
+				API.moderateLockWaitList(true, false);
+			}
 		}
 	}
 	
@@ -1799,7 +1801,8 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 	cmds.manager.keeplocked = function(a){
 		keeplocked = !keeplocked;
 		if(keeplocked)API.on('chat', eventKeepLockOn);
-		API.sendChat('/em ['+a.un+' is keeping the waitlist locked]');
+		else API.off('chat', eventKeepLockOn);
+		API.sendChat('/em ['+a.un+' is '+(keeplocked?'keeping the waitlist locked':'no longer keeping the waitlist locked')+']');
 	};
 	cmds.host.party = function(a){
 		if(!settings.activeP){
