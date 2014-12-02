@@ -32,7 +32,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 	// begin setup
 	    
 	var services = {},
-		version = '1.1.6.3',
+		version = '1.1.6.4',
 		u = [],
 		safemode = false,
 		settings = {
