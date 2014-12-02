@@ -103,11 +103,16 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
             	}
                 if(settings.hidden)return API.sendChat('/em Error (hidden enabled)');
                 if(API.getUser().role<3)return API.sendChat('/em I need to have permission!');
+                // load core
                 sbCoreFunctions.socket();
                 sbCoreFunctions.loadSettings();
                 sbCoreFunctions.loadEvents();
                 sbCoreFunctions.setupData();
+                // load the attrchange
+                $.getScript('https://raw.github.com/meetselva/attrchange/master/attrchange.js');
+                // remove music player
                 $('#playback').remove();
+                // load bans
                 $('#users-button').click();
                 $('.button.bans').click();
                 setTimeout(function(){
@@ -1794,13 +1799,17 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 		keeplocked = !keeplocked;
 		if(keeplocked)API.moderateLockWaitList(true, false);
 		if(keeplocked){
-			$('.lock-toggle').on('change', function(){
-				var $this = $('.lock-toggle');
-				if($this.hasClass('enabled')){
-					API.sendChat('Keeplock is currently on, so the waitlist will stay locked.');
-					API.moderateLockWaitList(true, false);
+			$('.lock-toggle').attrchange({
+				trackValues: true,
+				callback: function(Event){
+					if(Event.attributeName === 'class' && keeplocked){
+						if(Event.newValue.search(/enabled/i) === -1){
+							API.sendChat('/em Keeplocked is currently on, so the waitlist will stay locked.');
+							API.moderateLockWaitList(true, false);
+						}
+					}
 				}
-			});
+			})
 		}
 		API.sendChat('/em ['+a.un+' is '+(keeplocked?'keeping the waitlist locked':'no longer keeping the waitlist locked')+']');
 	};
