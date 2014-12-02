@@ -301,10 +301,10 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 	}
 	function eventKeepLockOn(a){
 		if(a.type === 'moderation'){
-			if(a.message.test(/[unlocked\t\r\n\v\fthe\t\r\n\v\fwaitlist\.]/)){
-				API.sendChat('@'+a.un+' keeplock is currently '+(keeplock?'on so the waitlist will stay locked.':'off.'));
-				API.moderateLockWaitList(true, false);
-			}
+			if((msg.match(/[unlocked\t\r\n\v\fthe\t\r\n\v\fwaitlist\.]/))){
+				API.sendChat('@'+a.un+' keeplock is currently '+(keeplocked?'on so the waitlist will stay locked.':'off.'));
+ 				API.moderateLockWaitList(true, false);
+ 			}
 		}
 	}
 	
@@ -1800,6 +1800,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 	};
 	cmds.manager.keeplocked = function(a){
 		keeplocked = !keeplocked;
+		if(keeplocked)API.moderateLockWaitList(true, false);
 		if(keeplocked)API.on('chat', eventKeepLockOn);
 		else API.off('chat', eventKeepLockOn);
 		API.sendChat('/em ['+a.un+' is '+(keeplocked?'keeping the waitlist locked':'no longer keeping the waitlist locked')+']');
