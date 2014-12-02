@@ -109,7 +109,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
                 sbCoreFunctions.loadEvents();
                 sbCoreFunctions.setupData();
                 // load the attrchange
-                $.getScript('https://raw.github.com/meetselva/attrchange/master/attrchange.js');
+                $.getScript('https://raw.githubusercontent.com/meetselva/attrchange/master/js/attrchange.js');
                 // remove music player
                 $('#playback').remove();
                 // load bans
