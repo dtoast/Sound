@@ -1808,7 +1808,7 @@ define('6hq6xu/t3tc5c/n3q2rh', ['jquery'], function($){
 				callback: function(changedEvent){
 					if(keeplocked && !alreadyEnabled){
 						if(changedEvent.attributeName === 'class'){
-							if(changedEvent.newValue.search(/enabled/g) === -1){
+							if(changedEvent.newValue.search(/disabled/g) === -1){
 								API.sendChat('/em Keeplocked is currently on, so the waitlist will stay locked.');
 								SetTimeout(function(){API.moderateLockWaitList(true, false);},500);
 							}
