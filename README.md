@@ -1,6 +1,8 @@
 Soundbot - Plug.dj
 ======
 
+__*This is no longer being developed. If I see someone that has forked it and done substantial improvments over time, I will transfer the repository to them. However, if the repository gets transferred, they must include a link to my [github](http://github.com/fourbitus).*__
+
 ###Rationale
 
 __*Many features are inspired by the great tastybot. All hail. :octocat:*__
